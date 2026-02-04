@@ -25,16 +25,20 @@
   /* ⬆️ CANVAS MÁS ALTO (PC) */
   --cool-hero-h: clamp(620px, 68vh, 980px);
 
-  /* ⬇️ Tipografía KOOL/TURA responsive */
+  /* KOOL/TURA responsive */
   --cooltura-h: clamp(108px, 9vw, 160px);
 
-  /* Trazo editorial: mismo “peso” visual que KOOL/RT */
-  --k-stroke: clamp(6px, .55vw, 10px);
+  /* Trazo editorial (base L + línea sobre Tura) */
+  --k-stroke: 2px;
   --k-line-color: rgba(0,0,0,.86);
 
-  /* Ajustes KOOL */
-  --kool-shift-left: 46px; /* mueve KOOL hacia la izquierda */
-  --kool-tight: -0.10em;   /* acerca ooL y RT a la K */
+  /* KOOL: posición centrada en X=64% */
+  --kool-x: 64%;
+  /* Micro-ajuste fino (px) por si quieres empujar un poco a la izq/der */
+  --kool-nudge: 0px;
+
+  /* Acercar ooL y RT a la K (más negativo = más junto) */
+  --kool-tight: -0.10em;
 
   /* CARDS */
   --u: clamp(180px, 18vw, 240px);
@@ -342,12 +346,12 @@ img, video{ max-width: 100%; display: block; }
   margin-right: calc(50% - 50vw);
 
   padding: 0;
-  overflow: hidden;
+  overflow: hidden; /* clave: líneas largas sin scroll */
   isolation: isolate;
 }
 
 /* ==========================================================
-   KOOL / TURA — Epilogue “feeling Kultiveret”
+   KOOL / TURA — Epilogue
 ========================================================== */
 .cooltura-tura,
 .cooltura-kool{
@@ -401,28 +405,26 @@ img, video{ max-width: 100%; display: block; }
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
 
-/* Línea negra que atraviesa Tura por la mitad (grosor = --k-stroke) */
+/* Línea negra que atraviesa Tura por la mitad */
 .cooltura-tura::after{
   content:"";
   position:absolute;
   left: calc(-1 * var(--cooltura-edge));
   top: 50%;
   height: var(--k-stroke);
-  width: calc(100% + var(--cooltura-edge) + 10px);
+  width: calc(100vw + 10px); /* llega siempre al final aunque KOOL se mueva */
   background: var(--k-line-color);
   transform: translateY(-50%);
   opacity: .85;
-  z-index: -1; /* detrás del texto Tura */
+  z-index: -1;
 }
 
-/* KOOL */
+/* KOOL (centrado en X=64%) */
 .cooltura-kool{
   position: absolute;
   top: var(--cooltura-edge);
-
-  /* mantenemos tu shift a la izquierda */
-  right: calc(var(--cooltura-edge) + var(--kool-shift-left));
-
+  left: var(--kool-x);
+  right: auto;
   z-index: 7;
 
   margin: 0;
@@ -431,7 +433,6 @@ img, video{ max-width: 100%; display: block; }
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
-
   column-gap: 0.02em;
   row-gap: 0;
 
@@ -444,7 +445,11 @@ img, video{ max-width: 100%; display: block; }
   user-select: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
+
+  transform: translateX(calc(-50% + var(--kool-nudge)));
+  transform-origin: top center;
 }
+
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-ool,
 .cooltura-kool .kool-rt{
@@ -471,7 +476,7 @@ img, video{ max-width: 100%; display: block; }
   line-height: .7;
 }
 
-/* ooL arriba (más cerca de la K) */
+/* ooL arriba (L visual en mayúscula) */
 .cooltura-kool .kool-ool{
   grid-column: 2;
   grid-row: 1;
@@ -485,27 +490,22 @@ img, video{ max-width: 100%; display: block; }
 
   margin-left: var(--kool-tight);
 }
-
-/* L en mayúscula sin tocar HTML */
 .cooltura-kool .kool-l{
   text-transform: uppercase;
   position: relative;
   display: inline-block;
 }
 
-/* Base de la L extendida hasta X100 (solo base) */
+/* Base de la L extendida hasta el final */
 .cooltura-kool .kool-l::after{
   content:"";
   position:absolute;
   left: 0;
   bottom: 0.06em;
   height: var(--k-stroke);
-  width: 100vw;
+  width: 100vw; /* llega al final siempre */
   background: var(--k-line-color);
   opacity: .85;
-
-  /* MUY IMPORTANTE: que no tape las cards */
-  z-index: -1;
 }
 
 /* RT debajo — en mayúsculas */
@@ -605,29 +605,23 @@ img, video{ max-width: 100%; display: block; }
   font-weight: 800;
 }
 
-/* POSICIONES (tus porcentajes x/y) */
-.card-cartelera{ left: 8%;  top: 25%; }
-.card-ninos{     left: 14%; top: 60%; }
-.card-alargar{   left: 50%; top: 50%; }
-.card-museos{    left: 52%; top: 68%; }
-.card-expo{      left: 74%; top: 35%; }
+/* POSICIONES (tu mapa base x/y) */
+.card-cartelera{
+  left: 8%;
+  /* 2B: alineada con la BASE de Tura (aprox. parte inferior del bloque Tura) */
+  top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.68));
+}
+.card-ninos{   left: 14%; top: 60%; }
+.card-alargar{ left: 50%; top: 50%; }
+.card-museos{  left: 52%; top: 68%; }
+.card-expo{    left: 74%; top: 35%; }
 
-/* ✅ DIRECTO: NO usamos transform (si no, mata el zoom del JS)
-   La anclamos al borde derecho con right/top para mantener x100-y0 */
+/* EN DIRECTO: entera dentro del canvas, pegada al máximo a X=100/Y=0
+   IMPORTANTE: sin transform aquí (si no, rompe el zoom del efecto) */
 .card-directo{
   left: auto;
-  right: var(--cooltura-edge);
   top: var(--cooltura-edge);
-}
-
-/* Opción C — Directo translúcida para no matar KOOL (solo foto) */
-.card-directo .k-photo{
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08)),
-    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.02));
-  opacity: .86;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  right: var(--cooltura-edge); /* “aire” mínimo y card entera dentro */
 }
 
 /* Focus visible */
@@ -638,6 +632,7 @@ img, video{ max-width: 100%; display: block; }
 
 /* ==========================================================
    EFECTO PREMIUM: zoom + foco/desenfoque (Kultiveret)
+   JS añade: .is-dim al mosaic y .is-active a la card activa
 ========================================================== */
 .cooltura-mosaic.is-dim .k-card{
   opacity: .32;
@@ -656,7 +651,7 @@ img, video{ max-width: 100%; display: block; }
   box-shadow: 0 30px 82px rgba(0,0,0,.16);
 }
 
-/* Hover auxiliar */
+/* Hover “sombra” auxiliar (no pisa el efecto principal) */
 #kMosaic:hover .k-card:hover .k-photo{
   box-shadow: 0 30px 82px rgba(0,0,0,.16);
 }
@@ -807,10 +802,9 @@ img, video{ max-width: 100%; display: block; }
   .container{ width: min(100% - 32px, var(--max)); }
   .hero-copy{ padding: 44px 0; transform: translateX(-14px); }
 
-  /* Canvas más alto (móvil/tablet) */
+  /* Canvas alto móvil/tablet */
   .cooltura-canvas{ height: clamp(560px, 62vh, 760px); }
 
-  /* En móvil pasamos a grid y anulamos posiciones absolutas */
   .cooltura-mosaic{
     position: relative;
     inset: auto;
@@ -820,17 +814,18 @@ img, video{ max-width: 100%; display: block; }
     gap: 18px;
     padding: 0 18px;
   }
-  .k-card{ position: static; }
+  .k-card{ position: static; transform: none !important; }
   .k-lg, .k-md, .k-sm, .k-xs{ width: 100%; }
 
-  .cooltura-tura{ transform: scale(.92); transform-origin: top left; }
+  /* KOOL centrado más “seguro” en móvil */
   .cooltura-kool{
-    transform: scale(.92);
-    transform-origin: top right;
-    right: calc(var(--cooltura-edge) + 12px);
+    left: 50%;
+    transform: translateX(-50%) scale(.92);
+    transform-origin: top center;
   }
+  .cooltura-tura{ transform: scale(.92); transform-origin: top left; }
 
-  /* En móvil quitamos las líneas largas */
+  /* En móvil no dibujamos las líneas largas */
   .cooltura-tura::after{ display:none; }
   .cooltura-kool .kool-l::after{ display:none; }
 }
