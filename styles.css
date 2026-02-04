@@ -634,13 +634,13 @@ img, video{ max-width: 100%; display: block; }
 
 /* Museos: SOLO CAMBIO DE LUGAR (y tamaño en desktop abajo) */
 .card-museos{
-  left: 60%;
-  top: 60%;
+  left: 57%;
+  top: 62%;
 }
 
 /* Niños: SOLO CAMBIO DE LUGAR */
 .card-ninos{
-  left: 40%;
+  left: 35%;
   top: 92%;
   --pos-tx: -100%;
   --pos-ty: -100%;
