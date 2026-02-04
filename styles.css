@@ -22,22 +22,22 @@
 
   --cooltura-edge: 14px;
 
-  /* ⬆️ CANVAS MÁS ALTO (PC) */
+  /* CANVAS más alto (PC) */
   --cool-hero-h: clamp(620px, 68vh, 980px);
 
   /* KOOL/TURA responsive */
   --cooltura-h: clamp(108px, 9vw, 160px);
 
-  /* Trazo editorial (base L + línea sobre Tura) */
+  /* Trazo editorial */
   --k-stroke: 2px;
   --k-line-color: rgba(0,0,0,.86);
+  --k-line-overhang: 30px; /* sobresale un poco tras tocar Directo */
 
-  /* KOOL: posición centrada en X=64% */
+  /* KOOL: centrado en X=64% */
   --kool-x: 64%;
-  /* Micro-ajuste fino (px) por si quieres empujar un poco a la izq/der */
   --kool-nudge: 0px;
 
-  /* Acercar ooL y RT a la K (más negativo = más junto) */
+  /* Acercar ooL y RT a la K */
   --kool-tight: -0.10em;
 
   /* CARDS */
@@ -309,7 +309,7 @@ img, video{ max-width: 100%; display: block; }
 .footer-note a{ text-decoration: underline; text-underline-offset: 4px; }
 
 /* ==========================================================
-   COOLTURA CANVAS — fondo Kultiveret-like
+   COOLTURA CANVAS
 ========================================================== */
 .section-quehacer{
   padding: 0;
@@ -346,12 +346,26 @@ img, video{ max-width: 100%; display: block; }
   margin-right: calc(50% - 50vw);
 
   padding: 0;
-  overflow: hidden; /* clave: líneas largas sin scroll */
+  overflow: hidden;
   isolation: isolate;
 }
 
+/* Línea editorial larga: llega hasta el lado IZQ de Directo y sobresale un poco */
+.cooltura-canvas::after{
+  content:"";
+  position:absolute;
+  left: calc(-1 * var(--cooltura-edge));
+  top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.35)); /* “media” de Tura (ajuste fino) */
+  height: var(--k-stroke);
+  width: calc(100% - (var(--cooltura-edge) + var(--sq-xl)) + var(--k-line-overhang));
+  background: var(--k-line-color);
+  opacity: .85;
+  z-index: 5; /* por detrás de KOOL, por delante del fondo */
+  pointer-events: none;
+}
+
 /* ==========================================================
-   KOOL / TURA — Epilogue
+   KOOL / TURA
 ========================================================== */
 .cooltura-tura,
 .cooltura-kool{
@@ -405,21 +419,7 @@ img, video{ max-width: 100%; display: block; }
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
 
-/* Línea negra que atraviesa Tura por la mitad */
-.cooltura-tura::after{
-  content:"";
-  position:absolute;
-  left: calc(-1 * var(--cooltura-edge));
-  top: 50%;
-  height: var(--k-stroke);
-  width: calc(100vw + 10px); /* llega siempre al final aunque KOOL se mueva */
-  background: var(--k-line-color);
-  transform: translateY(-50%);
-  opacity: .85;
-  z-index: -1;
-}
-
-/* KOOL (centrado en X=64%) */
+/* KOOL centrado en X=64% */
 .cooltura-kool{
   position: absolute;
   top: var(--cooltura-edge);
@@ -476,7 +476,7 @@ img, video{ max-width: 100%; display: block; }
   line-height: .7;
 }
 
-/* ooL arriba (L visual en mayúscula) */
+/* ooL arriba (L mayúscula) */
 .cooltura-kool .kool-ool{
   grid-column: 2;
   grid-row: 1;
@@ -494,18 +494,6 @@ img, video{ max-width: 100%; display: block; }
   text-transform: uppercase;
   position: relative;
   display: inline-block;
-}
-
-/* Base de la L extendida hasta el final */
-.cooltura-kool .kool-l::after{
-  content:"";
-  position:absolute;
-  left: 0;
-  bottom: 0.06em;
-  height: var(--k-stroke);
-  width: 100vw; /* llega al final siempre */
-  background: var(--k-line-color);
-  opacity: .85;
 }
 
 /* RT debajo — en mayúsculas */
@@ -537,6 +525,7 @@ img, video{ max-width: 100%; display: block; }
   isolation: isolate;
 }
 
+/* 🔑 Base transform: usamos variables para NO romper el zoom del efecto */
 .k-card{
   position: absolute;
   appearance: none;
@@ -550,6 +539,11 @@ img, video{ max-width: 100%; display: block; }
   display: grid;
   gap: 10px;
 
+  /* base placement translate (por defecto 0) */
+  --pos-tx: 0px;
+  --pos-ty: 0px;
+
+  transform: translate(var(--pos-tx), var(--pos-ty));
   transform-origin: center;
   z-index: 1;
 
@@ -605,23 +599,50 @@ img, video{ max-width: 100%; display: block; }
   font-weight: 800;
 }
 
-/* POSICIONES (tu mapa base x/y) */
+/* =========================
+   POSICIONES (mapa final)
+   ========================= */
+
+/* Cartelera: un poco más abajo (aire) respecto a la “base” */
 .card-cartelera{
   left: 8%;
-  /* 2B: alineada con la BASE de Tura (aprox. parte inferior del bloque Tura) */
-  top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.68));
+  top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.68) + 14px);
 }
-.card-ninos{   left: 14%; top: 60%; }
-.card-alargar{ left: 50%; top: 50%; }
-.card-museos{  left: 52%; top: 68%; }
-.card-expo{    left: 74%; top: 35%; }
 
-/* EN DIRECTO: entera dentro del canvas, pegada al máximo a X=100/Y=0
-   IMPORTANTE: sin transform aquí (si no, rompe el zoom del efecto) */
+/* Alargar: centrada real (centro en 50/50) */
+.card-alargar{
+  left: 50%;
+  top: 50%;
+  --pos-tx: -50%;
+  --pos-ty: -50%;
+}
+
+/* Expo: bajada */
+.card-expo{
+  left: 74%;
+  top: 45%;
+}
+
+/* Museos (por ahora igual; luego ajustamos fino si choca) */
+.card-museos{
+  left: 52%;
+  top: 68%;
+}
+
+/* Niños: abajo derecha (Y≈95%) */
+.card-ninos{
+  left: 92%;
+  top: 95%;
+  --pos-tx: -100%;
+  --pos-ty: -100%;
+  gap: 6px; /* título más “pegado” */
+}
+
+/* Directo: entera dentro, pegada al borde, sin romper transform */
 .card-directo{
   left: auto;
   top: var(--cooltura-edge);
-  right: var(--cooltura-edge); /* “aire” mínimo y card entera dentro */
+  right: var(--cooltura-edge);
 }
 
 /* Focus visible */
@@ -632,18 +653,18 @@ img, video{ max-width: 100%; display: block; }
 
 /* ==========================================================
    EFECTO PREMIUM: zoom + foco/desenfoque (Kultiveret)
-   JS añade: .is-dim al mosaic y .is-active a la card activa
+   (manteniendo el translate base)
 ========================================================== */
 .cooltura-mosaic.is-dim .k-card{
   opacity: .32;
   filter: blur(2.8px) saturate(.90);
-  transform: scale(.97);
+  transform: translate(var(--pos-tx), var(--pos-ty)) scale(.97);
 }
 
 .cooltura-mosaic.is-dim .k-card.is-active{
   opacity: 1;
   filter: none;
-  transform: translateY(-8px) scale(1.065);
+  transform: translate(var(--pos-tx), var(--pos-ty)) translateY(-8px) scale(1.065);
   z-index: 10;
 }
 
@@ -651,7 +672,7 @@ img, video{ max-width: 100%; display: block; }
   box-shadow: 0 30px 82px rgba(0,0,0,.16);
 }
 
-/* Hover “sombra” auxiliar (no pisa el efecto principal) */
+/* Hover “sombra” auxiliar */
 #kMosaic:hover .k-card:hover .k-photo{
   box-shadow: 0 30px 82px rgba(0,0,0,.16);
 }
@@ -802,7 +823,6 @@ img, video{ max-width: 100%; display: block; }
   .container{ width: min(100% - 32px, var(--max)); }
   .hero-copy{ padding: 44px 0; transform: translateX(-14px); }
 
-  /* Canvas alto móvil/tablet */
   .cooltura-canvas{ height: clamp(560px, 62vh, 760px); }
 
   .cooltura-mosaic{
@@ -814,10 +834,14 @@ img, video{ max-width: 100%; display: block; }
     gap: 18px;
     padding: 0 18px;
   }
-  .k-card{ position: static; transform: none !important; }
+
+  .k-card{
+    position: static;
+    transform: none !important;
+    gap: 10px;
+  }
   .k-lg, .k-md, .k-sm, .k-xs{ width: 100%; }
 
-  /* KOOL centrado más “seguro” en móvil */
   .cooltura-kool{
     left: 50%;
     transform: translateX(-50%) scale(.92);
@@ -825,9 +849,8 @@ img, video{ max-width: 100%; display: block; }
   }
   .cooltura-tura{ transform: scale(.92); transform-origin: top left; }
 
-  /* En móvil no dibujamos las líneas largas */
-  .cooltura-tura::after{ display:none; }
-  .cooltura-kool .kool-l::after{ display:none; }
+  /* En móvil no dibujamos línea larga */
+  .cooltura-canvas::after{ display:none; }
 }
 
 @media (max-width: 700px){
