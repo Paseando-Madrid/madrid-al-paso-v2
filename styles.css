@@ -614,7 +614,7 @@ img, video{ max-width: 100%; display: block; }
 
 /* Cartelera: NO CAMBIAR */
 .card-cartelera{
-  left: 8%;
+  left: 6%;
   top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.68) + 14px);
 }
 
@@ -629,18 +629,18 @@ img, video{ max-width: 100%; display: block; }
 /* Expo: SOLO CAMBIO DE LUGAR */
 .card-expo{
   left: 74%;
-  top: 87%;
+  top: 70%;
 }
 
 /* Museos: SOLO CAMBIO DE LUGAR (y tamaño en desktop abajo) */
 .card-museos{
   left: 60%;
-  top: 80%;
+  top: 60%;
 }
 
 /* Niños: SOLO CAMBIO DE LUGAR */
 .card-ninos{
-  left: 16%;
+  left: 40%;
   top: 92%;
   --pos-tx: -100%;
   --pos-ty: -100%;
