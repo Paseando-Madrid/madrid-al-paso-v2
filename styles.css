@@ -629,19 +629,19 @@ img, video{ max-width: 100%; display: block; }
 /* Expo: SOLO CAMBIO DE LUGAR */
 .card-expo{
   left: 74%;
-  top: 72%;
+  top: 87%;
 }
 
 /* Museos: SOLO CAMBIO DE LUGAR (y tamaño en desktop abajo) */
 .card-museos{
   left: 60%;
-  top: 62%;
+  top: 80%;
 }
 
 /* Niños: SOLO CAMBIO DE LUGAR */
 .card-ninos{
-  left: 88%;
-  top: 84%;
+  left: 16%;
+  top: 92%;
   --pos-tx: -100%;
   --pos-ty: -100%;
 }
