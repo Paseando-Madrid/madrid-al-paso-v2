@@ -28,6 +28,14 @@
   /* ⬇️ Tipografía KOOL/TURA responsive para que “respire” con el nuevo alto */
   --cooltura-h: clamp(108px, 9vw, 160px);
 
+  /* Trazo editorial (base L + línea sobre Tura) */
+  --k-stroke: 2px;
+  --k-line-color: rgba(0,0,0,.86);
+
+  /* Ajustes KOOL */
+  --kool-shift-left: 46px; /* mueve KOOL hacia la izquierda */
+  --kool-tight: -0.10em;   /* acerca ooL y RT a la K (más negativo = más junto) */
+
   /* CARDS (base; luego ajustamos para igualar a Kultiveret cuando metas imágenes reales) */
   --u: clamp(180px, 18vw, 240px);
   --sq-xl: calc(var(--u) * 1.10);
@@ -393,11 +401,25 @@ img, video{ max-width: 100%; display: block; }
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
 
+/* Línea negra que atraviesa Tura por la mitad (mismo grosor que base de L) */
+.cooltura-tura::after{
+  content:"";
+  position:absolute;
+  left: calc(-1 * var(--cooltura-edge));
+  top: 50%;
+  height: var(--k-stroke);
+  width: calc(100% + var(--cooltura-edge) + 10px);
+  background: var(--k-line-color);
+  transform: translateY(-50%);
+  opacity: .85;
+  z-index: -1;
+}
+
 /* KOOL */
 .cooltura-kool{
   position: absolute;
   top: var(--cooltura-edge);
-  right: var(--cooltura-edge);
+  right: calc(var(--cooltura-edge) + var(--kool-shift-left));
   z-index: 7;
 
   margin: 0;
@@ -406,7 +428,7 @@ img, video{ max-width: 100%; display: block; }
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
-  column-gap: 0.06em;
+  column-gap: 0.02em; /* antes 0.06em */
   row-gap: 0;
 
   align-items: start;
@@ -445,7 +467,7 @@ img, video{ max-width: 100%; display: block; }
   line-height: .7;
 }
 
-/* ool arriba */
+/* ool arriba (L en mayúscula ya viene del HTML: "l" -> si quieres "L" visual lo hacemos con transform) */
 .cooltura-kool .kool-ool{
   grid-column: 2;
   grid-row: 1;
@@ -456,9 +478,31 @@ img, video{ max-width: 100%; display: block; }
 
   font-size: calc(var(--cooltura-h) * 0.54);
   line-height: .7;
+
+  /* más cerca de la K */
+  margin-left: var(--kool-tight);
 }
 
-/* rt debajo */
+/* “L” visual en mayúscula sin tocar HTML (convierte la l a L) */
+.cooltura-kool .kool-l{
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+
+/* Base de la L extendida hasta X100 (solo base, no toda la letra) */
+.cooltura-kool .kool-l::after{
+  content:"";
+  position:absolute;
+  left: 0;
+  bottom: 0.06em;
+  height: var(--k-stroke);
+  width: 100vw;
+  background: var(--k-line-color);
+  opacity: .85;
+}
+
+/* rt debajo — en mayúsculas */
 .cooltura-kool .kool-rt{
   grid-column: 2;
   grid-row: 2;
@@ -469,6 +513,9 @@ img, video{ max-width: 100%; display: block; }
 
   font-size: calc(var(--cooltura-h) * 0.54);
   line-height: .7;
+
+  margin-left: var(--kool-tight);
+  text-transform: uppercase;
 }
 .cooltura-kool .kool-r{ grid-column: 1; }
 .cooltura-kool .kool-t{ grid-column: 2; }
@@ -552,16 +599,29 @@ img, video{ max-width: 100%; display: block; }
   font-weight: 800;
 }
 
-/* POSICIONES */
-.card-directo{ left: 58%; top: 10%; }
-.card-expo{ left: 74%; top: 48%; }
-.card-cartelera{ left: 6%; top: 34%; }
-.card-alargar{ left: 44%; top: 46%; }
-.card-museos{
-  left: calc(44% + var(--sq-lg) - var(--gap-sm));
-  top:  calc(46% + (var(--sq-lg) * 1.05) - var(--gap-sm));
+/* POSICIONES (tus porcentajes x/y) */
+.card-cartelera{ left: 8%;  top: 25%; }
+.card-ninos{     left: 14%; top: 60%; }
+.card-alargar{   left: 50%; top: 50%; }
+.card-museos{    left: 52%; top: 68%; }
+.card-expo{      left: 74%; top: 35%; }
+
+/* Directo x100-y0 (anclada al borde derecho) */
+.card-directo{
+  left: 100%;
+  top: 0%;
+  transform: translate(-100%, 0);
 }
-.card-ninos{ left: 26%; top: 76%; }
+
+/* Opción C — Directo translúcida para no matar KOOL */
+.card-directo .k-photo{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08)),
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.02));
+  opacity: .86;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
 
 /* Focus visible */
 .k-card:focus-visible .k-photo{
@@ -574,7 +634,7 @@ img, video{ max-width: 100%; display: block; }
    JS añade: .is-dim al mosaic y .is-active a la card activa
 ========================================================== */
 .cooltura-mosaic.is-dim .k-card{
-  opacity: .32; /* más perceptible */
+  opacity: .32;
   filter: blur(2.8px) saturate(.90);
   transform: scale(.97);
 }
@@ -596,8 +656,7 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* ==========================================================
-   MODAL / OVERLAY (focus-in lento premium) — FIX REAL
-   - NO usamos display:none (no anima)
+   MODAL / OVERLAY (focus-in lento premium)
 ========================================================== */
 .k-modal{
   position: fixed;
@@ -754,11 +813,19 @@ img, video{ max-width: 100%; display: block; }
     gap: 18px;
     padding: 0 18px;
   }
-  .k-card{ position: static; }
+  .k-card{ position: static; transform: none !important; }
   .k-lg, .k-md, .k-sm, .k-xs{ width: 100%; }
 
   .cooltura-tura{ transform: scale(.92); transform-origin: top left; }
-  .cooltura-kool{ transform: scale(.92); transform-origin: top right; }
+  .cooltura-kool{
+    transform: scale(.92);
+    transform-origin: top right;
+    right: calc(var(--cooltura-edge) + 12px);
+  }
+
+  /* En móvil no dibujamos las líneas largas (evita barras raras) */
+  .cooltura-tura::after{ display:none; }
+  .cooltura-kool .kool-l::after{ display:none; }
 }
 
 @media (max-width: 700px){
