@@ -21,8 +21,12 @@
   --mustard: #C9A24A;
 
   --cooltura-edge: 14px;
-  --cool-hero-h: clamp(520px, 54vh, 760px);
-  --cooltura-h: 130px;
+
+  /* ⬆️ CANVAS MÁS ALTO (PC) */
+  --cool-hero-h: clamp(620px, 68vh, 980px);
+
+  /* ⬇️ Tipografía KOOL/TURA responsive para que “respire” con el nuevo alto */
+  --cooltura-h: clamp(108px, 9vw, 160px);
 
   /* CARDS (base; luego ajustamos para igualar a Kultiveret cuando metas imágenes reales) */
   --u: clamp(180px, 18vw, 240px);
@@ -738,7 +742,8 @@ img, video{ max-width: 100%; display: block; }
   .container{ width: min(100% - 32px, var(--max)); }
   .hero-copy{ padding: 44px 0; transform: translateX(-14px); }
 
-  .cooltura-canvas{ height: clamp(520px, 58vh, 820px); }
+  /* ⬆️ CANVAS MÁS ALTO (móvil/tablet) */
+  .cooltura-canvas{ height: clamp(560px, 62vh, 760px); }
 
   .cooltura-mosaic{
     position: relative;
@@ -808,4 +813,3 @@ img, video{ max-width: 100%; display: block; }
     transform: none;
   }
 }
-
