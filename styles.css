@@ -31,7 +31,7 @@
   /* Trazo editorial */
   --k-stroke: 2px;
   --k-line-color: rgba(0,0,0,.86);
-  --k-line-overhang: 30px; /* sobresale un poco tras tocar Directo */
+  --k-line-overhang: 30px;
 
   /* KOOL: centrado en X=64% */
   --kool-x: 64%;
@@ -54,12 +54,12 @@
   --t-dim: 650ms;
   --t-focus: 1050ms;
 
-  /* 🔑 referencia real: en tu HTML Niños = k-sm => width = var(--sq-md) */
+  /* 🔑 referencia real: Niños = k-sm => width = var(--sq-md) */
   --ninos-w: var(--sq-md);
 
   /* Ajuste fino de la L (editorial) */
-  --kool-l-scaleY: 1.16;  /* sensación de mayúscula más alta */
-  --kool-l-drop: 0.18em;  /* “cae” hacia la línea negra */
+  --kool-l-scaleY: 1.16;
+  --kool-l-drop: 0.18em;
 }
 
 /* Base */
@@ -357,19 +357,8 @@ img, video{ max-width: 100%; display: block; }
   isolation: isolate;
 }
 
-/* Línea editorial larga */
-.cooltura-canvas::after{
-  content:"";
-  position:absolute;
-  left: calc(-1 * var(--cooltura-edge));
-  top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.35));
-  height: var(--k-stroke);
-  width: calc(100% - (var(--cooltura-edge) + var(--sq-xl)) + var(--k-line-overhang));
-  background: var(--k-line-color);
-  opacity: .85;
-  z-index: 5;
-  pointer-events: none;
-}
+/* ✅ Quitamos la línea (era CSS) */
+.cooltura-canvas::after{ display:none; }
 
 /* ==========================================================
    KOOL / TURA
@@ -381,10 +370,13 @@ img, video{ max-width: 100%; display: block; }
   letter-spacing: -0.07em;
 }
 
+/* ✅ FIX REAL: el clip/fill se aplica a las LETRAS, no al contenedor */
 .cooltura-tura .tura,
 .cooltura-kool .kool-k,
-.cooltura-kool .kool-ool,
-.cooltura-kool .kool-rt{
+.cooltura-kool .kool-o,
+.cooltura-kool .kool-l,
+.cooltura-kool .kool-r,
+.cooltura-kool .kool-t{
   -webkit-text-fill-color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
@@ -425,7 +417,7 @@ img, video{ max-width: 100%; display: block; }
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
 
-/* KOOL centrado */
+/* KOOL */
 .cooltura-kool{
   position: absolute;
   top: var(--cooltura-edge);
@@ -455,9 +447,12 @@ img, video{ max-width: 100%; display: block; }
   transform-origin: top center;
 }
 
+/* Gradiente “metal negro” por letra */
 .cooltura-kool .kool-k,
-.cooltura-kool .kool-ool,
-.cooltura-kool .kool-rt{
+.cooltura-kool .kool-o,
+.cooltura-kool .kool-l,
+.cooltura-kool .kool-r,
+.cooltura-kool .kool-t{
   background-image:
     linear-gradient(180deg,
       rgba(255,255,255,.34) 0%,
@@ -496,7 +491,7 @@ img, video{ max-width: 100%; display: block; }
   margin-left: var(--kool-tight);
 }
 
-/* 🔑 L editorial: MÁS alta que “oo” y cae sobre la línea */
+/* L editorial */
 .cooltura-kool .kool-l{
   text-transform: uppercase;
   position: relative;
@@ -535,7 +530,6 @@ img, video{ max-width: 100%; display: block; }
   isolation: isolate;
 }
 
-/* Base transform: NO romper el zoom */
 .k-card{
   position: absolute;
   appearance: none;
@@ -590,6 +584,7 @@ img, video{ max-width: 100%; display: block; }
   color: rgba(17,17,17,.92);
 }
 
+/* Base split (se mantiene) */
 .k-card-title--split{
   display: inline-flex;
   align-items: baseline;
@@ -608,17 +603,40 @@ img, video{ max-width: 100%; display: block; }
   font-weight: 800;
 }
 
+/* ✅ Solo para ALARGAR: lo convertimos en ángulo recto (└) fuera de la card
+   - misma tipografía (k-card-title / k-v / k-h)
+   - misma lógica de distancia (sigue estando fuera, debajo del cuadrado)
+*/
+.card-alargar .k-card-title--split{
+  position: relative;
+  display: block;
+  padding-left: 18px;     /* “ala” horizontal arranca tras el vertical */
+  height: 34px;           /* caja editorial para construir el ángulo */
+  line-height: 1;         /* limpio */
+  gap: 0;                 /* anulamos el gap del inline-flex */
+}
+
+.card-alargar .k-card-title--split .k-v{
+  position: absolute;
+  left: 0;
+  bottom: 0;              /* vértice en la base, alineado con la línea inferior del texto */
+}
+
+.card-alargar .k-card-title--split .k-h{
+  position: absolute;
+  left: 18px;
+  bottom: 0;              /* forma la L desde el mismo vértice */
+}
+
 /* =========================
-   POSICIONES
+   POSICIONES (NO MOVER)
    ========================= */
 
-/* Cartelera: NO CAMBIAR */
 .card-cartelera{
   left: 6%;
   top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.68) + 14px);
 }
 
-/* Alargar: NO CAMBIAR */
 .card-alargar{
   left: 50%;
   top: 50%;
@@ -626,19 +644,16 @@ img, video{ max-width: 100%; display: block; }
   --pos-ty: -50%;
 }
 
-/* Expo: SOLO CAMBIO DE LUGAR */
 .card-expo{
   left: 74%;
   top: 70%;
 }
 
-/* Museos: SOLO CAMBIO DE LUGAR (y tamaño en desktop abajo) */
 .card-museos{
   left: 57%;
   top: 62%;
 }
 
-/* Niños: SOLO CAMBIO DE LUGAR */
 .card-ninos{
   left: 35%;
   top: 92%;
@@ -646,11 +661,17 @@ img, video{ max-width: 100%; display: block; }
   --pos-ty: -100%;
 }
 
-/* Directo: NO CAMBIAR */
 .card-directo{
   left: auto;
   top: var(--cooltura-edge);
   right: var(--cooltura-edge);
+}
+
+/* ✅ Expo = 2/3 del tamaño actual (solo desktop) */
+@media (min-width: 901px){
+  .card-expo{
+    width: calc(var(--sq-lg) * 0.6666667);
+  }
 }
 
 /* ✅ Museos = mitad exacta de Niños (solo desktop) */
@@ -686,7 +707,6 @@ img, video{ max-width: 100%; display: block; }
   box-shadow: 0 30px 82px rgba(0,0,0,.16);
 }
 
-/* Hover “sombra” auxiliar */
 #kMosaic:hover .k-card:hover .k-photo{
   box-shadow: 0 30px 82px rgba(0,0,0,.16);
 }
