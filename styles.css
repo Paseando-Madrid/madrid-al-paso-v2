@@ -54,12 +54,10 @@
   --t-dim: 650ms;
   --t-focus: 1050ms;
 
-  /* 🔑 referencia real: Niños = k-sm => width = var(--sq-md) */
-  --ninos-w: var(--sq-md);
-
   /* Ajuste fino de la L (editorial) */
   --kool-l-scaleY: 1.16;
-  --kool-l-drop: 0.18em;
+  /* ✅ MEJORA: subimos la L para que NO pise la T */
+  --kool-l-drop: 0.06em;
 }
 
 /* Base */
@@ -324,7 +322,6 @@ img, video{ max-width: 100%; display: block; }
   position: relative;
 
   background-color: var(--ivory);
-
   background-image:
     url("assets/backgrounds/cooltura-bg-paper.jpg"),
     radial-gradient(1100px 520px at 50% 0%,
@@ -340,7 +337,6 @@ img, video{ max-width: 100%; display: block; }
   background-repeat: repeat, no-repeat, no-repeat;
   background-size: 920px auto, 100% 100%, 100% 100%;
   background-position: top left, top center, top center;
-
   background-blend-mode: multiply, screen, normal;
 }
 
@@ -357,7 +353,7 @@ img, video{ max-width: 100%; display: block; }
   isolation: isolate;
 }
 
-/* ✅ Quitamos la línea (era CSS) */
+/* (Tu línea ya estaba desactivada en la versión que estabas usando) */
 .cooltura-canvas::after{ display:none; }
 
 /* ==========================================================
@@ -370,7 +366,7 @@ img, video{ max-width: 100%; display: block; }
   letter-spacing: -0.07em;
 }
 
-/* ✅ FIX REAL: el clip/fill se aplica a las LETRAS, no al contenedor */
+/* ✅ CLAVE para que la “L” (y el resto) se vean: el clip debe ir en CADA letra */
 .cooltura-tura .tura,
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
@@ -447,7 +443,7 @@ img, video{ max-width: 100%; display: block; }
   transform-origin: top center;
 }
 
-/* Gradiente “metal negro” por letra */
+/* “metal negro” por letra */
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
 .cooltura-kool .kool-l,
@@ -491,7 +487,7 @@ img, video{ max-width: 100%; display: block; }
   margin-left: var(--kool-tight);
 }
 
-/* L editorial */
+/* ✅ L editorial: mayúscula + subimos para no pisar la T */
 .cooltura-kool .kool-l{
   text-transform: uppercase;
   position: relative;
@@ -584,7 +580,7 @@ img, video{ max-width: 100%; display: block; }
   color: rgba(17,17,17,.92);
 }
 
-/* Base split (se mantiene) */
+/* Base split (global) */
 .k-card-title--split{
   display: inline-flex;
   align-items: baseline;
@@ -603,35 +599,40 @@ img, video{ max-width: 100%; display: block; }
   font-weight: 800;
 }
 
-/* ✅ Solo para ALARGAR: lo convertimos en ángulo recto (└) fuera de la card
-   - misma tipografía (k-card-title / k-v / k-h)
-   - misma lógica de distancia (sigue estando fuera, debajo del cuadrado)
-*/
+/* ✅ MEJORA: SOLO ALARGAR — ángulo recto + MISMA tipografía/peso/tamaño */
 .card-alargar .k-card-title--split{
   position: relative;
   display: block;
-  padding-left: 18px;     /* “ala” horizontal arranca tras el vertical */
-  height: 34px;           /* caja editorial para construir el ángulo */
-  line-height: 1;         /* limpio */
-  gap: 0;                 /* anulamos el gap del inline-flex */
+  height: 34px;
+  padding-left: 18px;
+  line-height: 1;
 }
 
 .card-alargar .k-card-title--split .k-v{
   position: absolute;
   left: 0;
-  bottom: 0;              /* vértice en la base, alineado con la línea inferior del texto */
+  bottom: 0;
+
+  /* igualar a “el paseo” */
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: none;
 }
 
 .card-alargar .k-card-title--split .k-h{
   position: absolute;
   left: 18px;
-  bottom: 0;              /* forma la L desde el mismo vértice */
+  bottom: 0;
+
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 /* =========================
-   POSICIONES (NO MOVER)
-   ========================= */
-
+   POSICIONES (NO TOCAR)
+========================= */
 .card-cartelera{
   left: 6%;
   top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.68) + 14px);
@@ -665,20 +666,6 @@ img, video{ max-width: 100%; display: block; }
   left: auto;
   top: var(--cooltura-edge);
   right: var(--cooltura-edge);
-}
-
-/* ✅ Expo = 2/3 del tamaño actual (solo desktop) */
-@media (min-width: 901px){
-  .card-expo{
-    width: calc(var(--sq-lg) * 0.6666667);
-  }
-}
-
-/* ✅ Museos = mitad exacta de Niños (solo desktop) */
-@media (min-width: 901px){
-  .card-museos{
-    width: calc(var(--ninos-w) * .5);
-  }
 }
 
 /* Focus visible */
