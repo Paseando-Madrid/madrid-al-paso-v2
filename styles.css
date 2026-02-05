@@ -63,6 +63,9 @@
   /* Ajuste fino de la L (editorial) */
   --kool-l-scaleY: 1.16;
   --kool-l-drop: 0.18em;
+
+  /* ✅ Ajuste seguro SOLO para el ángulo de ALARGAR */
+  --alargar-angle-raise: -10px; /* ajusta luego: -8px a -12px */
 }
 
 /* ======================================================================
@@ -606,6 +609,9 @@ img, video{ max-width: 100%; display: block; }
   height: 34px;
   line-height: 1;
   gap: 0;
+
+  /* ✅ Subir SOLO el ángulo (no toca la card) */
+  margin-top: var(--alargar-angle-raise);
 }
 
 .card-alargar .k-card-title--split .k-v{
@@ -618,6 +624,12 @@ img, video{ max-width: 100%; display: block; }
   position: absolute;
   left: 18px;
   bottom: 0;
+}
+
+/* ✅ Lectura vertical ARRIBA→ABAJO SOLO en ALARGAR
+   (anulamos el rotate(180deg) que es global) */
+.card-alargar .k-card-title--split .k-v{
+  transform: none;
 }
 
 /* ========================= POSICIONES (NO MOVER) ========================= */
