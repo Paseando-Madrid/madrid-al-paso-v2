@@ -61,7 +61,7 @@
   --ninos-w: var(--sq-md);
 
   /* Ajuste fino de la L (editorial) */
-  --kool-l-scaleY: 1.16;
+  --kool-l-scaleY: 1.12;
   --kool-l-drop: 0.18em;
 
   /* ✅ Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
