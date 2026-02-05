@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300,400,500&family=Inter:wght@300;400;500;600;700;800&family=Epilogue:wght@300;400;500;600;700;800&display=swap');
 
 /* ======================================================================
-   TOKENS / VARIABLES
+   TOKENS / VARIABLES  (LIMPIO: sin rojos guardados, sin duplicados)
    ====================================================================== */
 :root{
   --bg: #ffffff;
@@ -15,12 +15,11 @@
   --font-serif: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
-  /* Fuente estilo Kultiveret para KOOL/TURA */
+  /* Fuente para KOOL/RT */
   --font-cooltura: "Epilogue", Arial, sans-serif;
 
   /* COOLTURA */
   --ivory: #EFECDD;
-  --cooltura-blue: #3E7FAE;   /* azul base */
   --mustard: #C9A24A;
 
   --cooltura-edge: 14px;
@@ -28,18 +27,11 @@
   /* CANVAS más alto (PC) */
   --cool-hero-h: clamp(620px, 68vh, 980px);
 
-  /* KOOL/TURA responsive */
+  /* KOOL/RT responsive */
   --cooltura-h: clamp(108px, 9vw, 160px);
 
-  /* Trazo editorial */
-  --k-stroke: 2px;
-  --k-line-color: rgba(0,0,0,.86);
-  --k-line-overhang: 30px;
-
-  /* KOOL: centrado en X=64% (se conserva por si lo recuperamos) */
+  /* KOOL: (se conserva por si recuperamos centrado más adelante, NO se usa ahora) */
   --kool-x: 64%;
-
-  /* mover KOOL ART a la derecha (se conserva, pero ahora KOOL va anclado a esquina) */
   --kool-nudge: 72px;
 
   /* Acercar ooL y RT a la K */
@@ -65,19 +57,22 @@
   /* L más arriba y SIN rozar la T */
   --kool-l-scaleY: 1.12;
   --kool-l-drop: 0.18em;
-  --kool-l-lift: -0.14em; /* más negativo = sube más */
+  --kool-l-lift: -0.14em;
 
   /* Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
   --alargar-title-tx: -10px;
   --alargar-title-ty: -22px;
 
-  /* ✅ Color editorial (cards + KOOL/RT) -> ROJO CARMÍN */
-  --cooltura-title-accent: #B1120A;        /* rojo carmín (alto contraste) */
-  --cooltura-title-accent-ink: #8F0C07;    /* un pelín más profundo para el “metal” */
+  /* ✅ Negro editorial unificado (KOOL/RT + títulos) */
+  --cooltura-ink: rgba(10,10,10,1);
 
-  /* ✅ Micro-contraste premium para textos sobre fondo complejo (sin “caja”) */
-  --title-glow: 0 1px 0 rgba(255,255,255,.60), 0 10px 22px rgba(0,0,0,.12);
-  --title-stroke: 0.6px; /* muy sutil (si el navegador lo soporta) */
+  /* ✅ Legibilidad premium sobre fondo complejo (SIN caja) */
+  --title-glow: 0 1px 0 rgba(255,255,255,.62), 0 10px 22px rgba(0,0,0,.12);
+  --title-stroke: 0.6px;
+
+  /* ✅ “Incrustado” Kultiveret (sin sombra): velo + micro-grano */
+  --card-embed-strength: .18; /* sube a .22 si quieres más “papel” */
+  --card-grain-alpha: .08;    /* micro grano muy sutil */
 }
 
 /* ======================================================================
@@ -406,7 +401,7 @@ img, video{ max-width: 100%; display: block; }
   letter-spacing: -0.07em;
 }
 
-/* ✅ FIX REAL: el clip/fill se aplica a las LETRAS, no al contenedor */
+/* ✅ el clip/fill se aplica a las LETRAS */
 .cooltura-tura .tura,
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
@@ -436,19 +431,10 @@ img, video{ max-width: 100%; display: block; }
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 
-  /* ✅ cambio pedido: Tura fuera */
   display: none;
 }
 
-.cooltura-tura .tura{
-  background-image:
-    linear-gradient(180deg, rgba(255,255,255,.40) 0%, rgba(255,255,255,.10) 18%, rgba(0,0,0,.10) 55%, rgba(255,255,255,.08) 100%),
-    linear-gradient(180deg, rgba(62,127,174,1) 0%, rgba(62,127,174,1) 100%);
-  background-blend-mode: screen, normal;
-  filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
-}
-
-/* KOOL (ahora ocupa el lugar de TURA: esquina superior izquierda) */
+/* KOOL (esquina superior izquierda) */
 .cooltura-kool{
   position: absolute;
   top: var(--cooltura-edge);
@@ -471,12 +457,11 @@ img, video{ max-width: 100%; display: block; }
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 
-  /* ✅ anclado a esquina: no centrado */
   transform: none;
   transform-origin: top left;
 }
 
-/* ✅ KOOL/RT en ROJO CARMÍN manteniendo “satinado” */
+/* ✅ KOOL/RT NEGRO satinado (sin “color guardado”) */
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
 .cooltura-kool .kool-l,
@@ -484,7 +469,7 @@ img, video{ max-width: 100%; display: block; }
 .cooltura-kool .kool-t{
   background-image:
     linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.10) 18%, rgba(0,0,0,.18) 58%, rgba(255,255,255,.10) 100%),
-    linear-gradient(180deg, var(--cooltura-title-accent-ink) 0%, var(--cooltura-title-accent-ink) 100%);
+    linear-gradient(180deg, var(--cooltura-ink) 0%, var(--cooltura-ink) 100%);
   background-blend-mode: screen, normal;
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
@@ -509,7 +494,7 @@ img, video{ max-width: 100%; display: block; }
   margin-left: var(--kool-tight);
 }
 
-/* L editorial (lift añadido para que NO roce la T) */
+/* L editorial */
 .cooltura-kool .kool-l{
   text-transform: uppercase;
   position: relative;
@@ -577,23 +562,68 @@ img, video{ max-width: 100%; display: block; }
 .k-sm{ width: var(--sq-md); }
 .k-xs{ width: var(--sq-sm); }
 
+/* ======================================================================
+   ✅ K-PHOTO “KULTIVERET”: SIN SOMBRA, ESQUINA CUADRADA, INCRUSTADO
+   - No toca HTML/JS
+   - No bloquea hover/click (capas pointer-events:none)
+   ====================================================================== */
 .k-photo{
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 18px;
+
+  /* ✅ pedido: totalmente cuadrada */
+  border-radius: 0;
+
   overflow: hidden;
 
+  /* Fallback editorial si falta imagen */
   background:
     linear-gradient(180deg, rgba(0,0,0,.055), rgba(0,0,0,.018)),
     repeating-linear-gradient(90deg, rgba(0,0,0,.055) 0 12px, rgba(0,0,0,.028) 12px 24px);
 
-  box-shadow: 0 18px 46px rgba(0,0,0,.10);
-  transition: box-shadow 450ms ease;
+  /* ✅ pedido: NINGUNA sombra */
+  box-shadow: none;
+
+  /* Mantener transición (pero sin sombras que “floten”) */
+  transition: filter 450ms ease;
+  position: relative;
+}
+
+/* ✅ Velo de integración (editorial) */
+.k-photo::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* 1) “wash” muy suave para casar con el papel
+     2) micro grano con repeating-radial (no es una sombra, no flota)
+     3) un toque de viñeta mínima para “asentar” */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255, calc(var(--card-embed-strength) * .65)) 0%,
+      rgba(255,255,255, calc(var(--card-embed-strength) * .25)) 38%,
+      rgba(0,0,0,        calc(var(--card-embed-strength) * .18)) 100%
+    ),
+    repeating-radial-gradient(
+      circle at 30% 20%,
+      rgba(0,0,0, var(--card-grain-alpha)) 0 1px,
+      rgba(0,0,0, 0) 1px 3px
+    ),
+    radial-gradient(
+      120% 120% at 50% 50%,
+      rgba(0,0,0,.05) 0%,
+      rgba(0,0,0,0) 58%
+    );
+
+  mix-blend-mode: multiply;
+  opacity: .95;
 }
 
 /* ======================================================================
    ✅ CARD IMAGES (solo añade imágenes sin tocar HTML/JS)
-   - Si falta el archivo, se ve el “fallback” editorial de arriba.
+   - Si falta el archivo, se ve el “fallback” editorial.
    ====================================================================== */
 .card-cartelera .k-photo{
   background-image: url("assets/cards/cartelera.jpg");
@@ -616,17 +646,20 @@ img, video{ max-width: 100%; display: block; }
   background-repeat: no-repeat;
 }
 
+/* ======================================================================
+   TÍTULOS DE CARDS (NEGRO + legibilidad sin caja)
+   ====================================================================== */
 .k-card-title{
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
 
-  /* ✅ cambio pedido: títulos en ROJO CARMÍN */
-  color: var(--cooltura-title-accent);
+  /* ✅ pedido: volver a negro */
+  color: rgba(17,17,17,.96);
 
-  /* ✅ mejora: legibilidad sobre fondo complejo (sin caja) */
+  /* Legibilidad premium sin “pegatina” */
   text-shadow: var(--title-glow);
-  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.30);
+  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.28);
 }
 
 /* Base split (se mantiene) */
@@ -661,25 +694,24 @@ img, video{ max-width: 100%; display: block; }
   transform: translate(var(--alargar-title-tx), var(--alargar-title-ty));
 }
 
-/* ✅ En Alargar, ambos trozos siguen el ROJO y el peso editorial */
 .card-alargar .k-card-title--split .k-v{
   position: absolute;
   left: 0;
   bottom: 0;
-  transform: none;      /* lectura arriba→abajo solo aquí */
-  font-weight: 800;     /* ALARGAR en negrita */
-  color: var(--cooltura-title-accent);
+  transform: none;
+  font-weight: 800;
+  color: rgba(17,17,17,.96);
   text-shadow: var(--title-glow);
-  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.30);
+  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.28);
 }
 
 .card-alargar .k-card-title--split .k-h{
   position: absolute;
   left: 18px;
   bottom: 0;
-  color: var(--cooltura-title-accent);
+  color: rgba(17,17,17,.96);
   text-shadow: var(--title-glow);
-  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.30);
+  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.28);
 }
 
 /* ========================= POSICIONES (NO MOVER) ========================= */
@@ -721,14 +753,14 @@ img, video{ max-width: 100%; display: block; }
   .card-museos{ width: calc(var(--ninos-w) * .5); }
 }
 
-/* Focus visible */
+/* Focus visible (mantener accesibilidad) */
 .k-card:focus-visible .k-photo{
   outline: 2px solid rgba(17,17,17,.22);
   outline-offset: 4px;
 }
 
 /* ======================================================================
-   EFECTO PREMIUM: zoom + foco/desenfoque (EXACTO)
+   EFECTO PREMIUM: zoom + foco/desenfoque (EXACTO)  (NO TOCAR)
    ====================================================================== */
 .cooltura-mosaic.is-dim .k-card{
   opacity: .32;
@@ -743,13 +775,9 @@ img, video{ max-width: 100%; display: block; }
   z-index: 10;
 }
 
-.cooltura-mosaic.is-dim .k-card.is-active .k-photo{
-  box-shadow: 0 30px 82px rgba(0,0,0,.16);
-}
-
-#kMosaic:hover .k-card:hover .k-photo{
-  box-shadow: 0 30px 82px rgba(0,0,0,.16);
-}
+/* ✅ pedido: NINGUNA sombra en cards (también en active/hover) */
+.cooltura-mosaic.is-dim .k-card.is-active .k-photo{ box-shadow: none; }
+#kMosaic:hover .k-card:hover .k-photo{ box-shadow: none; }
 
 /* ======================================================================
    MODAL / OVERLAY (SIN display:none PARA ANIMAR)
@@ -929,7 +957,7 @@ img, video{ max-width: 100%; display: block; }
 
   .k-lg, .k-md, .k-sm, .k-xs{ width: 100%; }
 
-  /* ✅ KOOL/RT sigue en esquina (solo escalamos), sin pisar nada */
+  /* KOOL/RT sigue en esquina (solo escalamos) */
   .cooltura-kool{
     left: var(--cooltura-edge);
     transform: scale(.92);
