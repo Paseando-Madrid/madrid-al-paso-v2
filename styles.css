@@ -66,7 +66,7 @@
 
   /* ✅ Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
   --alargar-title-tx: -10px;
-  --alargar-title-ty: -14px;
+  --alargar-title-ty: -22px;
 }
 
 /* ======================================================================
@@ -457,7 +457,7 @@ img, video{ max-width: 100%; display: block; }
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 
-  transform: translateX(calc(-50% + var(--kool-nudge)));
+  transform: translateX(calc(-50% + 22px));
   transform-origin: top center;
 }
 
