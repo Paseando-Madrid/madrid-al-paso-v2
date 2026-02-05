@@ -74,6 +74,10 @@
   /* ✅ Color editorial (cards + KOOL/RT) -> ROJO CARMÍN */
   --cooltura-title-accent: #B1120A;        /* rojo carmín (alto contraste) */
   --cooltura-title-accent-ink: #8F0C07;    /* un pelín más profundo para el “metal” */
+
+  /* ✅ Micro-contraste premium para textos sobre fondo complejo (sin “caja”) */
+  --title-glow: 0 1px 0 rgba(255,255,255,.60), 0 10px 22px rgba(0,0,0,.12);
+  --title-stroke: 0.6px; /* muy sutil (si el navegador lo soporta) */
 }
 
 /* ======================================================================
@@ -587,6 +591,31 @@ img, video{ max-width: 100%; display: block; }
   transition: box-shadow 450ms ease;
 }
 
+/* ======================================================================
+   ✅ CARD IMAGES (solo añade imágenes sin tocar HTML/JS)
+   - Si falta el archivo, se ve el “fallback” editorial de arriba.
+   ====================================================================== */
+.card-cartelera .k-photo{
+  background-image: url("assets/cards/cartelera.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card-directo .k-photo{
+  background-image: url("assets/cards/directo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card-museos .k-photo{
+  background-image: url("assets/cards/museos.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .k-card-title{
   font-size: 15px;
   font-weight: 700;
@@ -594,6 +623,10 @@ img, video{ max-width: 100%; display: block; }
 
   /* ✅ cambio pedido: títulos en ROJO CARMÍN */
   color: var(--cooltura-title-accent);
+
+  /* ✅ mejora: legibilidad sobre fondo complejo (sin caja) */
+  text-shadow: var(--title-glow);
+  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.30);
 }
 
 /* Base split (se mantiene) */
@@ -636,6 +669,8 @@ img, video{ max-width: 100%; display: block; }
   transform: none;      /* lectura arriba→abajo solo aquí */
   font-weight: 800;     /* ALARGAR en negrita */
   color: var(--cooltura-title-accent);
+  text-shadow: var(--title-glow);
+  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.30);
 }
 
 .card-alargar .k-card-title--split .k-h{
@@ -643,6 +678,8 @@ img, video{ max-width: 100%; display: block; }
   left: 18px;
   bottom: 0;
   color: var(--cooltura-title-accent);
+  text-shadow: var(--title-glow);
+  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.30);
 }
 
 /* ========================= POSICIONES (NO MOVER) ========================= */
