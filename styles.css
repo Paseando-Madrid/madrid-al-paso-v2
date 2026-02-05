@@ -71,9 +71,9 @@
   --alargar-title-tx: -10px;
   --alargar-title-ty: -22px;
 
-  /* ✅ Color editorial para títulos (cards + KOOL/RT) */
-  --cooltura-title-blue: var(--cooltura-blue);
-  --cooltura-title-blue-ink: #2F6F9B; /* un pelín más profundo */
+  /* ✅ Color editorial (cards + KOOL/RT) -> ROJO CARMÍN */
+  --cooltura-title-accent: #B1120A;        /* rojo carmín (alto contraste) */
+  --cooltura-title-accent-ink: #8F0C07;    /* un pelín más profundo para el “metal” */
 }
 
 /* ======================================================================
@@ -472,7 +472,7 @@ img, video{ max-width: 100%; display: block; }
   transform-origin: top left;
 }
 
-/* ✅ KOOL/RT en azul manteniendo “satinado” */
+/* ✅ KOOL/RT en ROJO CARMÍN manteniendo “satinado” */
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
 .cooltura-kool .kool-l,
@@ -480,7 +480,7 @@ img, video{ max-width: 100%; display: block; }
 .cooltura-kool .kool-t{
   background-image:
     linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.10) 18%, rgba(0,0,0,.18) 58%, rgba(255,255,255,.10) 100%),
-    linear-gradient(180deg, var(--cooltura-title-blue-ink) 0%, var(--cooltura-title-blue-ink) 100%);
+    linear-gradient(180deg, var(--cooltura-title-accent-ink) 0%, var(--cooltura-title-accent-ink) 100%);
   background-blend-mode: screen, normal;
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
@@ -592,8 +592,8 @@ img, video{ max-width: 100%; display: block; }
   font-weight: 700;
   letter-spacing: -0.01em;
 
-  /* ✅ cambio pedido: títulos en azul */
-  color: var(--cooltura-title-blue);
+  /* ✅ cambio pedido: títulos en ROJO CARMÍN */
+  color: var(--cooltura-title-accent);
 }
 
 /* Base split (se mantiene) */
@@ -628,23 +628,21 @@ img, video{ max-width: 100%; display: block; }
   transform: translate(var(--alargar-title-tx), var(--alargar-title-ty));
 }
 
-/* ✅ En Alargar, ambos trozos siguen el azul y el peso editorial */
+/* ✅ En Alargar, ambos trozos siguen el ROJO y el peso editorial */
 .card-alargar .k-card-title--split .k-v{
   position: absolute;
   left: 0;
   bottom: 0;
   transform: none;      /* lectura arriba→abajo solo aquí */
   font-weight: 800;     /* ALARGAR en negrita */
-
-  color: var(--cooltura-title-blue);
+  color: var(--cooltura-title-accent);
 }
 
 .card-alargar .k-card-title--split .k-h{
   position: absolute;
   left: 18px;
   bottom: 0;
-
-  color: var(--cooltura-title-blue);
+  color: var(--cooltura-title-accent);
 }
 
 /* ========================= POSICIONES (NO MOVER) ========================= */
@@ -901,7 +899,6 @@ img, video{ max-width: 100%; display: block; }
     transform-origin: top left;
   }
 
-  /* Tura está oculto: no hace falta tocarlo aquí, pero no rompe nada */
   .cooltura-canvas::after{ display:none; }
 }
 
