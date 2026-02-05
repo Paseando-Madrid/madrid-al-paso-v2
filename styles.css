@@ -64,8 +64,9 @@
   --kool-l-scaleY: 1.16;
   --kool-l-drop: 0.18em;
 
-  /* ✅ Ajuste seguro SOLO para el ángulo de ALARGAR */
-  --alargar-angle-raise: -10px; /* ajusta luego: -8px a -12px */
+  /* ✅ AJUSTES FINOS SOLO PARA EL ÁNGULO DE ALARGAR (sin tocar la card) */
+  --alargar-angle-raise: -6px;  /* un poquito más arriba */
+  --alargar-angle-left: -8px;   /* un poquito a la izquierda (sale del borde) */
 }
 
 /* ======================================================================
@@ -610,26 +611,27 @@ img, video{ max-width: 100%; display: block; }
   line-height: 1;
   gap: 0;
 
-  /* ✅ Subir SOLO el ángulo (no toca la card) */
+  /* ✅ SOLO lo que pediste: un poquito arriba y un poquito a la izquierda */
   margin-top: var(--alargar-angle-raise);
+  margin-left: var(--alargar-angle-left);
 }
 
 .card-alargar .k-card-title--split .k-v{
   position: absolute;
   left: 0;
   bottom: 0;
+
+  /* ✅ Lectura vertical ARRIBA→ABAJO SOLO en ALARGAR (sin tocar las demás) */
+  transform: none;
+
+  /* ✅ ALARGAR en negrita como “EL PASEO” */
+  font-weight: 800;
 }
 
 .card-alargar .k-card-title--split .k-h{
   position: absolute;
   left: 18px;
   bottom: 0;
-}
-
-/* ✅ Lectura vertical ARRIBA→ABAJO SOLO en ALARGAR
-   (anulamos el rotate(180deg) que es global) */
-.card-alargar .k-card-title--split .k-v{
-  transform: none;
 }
 
 /* ========================= POSICIONES (NO MOVER) ========================= */
