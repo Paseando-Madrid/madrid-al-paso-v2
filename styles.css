@@ -64,9 +64,9 @@
   --kool-l-scaleY: 1.16;
   --kool-l-drop: 0.18em;
 
-  /* ✅ AJUSTES FINOS SOLO PARA EL ÁNGULO DE ALARGAR (sin tocar la card) */
-  --alargar-angle-raise: -6px;  /* un poquito más arriba */
-  --alargar-angle-left: -8px;   /* un poquito a la izquierda (sale del borde) */
+  /* ✅ Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
+  --alargar-title-tx: -10px;
+  --alargar-title-ty: -14px;
 }
 
 /* ======================================================================
@@ -602,7 +602,9 @@ img, video{ max-width: 100%; display: block; }
 
 .k-card-title--split .k-h{ font-weight: 800; }
 
-/* ✅ Solo para ALARGAR: ángulo recto (└) fuera de la card */
+/* ✅ Solo para ALARGAR: ángulo recto (└) fuera de la card
+   - Quitamos margin-top/margin-left (flujo) para que no “parezca” que no sube
+   - Usamos transform (visual) para subir y mover sin tocar hitbox */
 .card-alargar .k-card-title--split{
   position: relative;
   display: block;
@@ -611,9 +613,11 @@ img, video{ max-width: 100%; display: block; }
   line-height: 1;
   gap: 0;
 
-  /* ✅ SOLO lo que pediste: un poquito arriba y un poquito a la izquierda */
-  margin-top: var(--alargar-angle-raise);
-  margin-left: var(--alargar-angle-left);
+  /* ❌ fuera: margin-top / margin-left (lo quitamos) */
+  margin: 0;
+
+  /* ✅ forma correcta: mueve el ángulo sin cambiar el área clicable */
+  transform: translate(var(--alargar-title-tx), var(--alargar-title-ty));
 }
 
 .card-alargar .k-card-title--split .k-v{
@@ -621,10 +625,10 @@ img, video{ max-width: 100%; display: block; }
   left: 0;
   bottom: 0;
 
-  /* ✅ Lectura vertical ARRIBA→ABAJO SOLO en ALARGAR (sin tocar las demás) */
+  /* ✅ Lectura vertical ARRIBA→ABAJO SOLO en ALARGAR */
   transform: none;
 
-  /* ✅ ALARGAR en negrita como “EL PASEO” */
+  /* ✅ ALARGAR en negrita como el resto */
   font-weight: 800;
 }
 
