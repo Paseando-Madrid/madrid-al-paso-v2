@@ -39,8 +39,8 @@
   /* KOOL: centrado en X=64% */
   --kool-x: 64%;
 
-  /* ✅ (PUNTO 2) mover KOOL a la derecha de forma controlada */
-  --kool-nudge: 22px;
+  /* ✅ MEJORA #2: mover KOOL ART a la derecha SIN que lo pisen los @media */
+  --kool-nudge: 72px;
 
   /* Acercar ooL y RT a la K */
   --kool-tight: -0.10em;
@@ -62,9 +62,10 @@
   /* 🔑 referencia real: Niños = k-sm => width = var(--sq-md) */
   --ninos-w: var(--sq-md);
 
-  /* ✅ (PUNTO 1) L no roza la T (manteniendo L arriba) */
-  --kool-l-scaleY: 1.08;
-  --kool-l-drop: 0.12em;
+  /* ✅ MEJORA #1: L más arriba y SIN rozar la T (sin deformar el sistema) */
+  --kool-l-scaleY: 1.12;
+  --kool-l-drop: 0.18em;
+  --kool-l-lift: -0.14em; /* más negativo = sube más */
 
   /* ✅ Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
   --alargar-title-tx: -10px;
@@ -459,7 +460,7 @@ img, video{ max-width: 100%; display: block; }
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 
-  /* ✅ (PUNTO 2) nudge controlado por variable */
+  /* ✅ KOOL se mueve a la derecha con variable (no hardcode) */
   transform: translateX(calc(-50% + var(--kool-nudge)));
   transform-origin: top center;
 }
@@ -497,12 +498,12 @@ img, video{ max-width: 100%; display: block; }
   margin-left: var(--kool-tight);
 }
 
-/* L editorial */
+/* L editorial (✅ lift añadido para que NO roce la T) */
 .cooltura-kool .kool-l{
   text-transform: uppercase;
   position: relative;
   display: inline-block;
-  transform: translateY(var(--kool-l-drop)) scaleY(var(--kool-l-scaleY));
+  transform: translateY(calc(var(--kool-l-drop) + var(--kool-l-lift))) scaleY(var(--kool-l-scaleY));
   transform-origin: bottom center;
 }
 
@@ -606,8 +607,7 @@ img, video{ max-width: 100%; display: block; }
 .k-card-title--split .k-h{ font-weight: 800; }
 
 /* ✅ Solo para ALARGAR: ángulo recto (└) fuera de la card
-   - Quitamos margin-top/margin-left (flujo) para que no “parezca” que no sube
-   - Usamos transform (visual) para subir y mover sin tocar hitbox */
+   - transform mueve visualmente sin tocar hitbox */
 .card-alargar .k-card-title--split{
   position: relative;
   display: block;
@@ -615,11 +615,7 @@ img, video{ max-width: 100%; display: block; }
   height: 34px;
   line-height: 1;
   gap: 0;
-
-  /* ❌ fuera: margin-top / margin-left (lo quitamos) */
   margin: 0;
-
-  /* ✅ forma correcta: mueve el ángulo sin cambiar el área clicable */
   transform: translate(var(--alargar-title-tx), var(--alargar-title-ty));
 }
 
@@ -627,12 +623,8 @@ img, video{ max-width: 100%; display: block; }
   position: absolute;
   left: 0;
   bottom: 0;
-
-  /* ✅ Lectura vertical ARRIBA→ABAJO SOLO en ALARGAR */
-  transform: none;
-
-  /* ✅ ALARGAR en negrita como el resto */
-  font-weight: 800;
+  transform: none;      /* lectura arriba→abajo solo aquí */
+  font-weight: 800;     /* ALARGAR en negrita */
 }
 
 .card-alargar .k-card-title--split .k-h{
@@ -654,7 +646,7 @@ img, video{ max-width: 100%; display: block; }
   --pos-ty: -50%;
 }
 
-.card-expo{ left: 74%; top: 68%; }
+.card-expo{ left: 74%; top: 70%; }
 .card-museos{ left: 57%; top: 62%; }
 
 .card-ninos{
@@ -888,9 +880,10 @@ img, video{ max-width: 100%; display: block; }
 
   .k-lg, .k-md, .k-sm, .k-xs{ width: 100%; }
 
+  /* ✅ NO pisamos el nudge: lo respetamos y añadimos scale */
   .cooltura-kool{
     left: 50%;
-    transform: translateX(-50%) scale(.92);
+    transform: translateX(calc(-50% + var(--kool-nudge))) scale(.92);
     transform-origin: top center;
   }
 
