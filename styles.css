@@ -20,7 +20,7 @@
 
   /* COOLTURA */
   --ivory: #EFECDD;
-  --cooltura-blue: #3E7FAE;
+  --cooltura-blue: #3E7FAE;   /* azul base */
   --mustard: #C9A24A;
 
   --cooltura-edge: 14px;
@@ -36,10 +36,10 @@
   --k-line-color: rgba(0,0,0,.86);
   --k-line-overhang: 30px;
 
-  /* KOOL: centrado en X=64% */
+  /* KOOL: centrado en X=64% (se conserva por si lo recuperamos) */
   --kool-x: 64%;
 
-  /* ✅ MEJORA #2: mover KOOL ART a la derecha SIN que lo pisen los @media */
+  /* mover KOOL ART a la derecha (se conserva, pero ahora KOOL va anclado a esquina) */
   --kool-nudge: 72px;
 
   /* Acercar ooL y RT a la K */
@@ -62,14 +62,18 @@
   /* 🔑 referencia real: Niños = k-sm => width = var(--sq-md) */
   --ninos-w: var(--sq-md);
 
-  /* ✅ MEJORA #1: L más arriba y SIN rozar la T (sin deformar el sistema) */
+  /* L más arriba y SIN rozar la T */
   --kool-l-scaleY: 1.12;
   --kool-l-drop: 0.18em;
   --kool-l-lift: -0.14em; /* más negativo = sube más */
 
-  /* ✅ Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
+  /* Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
   --alargar-title-tx: -10px;
   --alargar-title-ty: -22px;
+
+  /* ✅ Color editorial para títulos (cards + KOOL/RT) */
+  --cooltura-title-blue: var(--cooltura-blue);
+  --cooltura-title-blue-ink: #2F6F9B; /* un pelín más profundo */
 }
 
 /* ======================================================================
@@ -410,7 +414,7 @@ img, video{ max-width: 100%; display: block; }
   -webkit-background-clip: text;
 }
 
-/* TURA */
+/* TURA (se mantiene por compatibilidad, pero queda oculto) */
 .cooltura-tura{
   position: absolute;
   top: var(--cooltura-edge);
@@ -427,6 +431,9 @@ img, video{ max-width: 100%; display: block; }
   user-select: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
+
+  /* ✅ cambio pedido: Tura fuera */
+  display: none;
 }
 
 .cooltura-tura .tura{
@@ -437,11 +444,11 @@ img, video{ max-width: 100%; display: block; }
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
 
-/* KOOL */
+/* KOOL (ahora ocupa el lugar de TURA: esquina superior izquierda) */
 .cooltura-kool{
   position: absolute;
   top: var(--cooltura-edge);
-  left: var(--kool-x);
+  left: var(--cooltura-edge);
   z-index: 7;
   margin: 0;
   padding: 0;
@@ -460,12 +467,12 @@ img, video{ max-width: 100%; display: block; }
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 
-  /* ✅ KOOL se mueve a la derecha con variable (no hardcode) */
-  transform: translateX(calc(-50% + var(--kool-nudge)));
-  transform-origin: top center;
+  /* ✅ anclado a esquina: no centrado */
+  transform: none;
+  transform-origin: top left;
 }
 
-/* Gradiente “metal negro” por letra */
+/* ✅ KOOL/RT en azul manteniendo “satinado” */
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
 .cooltura-kool .kool-l,
@@ -473,9 +480,9 @@ img, video{ max-width: 100%; display: block; }
 .cooltura-kool .kool-t{
   background-image:
     linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(255,255,255,.10) 18%, rgba(0,0,0,.18) 58%, rgba(255,255,255,.10) 100%),
-    linear-gradient(180deg, rgba(10,10,10,1) 0%, rgba(10,10,10,1) 100%);
+    linear-gradient(180deg, var(--cooltura-title-blue-ink) 0%, var(--cooltura-title-blue-ink) 100%);
   background-blend-mode: screen, normal;
-  filter: drop-shadow(0 1px 0 rgba(0,0,0,.12));
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
 
 /* K ocupa 2 líneas */
@@ -498,7 +505,7 @@ img, video{ max-width: 100%; display: block; }
   margin-left: var(--kool-tight);
 }
 
-/* L editorial (✅ lift añadido para que NO roce la T) */
+/* L editorial (lift añadido para que NO roce la T) */
 .cooltura-kool .kool-l{
   text-transform: uppercase;
   position: relative;
@@ -584,7 +591,9 @@ img, video{ max-width: 100%; display: block; }
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: rgba(17,17,17,.92);
+
+  /* ✅ cambio pedido: títulos en azul */
+  color: var(--cooltura-title-blue);
 }
 
 /* Base split (se mantiene) */
@@ -619,18 +628,23 @@ img, video{ max-width: 100%; display: block; }
   transform: translate(var(--alargar-title-tx), var(--alargar-title-ty));
 }
 
+/* ✅ En Alargar, ambos trozos siguen el azul y el peso editorial */
 .card-alargar .k-card-title--split .k-v{
   position: absolute;
   left: 0;
   bottom: 0;
   transform: none;      /* lectura arriba→abajo solo aquí */
   font-weight: 800;     /* ALARGAR en negrita */
+
+  color: var(--cooltura-title-blue);
 }
 
 .card-alargar .k-card-title--split .k-h{
   position: absolute;
   left: 18px;
   bottom: 0;
+
+  color: var(--cooltura-title-blue);
 }
 
 /* ========================= POSICIONES (NO MOVER) ========================= */
@@ -880,18 +894,14 @@ img, video{ max-width: 100%; display: block; }
 
   .k-lg, .k-md, .k-sm, .k-xs{ width: 100%; }
 
-  /* ✅ NO pisamos el nudge: lo respetamos y añadimos scale */
+  /* ✅ KOOL/RT sigue en esquina (solo escalamos), sin pisar nada */
   .cooltura-kool{
-    left: 50%;
-    transform: translateX(calc(-50% + var(--kool-nudge))) scale(.92);
-    transform-origin: top center;
-  }
-
-  .cooltura-tura{
+    left: var(--cooltura-edge);
     transform: scale(.92);
     transform-origin: top left;
   }
 
+  /* Tura está oculto: no hace falta tocarlo aquí, pero no rompe nada */
   .cooltura-canvas::after{ display:none; }
 }
 
