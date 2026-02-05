@@ -38,7 +38,9 @@
 
   /* KOOL: centrado en X=64% */
   --kool-x: 64%;
-  --kool-nudge: 0px;
+
+  /* ✅ (PUNTO 2) mover KOOL a la derecha de forma controlada */
+  --kool-nudge: 22px;
 
   /* Acercar ooL y RT a la K */
   --kool-tight: -0.10em;
@@ -60,9 +62,9 @@
   /* 🔑 referencia real: Niños = k-sm => width = var(--sq-md) */
   --ninos-w: var(--sq-md);
 
-  /* Ajuste fino de la L (editorial) */
-  --kool-l-scaleY: 1.12;
-  --kool-l-drop: 0.18em;
+  /* ✅ (PUNTO 1) L no roza la T (manteniendo L arriba) */
+  --kool-l-scaleY: 1.08;
+  --kool-l-drop: 0.12em;
 
   /* ✅ Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
   --alargar-title-tx: -10px;
@@ -457,7 +459,8 @@ img, video{ max-width: 100%; display: block; }
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 
-  transform: translateX(calc(-50% + 22px));
+  /* ✅ (PUNTO 2) nudge controlado por variable */
+  transform: translateX(calc(-50% + var(--kool-nudge)));
   transform-origin: top center;
 }
 
