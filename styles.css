@@ -70,9 +70,9 @@
   --title-glow: 0 1px 0 rgba(255,255,255,.62), 0 10px 22px rgba(0,0,0,.12);
   --title-stroke: 0.6px;
 
-  /* ✅ “Incrustado” Kultiveret (sin sombra): velo + micro-grano */
-  --card-embed-strength: .18; /* sube a .22 si quieres más “papel” */
-  --card-grain-alpha: .08;    /* micro grano muy sutil */
+  /* ✅ “Incrustado” Kultiveret (sin sombra): velo + micro-grano orgánico */
+  --card-embed-strength: .20; /* más incrustado (antes .18) */
+  --card-grain-alpha: .06;    /* grano más fino (antes .08) */
 }
 
 /* ======================================================================
@@ -388,7 +388,6 @@ img, video{ max-width: 100%; display: block; }
   isolation: isolate;
 }
 
-/* ✅ Quitamos la línea (era CSS) */
 .cooltura-canvas::after{ display:none; }
 
 /* ======================================================================
@@ -401,7 +400,6 @@ img, video{ max-width: 100%; display: block; }
   letter-spacing: -0.07em;
 }
 
-/* ✅ el clip/fill se aplica a las LETRAS */
 .cooltura-tura .tura,
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
@@ -413,7 +411,7 @@ img, video{ max-width: 100%; display: block; }
   -webkit-background-clip: text;
 }
 
-/* TURA (se mantiene por compatibilidad, pero queda oculto) */
+/* TURA oculto */
 .cooltura-tura{
   position: absolute;
   top: var(--cooltura-edge);
@@ -421,20 +419,17 @@ img, video{ max-width: 100%; display: block; }
   z-index: 6;
   margin: 0;
   padding: 0;
-
   font-size: var(--cooltura-h);
   line-height: .7;
   white-space: nowrap;
-
   pointer-events: none;
   user-select: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
-
   display: none;
 }
 
-/* KOOL (esquina superior izquierda) */
+/* KOOL/RT esquina superior izquierda */
 .cooltura-kool{
   position: absolute;
   top: var(--cooltura-edge);
@@ -461,7 +456,7 @@ img, video{ max-width: 100%; display: block; }
   transform-origin: top left;
 }
 
-/* ✅ KOOL/RT NEGRO satinado (sin “color guardado”) */
+/* KOOL/RT NEGRO satinado */
 .cooltura-kool .kool-k,
 .cooltura-kool .kool-o,
 .cooltura-kool .kool-l,
@@ -474,7 +469,6 @@ img, video{ max-width: 100%; display: block; }
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.10));
 }
 
-/* K ocupa 2 líneas */
 .cooltura-kool .kool-k{
   grid-column: 1;
   grid-row: 1 / span 2;
@@ -482,7 +476,6 @@ img, video{ max-width: 100%; display: block; }
   line-height: .7;
 }
 
-/* ooL arriba */
 .cooltura-kool .kool-ool{
   grid-column: 2;
   grid-row: 1;
@@ -494,7 +487,6 @@ img, video{ max-width: 100%; display: block; }
   margin-left: var(--kool-tight);
 }
 
-/* L editorial */
 .cooltura-kool .kool-l{
   text-transform: uppercase;
   position: relative;
@@ -503,7 +495,6 @@ img, video{ max-width: 100%; display: block; }
   transform-origin: bottom center;
 }
 
-/* RT debajo */
 .cooltura-kool .kool-rt{
   grid-column: 2;
   grid-row: 2;
@@ -521,7 +512,7 @@ img, video{ max-width: 100%; display: block; }
 .cooltura-kool .kool-spacer{ grid-column: 3; }
 
 /* ======================================================================
-   MOSAIC / CARDS (COLOCACIÓN + TAMAÑOS EXACTOS)
+   MOSAIC / CARDS
    ====================================================================== */
 .cooltura-mosaic{
   position: absolute;
@@ -563,47 +554,34 @@ img, video{ max-width: 100%; display: block; }
 .k-xs{ width: var(--sq-sm); }
 
 /* ======================================================================
-   ✅ K-PHOTO “KULTIVERET”: SIN SOMBRA, ESQUINA CUADRADA, INCRUSTADO
-   - No toca HTML/JS
-   - No bloquea hover/click (capas pointer-events:none)
+   K-PHOTO “KULTIVERET”: SIN SOMBRA, SIN SURCOS, CUADRADA, INCRUSTADA
    ====================================================================== */
 .k-photo{
   width: 100%;
   aspect-ratio: 1 / 1;
-
-  /* ✅ pedido: totalmente cuadrada */
   border-radius: 0;
-
   overflow: hidden;
-
-  /* Fallback editorial si falta imagen */
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.055), rgba(0,0,0,.018)),
-    repeating-linear-gradient(90deg, rgba(0,0,0,.055) 0 12px, rgba(0,0,0,.028) 12px 24px);
-
-  /* ✅ pedido: NINGUNA sombra */
-  box-shadow: none;
-
-  /* Mantener transición (pero sin sombras que “floten”) */
-  transition: filter 450ms ease;
   position: relative;
+
+  /* Fallback limpio (SIN repeating-linear “surcos”) */
+  background: linear-gradient(180deg, rgba(0,0,0,.045), rgba(0,0,0,.015));
+
+  box-shadow: none;
+  transition: filter 450ms ease;
 }
 
-/* ✅ Velo de integración (editorial) */
+/* Velo + micro-grano orgánico (no rayas) */
 .k-photo::after{
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
 
-  /* 1) “wash” muy suave para casar con el papel
-     2) micro grano con repeating-radial (no es una sombra, no flota)
-     3) un toque de viñeta mínima para “asentar” */
   background:
     linear-gradient(
       180deg,
       rgba(255,255,255, calc(var(--card-embed-strength) * .65)) 0%,
-      rgba(255,255,255, calc(var(--card-embed-strength) * .25)) 38%,
+      rgba(255,255,255, calc(var(--card-embed-strength) * .25)) 40%,
       rgba(0,0,0,        calc(var(--card-embed-strength) * .18)) 100%
     ),
     repeating-radial-gradient(
@@ -613,8 +591,8 @@ img, video{ max-width: 100%; display: block; }
     ),
     radial-gradient(
       120% 120% at 50% 50%,
-      rgba(0,0,0,.05) 0%,
-      rgba(0,0,0,0) 58%
+      rgba(0,0,0,.04) 0%,
+      rgba(0,0,0,0) 60%
     );
 
   mix-blend-mode: multiply;
@@ -622,8 +600,7 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* ======================================================================
-   ✅ CARD IMAGES (solo añade imágenes sin tocar HTML/JS)
-   - Si falta el archivo, se ve el “fallback” editorial.
+   CARD IMAGES
    ====================================================================== */
 .card-cartelera .k-photo{
   background-image: url("assets/cards/cartelera.jpg");
@@ -653,16 +630,11 @@ img, video{ max-width: 100%; display: block; }
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
-
-  /* ✅ pedido: volver a negro */
   color: rgba(17,17,17,.96);
-
-  /* Legibilidad premium sin “pegatina” */
   text-shadow: var(--title-glow);
   -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.28);
 }
 
-/* Base split (se mantiene) */
 .k-card-title--split{
   display: inline-flex;
   align-items: baseline;
@@ -681,8 +653,6 @@ img, video{ max-width: 100%; display: block; }
 
 .k-card-title--split .k-h{ font-weight: 800; }
 
-/* ✅ Solo para ALARGAR: ángulo recto (└) fuera de la card
-   - transform mueve visualmente sin tocar hitbox */
 .card-alargar .k-card-title--split{
   position: relative;
   display: block;
@@ -694,27 +664,30 @@ img, video{ max-width: 100%; display: block; }
   transform: translate(var(--alargar-title-tx), var(--alargar-title-ty));
 }
 
+.card-alargar .k-card-title--split .k-v,
+.card-alargar .k-card-title--split .k-h{
+  color: rgba(17,17,17,.96);
+  text-shadow: var(--title-glow);
+  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.28);
+}
+
 .card-alargar .k-card-title--split .k-v{
   position: absolute;
   left: 0;
   bottom: 0;
   transform: none;
   font-weight: 800;
-  color: rgba(17,17,17,.96);
-  text-shadow: var(--title-glow);
-  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.28);
 }
 
 .card-alargar .k-card-title--split .k-h{
   position: absolute;
   left: 18px;
   bottom: 0;
-  color: rgba(17,17,17,.96);
-  text-shadow: var(--title-glow);
-  -webkit-text-stroke: var(--title-stroke) rgba(255,255,255,.28);
 }
 
-/* ========================= POSICIONES (NO MOVER) ========================= */
+/* ======================================================================
+   POSICIONES (NO MOVER)
+   ====================================================================== */
 .card-cartelera{
   left: 6%;
   top: calc(var(--cooltura-edge) + (var(--cooltura-h) * 0.68) + 14px);
@@ -737,30 +710,35 @@ img, video{ max-width: 100%; display: block; }
   --pos-ty: -100%;
 }
 
+/* Directo mantiene margen derecho */
 .card-directo{
   left: auto;
   top: var(--cooltura-edge);
   right: var(--cooltura-edge);
 }
 
-/* ✅ Expo = 2/3 del tamaño actual (solo desktop) */
+/* ======================================================================
+   AJUSTES TAMAÑO ESPECÍFICOS DESKTOP
+   ====================================================================== */
 @media (min-width: 901px){
+  /* Expo = 2/3 */
   .card-expo{ width: calc(var(--sq-lg) * 0.6666667); }
-}
 
-/* ✅ Museos = mitad exacta de Niños (solo desktop) */
-@media (min-width: 901px){
+  /* Museos = mitad de Niños */
   .card-museos{ width: calc(var(--ninos-w) * .5); }
+
+  /* ✅ Directo: más pequeña sin perder margen */
+  .card-directo{ width: calc(var(--sq-xl) * 0.88); }
 }
 
-/* Focus visible (mantener accesibilidad) */
+/* Focus visible (accesibilidad) */
 .k-card:focus-visible .k-photo{
   outline: 2px solid rgba(17,17,17,.22);
   outline-offset: 4px;
 }
 
 /* ======================================================================
-   EFECTO PREMIUM: zoom + foco/desenfoque (EXACTO)  (NO TOCAR)
+   EFECTO PREMIUM: zoom + foco/desenfoque (NO TOCAR)
    ====================================================================== */
 .cooltura-mosaic.is-dim .k-card{
   opacity: .32;
@@ -786,11 +764,9 @@ img, video{ max-width: 100%; display: block; }
   position: fixed;
   inset: 0;
   z-index: 999;
-
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-
   transition: opacity 420ms var(--ease-premium);
 }
 
@@ -957,7 +933,6 @@ img, video{ max-width: 100%; display: block; }
 
   .k-lg, .k-md, .k-sm, .k-xs{ width: 100%; }
 
-  /* KOOL/RT sigue en esquina (solo escalamos) */
   .cooltura-kool{
     left: var(--cooltura-edge);
     transform: scale(.92);
@@ -1033,7 +1008,7 @@ img, video{ max-width: 100%; display: block; }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   .hero-video{ transform: none; }
-  .k-card, .k-photo, .k-backdrop, .k-modal, .k-sheet{ transition: none !important; }
+  .k-card, .k-backdrop, .k-modal, .k-sheet{ transition: none !important; }
   .cooltura-mosaic.is-dim .k-card{
     opacity: 1;
     filter: none;
