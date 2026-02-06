@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300,400,500&family=Inter:wght@300;400;500;600;700;800&family=Epilogue:wght@300;400;500;600;700;800&display=swap');
 
 /* ======================================================================
-   TOKENS / VARIABLES  (LIMPIO: sin rojos guardados, sin duplicados)
+   TOKENS / VARIABLES  (LIMPIO: sin duplicados)
    ====================================================================== */
 :root{
   --bg: #ffffff;
@@ -66,13 +66,25 @@
   /* ✅ Negro editorial unificado (KOOL/RT + títulos) */
   --cooltura-ink: rgba(10,10,10,1);
 
-  /* ✅ Legibilidad premium sobre fondo complejo (SIN caja) */
-  --title-glow: 0 1px 0 rgba(255,255,255,.62), 0 10px 22px rgba(0,0,0,.12);
+  /* ✅ Legibilidad premium sobre fondo complejo (SIN caja)
+     Ajuste: menos halo "UI" (sombra larga más corta/suave) */
+  --title-glow: 0 1px 0 rgba(255,255,255,.62), 0 6px 14px rgba(0,0,0,.08);
   --title-stroke: 0.6px;
 
-  /* ✅ “Incrustado” Kultiveret (sin sombra): velo + micro-grano orgánico */
-  --card-embed-strength: .20; /* más incrustado (antes .18) */
-  --card-grain-alpha: .06;    /* grano más fino (antes .08) */
+  /* ✅ “Incrustado” (PRO): velo + micro-grano orgánico sutil */
+  --card-embed-strength: .20;
+  --card-grain-alpha: .04; /* antes .06: menos patrón, más orgánico */
+
+  /* ✅ Mosaic focus tuning (Kultiveret-like) */
+  --dim-opacity: .32;
+  --dim-blur: 2px;         /* antes 2.8px */
+  --dim-scale: .985;       /* antes .97 */
+  --active-lift: -3px;     /* antes -8px */
+  --active-scale: 1.035;   /* antes 1.065 */
+
+  /* ✅ Overlay sheet sizing (ancho proporcional) */
+  --overlay-w: clamp(420px, 44vw, 620px);
+  --overlay-pad: 120px; /* margen vertical interno contra canvas */
 }
 
 /* ======================================================================
@@ -554,7 +566,7 @@ img, video{ max-width: 100%; display: block; }
 .k-xs{ width: var(--sq-sm); }
 
 /* ======================================================================
-   K-PHOTO “KULTIVERET”: SIN SOMBRA, SIN SURCOS, CUADRADA, INCRUSTADA
+   K-PHOTO: CUADRADA, INCRUSTADA (SIN SOMBRA)
    ====================================================================== */
 .k-photo{
   width: 100%;
@@ -563,14 +575,12 @@ img, video{ max-width: 100%; display: block; }
   overflow: hidden;
   position: relative;
 
-  /* Fallback limpio (SIN repeating-linear “surcos”) */
   background: linear-gradient(180deg, rgba(0,0,0,.045), rgba(0,0,0,.015));
-
   box-shadow: none;
   transition: filter 450ms ease;
 }
 
-/* Velo + micro-grano orgánico (no rayas) */
+/* Velo + micro-grano orgánico (sutil) */
 .k-photo::after{
   content: "";
   position: absolute;
@@ -587,7 +597,7 @@ img, video{ max-width: 100%; display: block; }
     repeating-radial-gradient(
       circle at 30% 20%,
       rgba(0,0,0, var(--card-grain-alpha)) 0 1px,
-      rgba(0,0,0, 0) 1px 3px
+      rgba(0,0,0, 0) 1px 4px
     ),
     radial-gradient(
       120% 120% at 50% 50%,
@@ -596,7 +606,7 @@ img, video{ max-width: 100%; display: block; }
     );
 
   mix-blend-mode: multiply;
-  opacity: .95;
+  opacity: .92;
 }
 
 /* ======================================================================
@@ -608,38 +618,30 @@ img, video{ max-width: 100%; display: block; }
   background-position: center;
   background-repeat: no-repeat;
 }
-
 .card-directo .k-photo{
   background-image: url("assets/cards/directo.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-
 .card-museos .k-photo{
   background-image: url("assets/cards/museos.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-
-/* ✅ ACTIVADO: Niños */
 .card-ninos .k-photo{
   background-image: url("assets/cards/ninos.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-
-/* ✅ ACTIVADO: Expo */
 .card-expo .k-photo{
   background-image: url("assets/cards/expo.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-
-/* ✅ ACTIVADO: Alargar el paseo */
 .card-alargar .k-photo{
   background-image: url("assets/cards/alargar.jpg");
   background-size: cover;
@@ -710,7 +712,7 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* ======================================================================
-   POSICIONES (NO MOVER)
+   POSICIONES (EDITABLES)
    ====================================================================== */
 .card-cartelera{
   left: 6%;
@@ -734,7 +736,6 @@ img, video{ max-width: 100%; display: block; }
   --pos-ty: -100%;
 }
 
-/* Directo mantiene margen derecho */
 .card-directo{
   left: auto;
   top: var(--cooltura-edge);
@@ -742,16 +743,11 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* ======================================================================
-   AJUSTES TAMAÑO ESPECÍFICOS DESKTOP
+   AJUSTES TAMAÑO ESPECÍFICOS DESKTOP (EDITABLES)
    ====================================================================== */
 @media (min-width: 901px){
-  /* Expo = 2/3 */
   .card-expo{ width: calc(var(--sq-lg) * 0.6666667); }
-
-  /* Museos = mitad de Niños */
   .card-museos{ width: calc(var(--ninos-w) * .5); }
-
-  /* ✅ Directo: más pequeña sin perder margen */
   .card-directo{ width: calc(var(--sq-xl) * 0.88); }
 }
 
@@ -762,27 +758,31 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* ======================================================================
-   EFECTO PREMIUM: zoom + foco/desenfoque (NO TOCAR)
+   EFECTO PREMIUM: zoom + foco/desenfoque (TUNED, sin romper)
    ====================================================================== */
 .cooltura-mosaic.is-dim .k-card{
-  opacity: .32;
-  filter: blur(2.8px) saturate(.90);
-  transform: translate(var(--pos-tx), var(--pos-ty)) scale(.97);
+  opacity: var(--dim-opacity);
+  filter: blur(var(--dim-blur)) saturate(.90);
+  transform: translate(var(--pos-tx), var(--pos-ty)) scale(var(--dim-scale));
 }
 
 .cooltura-mosaic.is-dim .k-card.is-active{
   opacity: 1;
   filter: none;
-  transform: translate(var(--pos-tx), var(--pos-ty)) translateY(-8px) scale(1.065);
+  transform:
+    translate(var(--pos-tx), var(--pos-ty))
+    translateY(var(--active-lift))
+    scale(var(--active-scale));
   z-index: 10;
 }
 
-/* ✅ pedido: NINGUNA sombra en cards (también en active/hover) */
+/* Pedido: NINGUNA sombra en cards */
 .cooltura-mosaic.is-dim .k-card.is-active .k-photo{ box-shadow: none; }
 #kMosaic:hover .k-card:hover .k-photo{ box-shadow: none; }
 
 /* ======================================================================
-   MODAL / OVERLAY (SIN display:none PARA ANIMAR)
+   MODAL / OVERLAY (rectangular + anclable + fondo fantasma)
+   Compatible con JS: --overlay-bg-url + left/top
    ====================================================================== */
 .k-modal{
   position: fixed;
@@ -807,23 +807,27 @@ img, video{ max-width: 100%; display: block; }
   opacity: 0;
   transition: opacity 520ms var(--ease-premium);
 }
-
 .k-modal.is-open .k-backdrop{ opacity: 1; }
 
 .k-sheet{
-  position: relative;
-  width: min(92vw, 960px);
-  max-height: min(82vh, 760px);
-  margin: min(8vh, 64px) auto;
-
-  background: #fff;
-  border-radius: 18px;
-  border: 1px solid rgba(0,0,0,.10);
-  box-shadow: 0 28px 90px rgba(0,0,0,.22);
+  /* JS ancla con left/top (viewport) */
+  position: absolute; /* antes relative */
+  left: 50%;
+  top: 10vh; /* fallback */
+  width: var(--overlay-w);
+  max-height: calc(var(--cool-hero-h) - var(--overlay-pad));
+  margin: 0;
   overflow: hidden;
 
+  --overlay-bg-url: none;
+
+  background: rgba(255,255,255,.92);
+  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,.10);
+  box-shadow: 0 18px 70px rgba(0,0,0,.18);
+
   opacity: 0;
-  transform: translateY(12px);
+  transform: translate(-50%, 12px);
   filter: blur(14px);
 
   transition:
@@ -834,8 +838,43 @@ img, video{ max-width: 100%; display: block; }
 
 .k-modal.is-open .k-sheet{
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(-50%, 0);
   filter: blur(0);
+}
+
+/* Fondo fantasma + velo marfil para legibilidad */
+.k-sheet::before{
+  content:"";
+  position:absolute;
+  inset:-30px;
+  background-image: var(--overlay-bg-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(22px) saturate(.92) contrast(.95);
+  opacity: .14;
+  transform: scale(1.06);
+  pointer-events:none;
+  z-index: 0;
+}
+
+.k-sheet::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(900px 520px at 30% 20%, rgba(255,255,255,.78) 0%, rgba(255,255,255,.54) 40%, rgba(255,255,255,.86) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.70) 0%, rgba(255,255,255,.92) 100%);
+  pointer-events:none;
+  z-index: 1;
+}
+
+/* Contenido por encima del fantasma */
+.k-close,
+.k-head,
+.k-body{
+  position: relative;
+  z-index: 2;
 }
 
 .k-close{
@@ -855,7 +894,7 @@ img, video{ max-width: 100%; display: block; }
 .k-head{
   padding: 30px 34px 18px;
   border-bottom: 1px solid rgba(0,0,0,.08);
-  background: #fff;
+  background: transparent; /* deja ver el velo */
 }
 
 .k-kicker{
@@ -891,7 +930,7 @@ img, video{ max-width: 100%; display: block; }
 .k-body{
   padding: 18px 34px 30px;
   overflow: auto;
-  max-height: calc(min(82vh, 760px) - 150px);
+  max-height: calc((var(--cool-hero-h) - var(--overlay-pad)) - 150px);
 }
 
 .k-list{ display: grid; gap: 14px; }
@@ -1014,7 +1053,7 @@ img, video{ max-width: 100%; display: block; }
   }
 }
 
-/* Modal móvil */
+/* Modal móvil: fullscreen, neutraliza anclaje */
 @media (max-width: 900px){
   .k-sheet{
     width: 100vw;
@@ -1022,6 +1061,10 @@ img, video{ max-width: 100%; display: block; }
     max-height: none;
     margin: 0;
     border-radius: 0;
+
+    left: 0 !important;
+    top: 0 !important;
+    transform: translate(0, 0) !important;
   }
   .k-body{ max-height: none; }
 }
