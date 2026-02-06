@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300,400,500&family=Inter:wght@300;400;500;600;700;800&family=Epilogue:wght@300;400;500;600;700;800&display=swap');
 
 /* ======================================================================
-   TOKENS / VARIABLES  (LIMPIO: sin duplicados)
+   TOKENS / VARIABLES  (LIMPIO: sin duplicados, sync con JS anclado)
    ====================================================================== */
 :root{
   --bg: #ffffff;
@@ -24,13 +24,13 @@
 
   --cooltura-edge: 14px;
 
-  /* CANVAS más alto (PC) */
+  /* CANVAS */
   --cool-hero-h: clamp(620px, 68vh, 980px);
 
   /* KOOL/RT responsive */
   --cooltura-h: clamp(108px, 9vw, 160px);
 
-  /* KOOL: (se conserva por si recuperamos centrado más adelante, NO se usa ahora) */
+  /* KOOL (reservado) */
   --kool-x: 64%;
   --kool-nudge: 72px;
 
@@ -59,32 +59,34 @@
   --kool-l-drop: 0.18em;
   --kool-l-lift: -0.14em;
 
-  /* Ajuste fino SOLO para ALARGAR (sin tocar la card / sin tocar hitbox) */
+  /* Ajuste fino SOLO para ALARGAR */
   --alargar-title-tx: -10px;
   --alargar-title-ty: -22px;
 
-  /* ✅ Negro editorial unificado (KOOL/RT + títulos) */
+  /* Negro editorial unificado */
   --cooltura-ink: rgba(10,10,10,1);
 
-  /* ✅ Legibilidad premium sobre fondo complejo (SIN caja)
-     Ajuste: menos halo "UI" (sombra larga más corta/suave) */
+  /* Legibilidad premium sobre fondo complejo (menos halo “UI”) */
   --title-glow: 0 1px 0 rgba(255,255,255,.62), 0 6px 14px rgba(0,0,0,.08);
   --title-stroke: 0.6px;
 
-  /* ✅ “Incrustado” (PRO): velo + micro-grano orgánico sutil */
+  /* “Incrustado” (PRO): velo + micro-grano orgánico sutil */
   --card-embed-strength: .20;
-  --card-grain-alpha: .04; /* antes .06: menos patrón, más orgánico */
+  --card-grain-alpha: .04;
 
-  /* ✅ Mosaic focus tuning (Kultiveret-like) */
+  /* Mosaic focus tuning (Kultiveret-like) */
   --dim-opacity: .32;
-  --dim-blur: 2px;         /* antes 2.8px */
-  --dim-scale: .985;       /* antes .97 */
-  --active-lift: -3px;     /* antes -8px */
-  --active-scale: 1.035;   /* antes 1.065 */
+  --dim-blur: 2px;
+  --dim-scale: .985;
+  --active-lift: -3px;
+  --active-scale: 1.035;
 
-  /* ✅ Overlay sheet sizing (ancho proporcional) */
+  /* Overlay sheet sizing (HOJA vertical: alto manda) */
   --overlay-w: clamp(420px, 44vw, 620px);
   --overlay-pad: 120px; /* margen vertical interno contra canvas */
+
+  /* Fondo fantasma overlay */
+  --overlay-ghost-opacity: .16; /* sube/baja aquí */
 }
 
 /* ======================================================================
@@ -400,8 +402,6 @@ img, video{ max-width: 100%; display: block; }
   isolation: isolate;
 }
 
-.cooltura-canvas::after{ display:none; }
-
 /* ======================================================================
    KOOL / TURA
    ====================================================================== */
@@ -463,9 +463,6 @@ img, video{ max-width: 100%; display: block; }
   user-select: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
-
-  transform: none;
-  transform-origin: top left;
 }
 
 /* KOOL/RT NEGRO satinado */
@@ -610,47 +607,17 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* ======================================================================
-   CARD IMAGES
+   CARD IMAGES  (EDITABLES: cambiar rutas sin tocar sistema)
    ====================================================================== */
-.card-cartelera .k-photo{
-  background-image: url("assets/cards/cartelera.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.card-directo .k-photo{
-  background-image: url("assets/cards/directo.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.card-museos .k-photo{
-  background-image: url("assets/cards/museos.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.card-ninos .k-photo{
-  background-image: url("assets/cards/ninos.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.card-expo .k-photo{
-  background-image: url("assets/cards/expo.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.card-alargar .k-photo{
-  background-image: url("assets/cards/alargar.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
+.card-cartelera .k-photo{ background: url("assets/cards/cartelera.jpg") center/cover no-repeat; }
+.card-directo   .k-photo{ background: url("assets/cards/directo.jpg")   center/cover no-repeat; }
+.card-museos    .k-photo{ background: url("assets/cards/museos.jpg")    center/cover no-repeat; }
+.card-ninos     .k-photo{ background: url("assets/cards/ninos.jpg")     center/cover no-repeat; }
+.card-expo      .k-photo{ background: url("assets/cards/expo.jpg")      center/cover no-repeat; }
+.card-alargar   .k-photo{ background: url("assets/cards/alargar.jpg")   center/cover no-repeat; }
 
 /* ======================================================================
-   TÍTULOS DE CARDS (NEGRO + legibilidad sin caja)
+   TÍTULOS DE CARDS
    ====================================================================== */
 .k-card-title{
   font-size: 15px;
@@ -781,8 +748,10 @@ img, video{ max-width: 100%; display: block; }
 #kMosaic:hover .k-card:hover .k-photo{ box-shadow: none; }
 
 /* ======================================================================
-   MODAL / OVERLAY (rectangular + anclable + fondo fantasma)
-   Compatible con JS: --overlay-bg-url + left/top
+   MODAL / OVERLAY
+   - HOJA VERTICAL (lectura normal)
+   - anclable por JS: left/top en viewport
+   - fondo fantasma por CSS var: --overlay-bg-url (inyectada por JS)
    ====================================================================== */
 .k-modal{
   position: fixed;
@@ -810,10 +779,10 @@ img, video{ max-width: 100%; display: block; }
 .k-modal.is-open .k-backdrop{ opacity: 1; }
 
 .k-sheet{
-  /* JS ancla con left/top (viewport) */
-  position: absolute; /* antes relative */
-  left: 50%;
-  top: 10vh; /* fallback */
+  /* 🔑 JS ancla con left/top => NO translateX */
+  position: absolute;
+  left: 0;            /* fallback (JS lo sobreescribe) */
+  top: 10vh;          /* fallback (JS lo sobreescribe) */
   width: var(--overlay-w);
   max-height: calc(var(--cool-hero-h) - var(--overlay-pad));
   margin: 0;
@@ -822,27 +791,40 @@ img, video{ max-width: 100%; display: block; }
   --overlay-bg-url: none;
 
   background: rgba(255,255,255,.92);
-  border-radius: 2px;
+  border-radius: 2px; /* hoja editorial */
   border: 1px solid rgba(0,0,0,.10);
   box-shadow: 0 18px 70px rgba(0,0,0,.18);
 
   opacity: 0;
-  transform: translate(-50%, 12px);
+  transform: translateY(12px);
   filter: blur(14px);
 
   transition:
     opacity 550ms var(--ease-premium),
     transform 700ms var(--ease-premium),
     filter var(--t-focus) var(--ease-premium);
+
+  will-change: transform, opacity, filter, left, top;
 }
 
 .k-modal.is-open .k-sheet{
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translateY(0);
   filter: blur(0);
 }
 
-/* Fondo fantasma + velo marfil para legibilidad */
+/* Swap suave (si en el futuro lo activas desde JS con .is-swap) */
+.k-sheet.is-swap{
+  transition:
+    opacity 320ms var(--ease-premium),
+    transform 420ms var(--ease-premium),
+    filter 520ms var(--ease-premium);
+  opacity: .92;
+  transform: translateY(8px);
+  filter: blur(8px);
+}
+
+/* Fondo fantasma + velo marfil */
 .k-sheet::before{
   content:"";
   position:absolute;
@@ -852,7 +834,7 @@ img, video{ max-width: 100%; display: block; }
   background-position: center;
   background-repeat: no-repeat;
   filter: blur(22px) saturate(.92) contrast(.95);
-  opacity: .14;
+  opacity: var(--overlay-ghost-opacity);
   transform: scale(1.06);
   pointer-events:none;
   z-index: 0;
@@ -870,7 +852,6 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* Contenido por encima del fantasma */
-.k-close,
 .k-head,
 .k-body{
   position: relative;
@@ -879,13 +860,14 @@ img, video{ max-width: 100%; display: block; }
 
 .k-close{
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 12px;
+  right: 12px;
+  z-index: 30; /* 🔑 blindaje click X */
   width: 36px;
   height: 36px;
   border-radius: 999px;
   border: 1px solid rgba(0,0,0,.10);
-  background: rgba(255,255,255,.88);
+  background: rgba(255,255,255,.92);
   cursor: pointer;
   font-size: 20px;
   line-height: 34px;
@@ -894,7 +876,7 @@ img, video{ max-width: 100%; display: block; }
 .k-head{
   padding: 30px 34px 18px;
   border-bottom: 1px solid rgba(0,0,0,.08);
-  background: transparent; /* deja ver el velo */
+  background: transparent;
 }
 
 .k-kicker{
@@ -928,6 +910,8 @@ img, video{ max-width: 100%; display: block; }
 }
 
 .k-body{
+  position: relative;
+  z-index: 2;
   padding: 18px 34px 30px;
   overflow: auto;
   max-height: calc((var(--cool-hero-h) - var(--overlay-pad)) - 150px);
@@ -1001,8 +985,6 @@ img, video{ max-width: 100%; display: block; }
     transform: scale(.92);
     transform-origin: top left;
   }
-
-  .cooltura-canvas::after{ display:none; }
 }
 
 @media (max-width: 700px){
@@ -1064,7 +1046,7 @@ img, video{ max-width: 100%; display: block; }
 
     left: 0 !important;
     top: 0 !important;
-    transform: translate(0, 0) !important;
+    transform: translateY(0) !important;
   }
   .k-body{ max-height: none; }
 }
