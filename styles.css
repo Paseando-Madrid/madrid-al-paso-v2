@@ -639,6 +639,14 @@ img, video{ max-width: 100%; display: block; }
   background-repeat: no-repeat;
 }
 
+/* ✅ ACTIVADO: Alargar el paseo */
+.card-alargar .k-photo{
+  background-image: url("assets/cards/alargar.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 /* ======================================================================
    TÍTULOS DE CARDS (NEGRO + legibilidad sin caja)
    ====================================================================== */
