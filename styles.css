@@ -623,6 +623,22 @@ img, video{ max-width: 100%; display: block; }
   background-repeat: no-repeat;
 }
 
+/* ✅ ACTIVADO: Niños */
+.card-ninos .k-photo{
+  background-image: url("assets/cards/ninos.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ✅ ACTIVADO: Expo */
+.card-expo .k-photo{
+  background-image: url("assets/cards/expo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 /* ======================================================================
    TÍTULOS DE CARDS (NEGRO + legibilidad sin caja)
    ====================================================================== */
