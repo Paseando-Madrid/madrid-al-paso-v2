@@ -81,15 +81,17 @@
   --active-lift: -3px;
   --active-scale: 1.035;
 
-  /* Overlay sheet sizing */
-  --overlay-w: clamp(420px, 44vw, 620px);
-  --overlay-pad: 120px; /* margen vertical interno contra canvas */
+  /* ✅ OVERLAY WIDTH (más estrecho = “la mitad” visual) */
+  --overlay-w: clamp(360px, 30vw, 480px);
+
+  /* Overlay vertical padding contra canvas */
+  --overlay-pad: 120px;
 
   /* ✅ Opción C: hoja vertical garantizada pero variable por contenido */
-  --overlay-min-h: clamp(440px, calc(var(--cool-hero-h) * 0.62), calc(var(--cool-hero-h) - 220px));
+  --overlay-min-h: clamp(420px, calc(var(--cool-hero-h) * 0.58), calc(var(--cool-hero-h) - 240px));
 
-  /* Fondo fantasma overlay */
-  --overlay-ghost-opacity: .20; /* antes .16 */
+  /* ✅ Fondo fantasma overlay (más visible) */
+  --overlay-ghost-opacity: .24;
 }
 
 /* ======================================================================
@@ -752,10 +754,6 @@ img, video{ max-width: 100%; display: block; }
 
 /* ======================================================================
    MODAL / OVERLAY
-   - HOJA VERTICAL (lectura normal)
-   - anclable por JS: left/top en viewport
-   - fondo fantasma por CSS var: --overlay-bg-url (inyectada por JS)
-   - ✅ Opción C: altura variable (contenido) pero “siempre hoja” (min-height)
    ====================================================================== */
 .k-modal{
   position: fixed;
@@ -783,17 +781,16 @@ img, video{ max-width: 100%; display: block; }
 .k-modal.is-open .k-backdrop{ opacity: 1; }
 
 .k-sheet{
-  /* 🔑 JS ancla con left/top => NO translateX */
   position: absolute;
-  left: 0;            /* fallback (JS lo sobreescribe) */
-  top: 10vh;          /* fallback (JS lo sobreescribe) */
+  left: 0;            /* fallback */
+  top: 10vh;          /* fallback */
   width: var(--overlay-w);
 
   /* ✅ Opción C: variable por contenido, pero nunca “horizontal” */
   min-height: var(--overlay-min-h);
   max-height: calc(var(--cool-hero-h) - var(--overlay-pad));
 
-  /* ✅ layout hoja */
+  /* ✅ layout hoja (scroll interno real) */
   display: flex;
   flex-direction: column;
 
@@ -802,9 +799,9 @@ img, video{ max-width: 100%; display: block; }
 
   --overlay-bg-url: none;
 
-  /* un pelín menos opaco para dejar respirar el fantasma */
-  background: rgba(255,255,255,.88);
-  border-radius: 2px; /* hoja editorial */
+  /* deja respirar el fantasma */
+  background: rgba(255,255,255,.86);
+  border-radius: 2px;
   border: 1px solid rgba(0,0,0,.10);
   box-shadow: 0 18px 70px rgba(0,0,0,.18);
 
@@ -826,7 +823,6 @@ img, video{ max-width: 100%; display: block; }
   filter: blur(0);
 }
 
-/* Swap suave (si en el futuro lo activas desde JS con .is-swap) */
 .k-sheet.is-swap{
   transition:
     opacity 320ms var(--ease-premium),
@@ -837,15 +833,14 @@ img, video{ max-width: 100%; display: block; }
   filter: blur(8px);
 }
 
-/* Fondo fantasma + velo marfil */
+/* ✅ Fantasma robusto (usa background completo) */
 .k-sheet::before{
   content:"";
   position:absolute;
   inset:-30px;
-  background-image: var(--overlay-bg-url);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+
+  background: var(--overlay-bg-url) center/cover no-repeat;
+
   filter: blur(22px) saturate(.92) contrast(.95);
   opacity: var(--overlay-ghost-opacity);
   transform: scale(1.06);
@@ -853,18 +848,18 @@ img, video{ max-width: 100%; display: block; }
   z-index: 0;
 }
 
+/* ✅ Velo menos opaco (no mata el fantasma) */
 .k-sheet::after{
   content:"";
   position:absolute;
   inset:0;
   background:
-    radial-gradient(900px 520px at 30% 20%, rgba(255,255,255,.66) 0%, rgba(255,255,255,.44) 42%, rgba(255,255,255,.78) 100%),
-    linear-gradient(180deg, rgba(255,255,255,.58) 0%, rgba(255,255,255,.86) 100%);
+    radial-gradient(900px 520px at 30% 20%, rgba(255,255,255,.58) 0%, rgba(255,255,255,.36) 42%, rgba(255,255,255,.74) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.52) 0%, rgba(255,255,255,.84) 100%);
   pointer-events:none;
   z-index: 1;
 }
 
-/* Contenido por encima del fantasma */
 .k-head,
 .k-body{
   position: relative;
@@ -875,7 +870,7 @@ img, video{ max-width: 100%; display: block; }
   position: absolute;
   top: 12px;
   right: 12px;
-  z-index: 30; /* 🔑 blindaje click X */
+  z-index: 30;
   width: 36px;
   height: 36px;
   border-radius: 999px;
@@ -922,13 +917,13 @@ img, video{ max-width: 100%; display: block; }
   color: rgba(17,17,17,.58);
 }
 
-/* ✅ flex child: ocupa el resto y scrollea dentro */
+/* ✅ flex child: ocupa el resto y scrollea */
 .k-body{
   padding: 18px 34px 30px;
   overflow: auto;
   flex: 1;
-  min-height: 0; /* clave para scroll en flex */
-  max-height: none; /* antes limitabas; ahora manda la hoja */
+  min-height: 0;
+  max-height: none;
 }
 
 .k-list{ display: grid; gap: 14px; }
@@ -1049,7 +1044,7 @@ img, video{ max-width: 100%; display: block; }
   }
 }
 
-/* Modal móvil: fullscreen, neutraliza anclaje */
+/* Modal móvil: fullscreen */
 @media (max-width: 900px){
   .k-sheet{
     width: 100vw;
