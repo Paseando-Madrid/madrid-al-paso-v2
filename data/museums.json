@@ -1,1 +1,54 @@
+{
+  "updatedAt": "2026-02-08",
+  "items": [
+    {
+      "name": "Museo del Prado",
+      "hours": "L–S 10:00–20:00 · D/Fest 10:00–19:00",
+      "free": "L–S 18:00–20:00 · D/Fest 17:00–19:00",
+      "address": "Paseo del Prado, s/n"
+    },
+    {
+      "name": "Museo Reina Sofía",
+      "hours": "L y Mi–S 10:00–21:00 · Dom 10:00–14:30 · Mar cerrado",
+      "free": "L, Mi–S 19:00–21:00 · Dom 12:30–14:30",
+      "address": "Calle de Santa Isabel, 52"
+    },
+    {
+      "name": "Museo Thyssen-Bornemisza",
+      "hours": "Mar–Dom 10:00–19:00 · L 12:00–16:00",
+      "free": "Lunes 12:00–16:00 · Sábados 21:00–23:00",
+      "address": "Paseo del Prado, 8"
+    },
+    {
+      "name": "Museo Lázaro Galdiano",
+      "hours": "Mar–Dom 9:30–15:00",
+      "free": "Martes",
+      "address": "Calle Serrano, 122"
+    },
+    {
+      "name": "Museo Cerralbo",
+      "hours": "Mar–Sáb 9:30–20:30 · Dom 10:00–15:00",
+      "free": "Jueves tarde · Domingos",
+      "address": "Calle Ventura Rodríguez, 17"
+    },
+    {
+      "name": "Museo del Traje",
+      "hours": "Mar–Sáb 9:30–19:00 · Dom 10:00–15:00",
+      "free": "Sábados desde 14:00 · Domingos",
+      "address": "Av. de Juan de Herrera, 2"
+    },
+    {
+      "name": "Museo Nacional de Artes Decorativas",
+      "hours": "Mar–Sáb 9:30–15:00 · Jueves hasta 20:00 · Dom 10:00–15:00",
+      "free": "Jueves tarde · Domingos",
+      "address": "Calle Montalbán, 12"
+    },
+    {
+      "name": "Estadio Santiago Bernabéu",
+      "hours": "Visitas según calendario del club",
+      "free": "No",
+      "address": "Av. de Concha Espina, 1"
+    }
+  ]
+}
 
