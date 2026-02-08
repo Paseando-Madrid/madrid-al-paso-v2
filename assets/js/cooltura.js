@@ -25,13 +25,14 @@ if (!modal || !mosaic) {
   const canvas = document.querySelector('.cooltura-canvas');
 
   // ---------- CONFIG (NO TOCAR CONTRATO) ----------
+  // 🔑 Claves canónicas: cartelera, ninos, alargar, museos, expo, directo
   const CFG = {
-    directo:   { title:"Conciertos esta semana",        deck:"Una selección breve para escuchar Madrid en directo.",                json:"data/agenda-weekly.json",  mode:"items" },
-    ninos:     { title:"Disfrutar Madrid con niños",    deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",     json:"data/kids-weekly.json",    mode:"items" },
-    expos:     { title:"Exposiciones de este mes",      deck:"Salas, museos y montajes que merecen la visita.",                     json:"data/agenda-monthly.json", mode:"group", group:"exhibitions" },
-    cartelera: { title:"Obras destacadas",              deck:"Teatro en cartel: propuestas con criterio para este mes.",            json:"data/agenda-monthly.json", mode:"group", group:"theatre" },
-    museo:     { title:"Horarios de museos",            deck:"Horarios, días clave y notas útiles para planificar.",                json:"data/museums.json",        mode:"items" },
-    alarga:    { title:"Para alargar el paseo",         deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",       json:"data/leisure.json",        mode:"items" }
+    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",          json:"data/agenda-weekly.json",  mode:"items" },
+    ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.", json:"data/kids-weekly.json",    mode:"items" },
+    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",               json:"data/agenda-monthly.json", mode:"group", group:"exhibitions" },
+    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",      json:"data/agenda-monthly.json", mode:"group", group:"theatre" },
+    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",          json:"data/museums.json",        mode:"items" },
+    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.", json:"data/leisure.json",        mode:"items" }
   };
 
   // ---------- DIM / ACTIVE (NO CAMBIAR EL EFECTO) ----------
@@ -75,7 +76,6 @@ if (!modal || !mosaic) {
   let anchorCard = null;
 
   function getCardBgUrl(cardEl){
-    // Robusto: lee la propiedad exacta (evita "none" por overrides raros)
     const photo = cardEl?.querySelector('.k-photo');
     if(!photo) return null;
 
@@ -103,8 +103,6 @@ if (!modal || !mosaic) {
 
     const cRect = canvas.getBoundingClientRect();
     const aRect = cardEl.getBoundingClientRect();
-
-    // Importante: medir sheet "real" (aunque esté con blur/opacidad)
     const sRect = sheet.getBoundingClientRect();
 
     const ax = aRect.left + aRect.width / 2;
@@ -113,24 +111,20 @@ if (!modal || !mosaic) {
     let left = ax - (sRect.width  / 2);
     let top  = ay - (sRect.height / 2);
 
-    // Nudge editorial para sensación “desplegar”
     top -= 10;
 
-    // Clamp dentro del canvas
     const pad = 14;
     const minLeft = cRect.left + pad;
     const maxLeft = cRect.right - pad - sRect.width;
     const minTop  = cRect.top  + pad;
     const maxTop  = cRect.bottom - pad - sRect.height;
 
-    // Si el sheet es más grande que el canvas en algún eje, evitamos NaN/flip
     const safeMaxLeft = Math.max(minLeft, maxLeft);
     const safeMaxTop  = Math.max(minTop,  maxTop);
 
     left = clamp(left, minLeft, safeMaxLeft);
     top  = clamp(top,  minTop,  safeMaxTop);
 
-    // NOTA: sheet debe ser position:absolute (lo hará el CSS)
     sheet.style.left = `${left}px`;
     sheet.style.top  = `${top}px`;
   }
@@ -139,7 +133,6 @@ if (!modal || !mosaic) {
     anchorCard = cardEl;
     setOverlayBgFromCard(cardEl);
 
-    // Si ya está abierto, reancla en el próximo frame (por si cambia alto)
     if(modal.classList.contains('is-open')){
       requestAnimationFrame(() => positionSheetToCard(cardEl));
     }
@@ -153,7 +146,6 @@ if (!modal || !mosaic) {
 
   function endSwap(){
     if(!sheet) return;
-    // doble RAF = asegura que el navegador aplique transiciones con contenido nuevo
     requestAnimationFrame(() => {
       requestAnimationFrame(() => sheet.classList.remove('is-swap'));
     });
@@ -165,19 +157,16 @@ if (!modal || !mosaic) {
       modal.setAttribute('aria-hidden','false');
       document.body.style.overflow = 'hidden';
 
-      // Reflow
       void modal.offsetWidth;
 
       requestAnimationFrame(() => {
         modal.classList.add('is-open');
 
-        // Posiciona antes de enfocar para evitar “salto”
         if(anchorCard) positionSheetToCard(anchorCard);
 
         if(closeBtn) closeBtn.focus({ preventScroll: true });
       });
     } else {
-      // ya abierto: reancla sin reanimar el modal completo
       if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
       if(closeBtn) closeBtn.focus({ preventScroll: true });
     }
@@ -191,7 +180,6 @@ if (!modal || !mosaic) {
     if (kList) kList.innerHTML = '';
     clearActive();
 
-    // Limpieza overlay
     anchorCard = null;
     if(sheet){
       sheet.classList.remove('is-swap');
@@ -201,7 +189,6 @@ if (!modal || !mosaic) {
     }
   }
 
-  // Cierre: redundante a propósito (a prueba de fallos)
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
   modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
 
@@ -209,7 +196,6 @@ if (!modal || !mosaic) {
     if(e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
   });
 
-  // Reposiciona en resize/scroll si está abierto
   window.addEventListener('resize', () => {
     if(modal.classList.contains('is-open') && anchorCard){
       requestAnimationFrame(() => positionSheetToCard(anchorCard));
@@ -265,7 +251,6 @@ if (!modal || !mosaic) {
     const cfg = CFG[key];
     if(!cfg) return;
 
-    // Swap suave (solo contenido)
     beginSwap();
 
     kTitle.textContent = cfg.title;
@@ -321,11 +306,10 @@ if (!modal || !mosaic) {
 
       setActiveCard(btn);
 
-      // ancla + bg fantasma (sin tocar automatización)
       syncOverlayToCard(btn);
 
-      // automatización intacta
-      loadAndRender(btn.dataset.open);
+      const family = btn.dataset.family;
+      loadAndRender(family);
     });
   });
 
