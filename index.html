@@ -1,1 +1,258 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paseando Madrid</title>
+
+  <meta name="description" content="Free tours culturales en Madrid para descubrir la historia, el arte y la vida de la ciudad paso a paso. Paseos guiados donde la ciudad forma parte del camino." />
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Preload del vídeo (OK) -->
+  <link rel="preload" as="video" href="assets/video/hero.mp4" type="video/mp4" />
+
+  <!-- Si algún día subes un poster real, descomenta esto y añade el archivo:
+       assets/video/hero-poster.jpg -->
+  <!-- <link rel="preload" as="image" href="assets/video/hero-poster.jpg" /> -->
+</head>
+
+<body>
+
+  <header class="site-header" id="inicio">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="Paseando Madrid, inicio">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-word">Paseando Madrid</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Navegación principal">
+        <a class="nav-link" href="#inicio">Inicio</a>
+        <a class="nav-link" href="#free-tours">Free tours</a>
+        <a class="nav-link" href="#tours-a-medida">Tours a medida</a>
+        <a class="nav-link" href="#quienes">Quiénes somos</a>
+        <a class="nav-link" href="#que-hacer">Qué hacer en Madrid</a>
+        <a class="nav-link" href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="home-hero" aria-label="Hero">
+      <div class="hero-frame hero-frame--full">
+
+        <video
+          class="hero-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-hidden="true"
+        >
+          <source src="assets/video/hero.mp4" type="video/mp4" />
+          Tu navegador no soporta vídeo HTML5.
+        </video>
+
+        <div class="hero-overlay" aria-hidden="true"></div>
+
+        <div class="container">
+          <div class="hero-copy">
+            <h1 class="hero-title">Madrid, contada paso a paso.</h1>
+
+            <p class="hero-subtitle">
+              Free tours culturales para hacer de la ciudad parte del camino,
+              entre historia, arte y vida.
+            </p>
+
+            <div class="hero-actions" aria-label="Acciones principales">
+              <a class="hero-cta" href="#free-tours">Comenzar el paseo →</a>
+              <a class="hero-cta hero-cta--ghost" href="#que-hacer">Cooltura →</a>
+            </div>
+
+            <p class="hero-proof" aria-label="Valoración de opiniones">
+              <em>Lo que dicen de nosotros</em>
+              <span class="hero-proof-sep" aria-hidden="true">·</span>
+              <span class="hero-proof-star" aria-hidden="true">★</span>
+              <strong class="hero-proof-score">4.9</strong>
+              <a class="hero-proof-link" href="#opiniones">Ver opiniones</a>
+            </p>
+          </div>
+        </div>
+
+        <noscript>
+          <style>
+            .hero-video{ display:none !important; }
+            .hero-frame{
+              background-image: url("assets/video/hero-poster.jpg");
+              background-size: cover;
+              background-position: center;
+            }
+          </style>
+        </noscript>
+
+      </div>
+    </section>
+
+    <section class="section" id="free-tours" aria-label="Free tours">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">Free tours</h2>
+          <p class="section-lead">Aquí irá la sección de familias (carruseles) en el siguiente paso.</p>
+        </div>
+        <div class="placeholder">
+          <p><strong>OK:</strong> si ves esto al bajar, el hero + header están bien.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="tours-a-medida" aria-label="Tours a medida">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">Tours a medida</h2>
+          <p class="section-lead">Placeholder para mantener estructura.</p>
+        </div>
+        <div class="placeholder"><p>Contenido a medida aquí.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="quienes" aria-label="Quiénes somos">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">Quiénes somos</h2>
+          <p class="section-lead">Placeholder para mantener estructura.</p>
+        </div>
+        <div class="placeholder"><p>Texto editorial + foto (opcional) aquí.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="opiniones" aria-label="Opiniones">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">Opiniones</h2>
+          <p class="section-lead">Aquí mostraremos reseñas reales (Google/Tripadvisor) con diseño editorial.</p>
+        </div>
+        <div class="placeholder"><p>Bloque de reseñas aquí.</p></div>
+      </div>
+    </section>
+
+    <section class="section-quehacer" id="que-hacer" aria-label="Cooltura">
+      <h2 class="sr-only">Qué hacer en Madrid</h2>
+
+      <div class="cooltura-canvas" role="region" aria-label="Cooltura: qué hacer en Madrid">
+
+        <div class="cooltura-tura" aria-hidden="true">
+          <span class="tura">Tura</span>
+        </div>
+
+        <div class="cooltura-kool" aria-hidden="true">
+          <span class="kool-k">K</span>
+          <span class="kool-ool">
+            <span class="kool-o">o</span><span class="kool-o">o</span><span class="kool-l">L</span>
+          </span>
+          <span class="kool-rt">
+            <span class="kool-r">r</span><span class="kool-t">t</span><span class="kool-spacer" aria-hidden="true"></span>
+          </span>
+        </div>
+
+        <div class="cooltura-mosaic" id="kMosaic" aria-label="Selección Cooltura">
+
+          <button class="k-card k-lg card-directo" type="button" data-family="directo" aria-label="En directo">
+            <div class="k-photo" aria-hidden="true"></div>
+            <span class="k-card-title">En directo</span>
+          </button>
+
+          <button class="k-card k-lg card-cartelera" type="button" data-family="cartelera" aria-label="Cartelera">
+            <div class="k-photo" aria-hidden="true"></div>
+            <span class="k-card-title">Cartelera</span>
+          </button>
+
+          <button class="k-card k-md card-expo" type="button" data-family="expo" aria-label="Expo">
+            <div class="k-photo" aria-hidden="true"></div>
+            <span class="k-card-title">Expo</span>
+          </button>
+
+          <button class="k-card k-md card-alargar" type="button" data-family="alargar" aria-label="Alargar el paseo">
+            <div class="k-photo" aria-hidden="true"></div>
+            <span class="k-card-title k-card-title--split" aria-hidden="true">
+              <span class="k-v">Alargar</span>
+              <span class="k-h">el paseo</span>
+            </span>
+          </button>
+
+          <button class="k-card k-md card-museos" type="button" data-family="museos" aria-label="Museos">
+            <div class="k-photo" aria-hidden="true"></div>
+            <span class="k-card-title">Museos</span>
+          </button>
+
+          <button class="k-card k-sm card-ninos" type="button" data-family="ninos" aria-label="Con niños">
+            <div class="k-photo" aria-hidden="true"></div>
+            <span class="k-card-title">Con niños</span>
+          </button>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" id="contacto" aria-label="Contacto">
+    <div class="container footer-inner">
+      <p class="footer-brand">Paseando Madrid</p>
+      <p class="footer-note">Contacto: <a href="mailto:info@paseandomadrid.com">info@paseandomadrid.com</a></p>
+    </div>
+  </footer>
+
+  <!-- ===========================
+       MODAL / OVERLAY Cooltura
+       + mejoras: ghost real + templates para render limpio
+       =========================== -->
+  <div class="k-modal" id="kModal" aria-hidden="true">
+    <div class="k-backdrop" data-close></div>
+
+    <article class="k-sheet" role="dialog" aria-modal="true" aria-label="Información">
+      <!-- Ghost real (la imagen de la card clicada se inyecta vía CSS var en JS) -->
+      <div class="k-sheet-ghost" aria-hidden="true"></div>
+
+      <button class="k-close" type="button" data-close aria-label="Cerrar">×</button>
+
+      <header class="k-head">
+        <p class="k-kicker">Qué hacer en Madrid</p>
+        <h3 class="k-modal-title" id="kTitle">—</h3>
+        <p class="k-deck" id="kDeck">—</p>
+        <p class="k-meta" id="kMeta">—</p>
+      </header>
+
+      <div class="k-body">
+        <div class="k-list" id="kList"></div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Templates: el JS los clona para evitar HTML a mano (y meter 📍 siempre igual) -->
+  <template id="tpl-pin">
+    <a class="pm-pin" href="" target="_blank" rel="noopener noreferrer" aria-label="Ver ubicación en Google Maps">
+      <span class="pm-pin__icon" aria-hidden="true">📍</span>
+    </a>
+  </template>
+
+  <template id="tpl-museo">
+    <article class="m-item">
+      <h4 class="m-title"><strong class="m-title-strong"></strong></h4>
+      <p class="m-row m-hours"></p>
+      <p class="m-row m-free"></p>
+      <p class="m-row m-addr">
+        <span class="m-addr-text"></span>
+        <span class="m-addr-pin"></span>
+      </p>
+    </article>
+  </template>
+
+  <!-- JS externo (Cooltura) -->
+  <script src="assets/js/cooltura.js" defer></script>
+
+</body>
+</html>
 
