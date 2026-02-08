@@ -1,1 +1,47 @@
+{
+  "updatedAt": "2026-02-08",
+  "city": "Madrid",
+  "venues": [
+    {
+      "name": "La Riviera",
+      "tier": "A",
+      "tags": ["rock", "pop", "electronica", "gran formato"]
+    },
+    {
+      "name": "Café Berlín",
+      "tier": "A",
+      "tags": ["jazz", "soul", "funk", "blues", "world"]
+    },
+    {
+      "name": "Teatro Eslava",
+      "tier": "A",
+      "tags": ["electronica", "club", "dj", "conciertos"]
+    },
+    {
+      "name": "Sala Clamores",
+      "tier": "A",
+      "tags": ["jazz", "soul", "funk", "blues", "afro"]
+    },
+    {
+      "name": "Siroko",
+      "tier": "B",
+      "tags": ["electronica", "indie", "alternativo"]
+    },
+    {
+      "name": "El Perro de la Parte de Atrás del Coche",
+      "tier": "B",
+      "tags": ["rock", "indie", "alternativo"]
+    },
+    {
+      "name": "Intruso Bar",
+      "tier": "B",
+      "tags": ["blues", "funk", "soul", "jam"]
+    },
+    {
+      "name": "Sala El Sol",
+      "tier": "B",
+      "tags": ["rock", "indie", "alternativo"]
+    }
+  ]
+}
 
