@@ -4,6 +4,7 @@
    - Overlay tipo “hoja” anclada + fondo fantasma (ghost real) + CSS var --overlay-bg-url
    - Swap premium al cambiar de card (sin brusquedad)
    - Museos: render editorial + pin 📍 (Google Maps en nueva pestaña)
+   - Directo: 8 conciertos + pin 📍 (sin Ticketmaster) + lista fija de salas recomendadas
 */
 
 const modal  = document.getElementById('kModal');
@@ -30,7 +31,7 @@ if (!modal || !mosaic) {
 
   const CFG = {
     // ✅ DIRECTO: apunta al JSON que genera tu workflow
-    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",            json:"data/directo-weekly.json", mode:"items" },
+    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",            json:"data/directo-weekly.json", mode:"directo" },
 
     // Estos los dejamos listos para cuando automatices
     ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.", json:"data/kids-weekly.json",    mode:"items" },
@@ -39,6 +40,50 @@ if (!modal || !mosaic) {
     museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",            json:"data/museums.json",        mode:"museos" },
     alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",   json:"data/leisure.json",        mode:"items" }
   };
+
+  // Lista fija (editorial) de salas recomendadas
+  const DIRECTO_VENUES = [
+    {
+      name: "Sala La Riviera",
+      program: "Conciertos y sesiones de gran formato (rock, pop, electrónica)",
+      address: "Paseo de la Virgen del Puerto, s/n"
+    },
+    {
+      name: "Café Berlín",
+      program: "Jazz, soul, funk, blues, world music",
+      address: "Costanilla de los Ángeles, 20"
+    },
+    {
+      name: "Teatro Eslava",
+      program: "Conciertos, electrónica, club nights y DJs",
+      address: "Calle del Arenal, 11"
+    },
+    {
+      name: "Sala Clamores",
+      program: "Jazz, soul, funk, blues y música afro",
+      address: "Calle de Alburquerque, 14"
+    },
+    {
+      name: "Siroko",
+      program: "Electrónica, indie, pop alternativo, DJs",
+      address: "Calle San Dimas, 3"
+    },
+    {
+      name: "El Perro de la Parte de Atrás del Coche",
+      program: "Rock, indie y alternativo",
+      address: "Calle Puebla, 15"
+    },
+    {
+      name: "Intruso Bar",
+      program: "Blues, funk, soul y jam sessions",
+      address: "Calle de Augusto Figueroa, 3"
+    },
+    {
+      name: "Sala El Sol",
+      program: "Rock, indie y alternativo",
+      address: "Calle Jardines, 3"
+    }
+  ];
 
   // ---------- DIM / ACTIVE ----------
   let hoverTimer = null;
@@ -245,6 +290,23 @@ if (!modal || !mosaic) {
     }
   }
 
+  function pinLinkHTML(mapsUrl, ariaLabel){
+    const safe = mapsUrl && isSafeHttpUrl(mapsUrl) ? mapsUrl : "";
+    if(!safe) return "";
+
+    // Si existe tpl-pin, lo usamos (estilo consistente). Si no, fallback a <a> simple.
+    if(tplPin && 'content' in tplPin){
+      const tmp = tplPin.content.firstElementChild.cloneNode(true);
+      tmp.href = safe;
+      tmp.setAttribute('aria-label', ariaLabel || 'Ver ubicación en Google Maps');
+      const wrap = document.createElement('div');
+      wrap.appendChild(tmp);
+      return wrap.innerHTML;
+    }
+
+    return `<a class="pm-pin" href="${safe}" target="_blank" rel="noopener noreferrer" aria-label="${ariaLabel || 'Ver ubicación en Google Maps'}">📍</a>`;
+  }
+
   // ---------- RENDER (GENÉRICO) ----------
   function renderItems(items){
     const max = Math.min(items.length, 8);
@@ -254,21 +316,60 @@ if (!modal || !mosaic) {
     }
 
     kList.innerHTML = items.slice(0, max).map(it => {
-      const place = [it.venue, it.area].filter(Boolean).join(' · ');
+      const title = safeText(it.title) || "—";
+      const venue = safeText(it.venue);
       const when  = fmtWhen(it.start);
-      const meta  = [place, when].filter(Boolean).join(' · ');
-      const desc  = it.excerpt ? it.excerpt : meta;
 
-      const url = it.url && isSafeHttpUrl(it.url) ? it.url : "";
+      const metaParts = [venue, when].filter(Boolean);
+      const meta = metaParts.join(' · ');
+
+      // ✅ PIN a Google Maps (no Ticketmaster)
+      // Preferimos query con sala + Madrid
+      const maps = mapsUrlFromQuery([venue, "Madrid"].filter(Boolean).join(", "));
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'la sala'} en Google Maps`) : "";
 
       return `
         <div class="k-item">
-          <h4>${safeText(it.title) || "—"}</h4>
-          <p>${safeText(desc) || ""}</p>
-          ${url ? `<a href="${url}" target="_blank" rel="noopener noreferrer">Ver detalles →</a>` : ``}
+          <h4>${title}</h4>
+          <p>${meta ? `${meta} ${pin ? `· ${pin}` : ""}` : ""}</p>
         </div>
       `;
     }).join('');
+  }
+
+  // ---------- RENDER (DIRECTO: items + salas recomendadas) ----------
+  function renderDirecto(items){
+    // 1) Conciertos (8) con pin
+    renderItems(items);
+
+    // 2) Bloque salas recomendadas (debajo)
+    const venuesHtml = DIRECTO_VENUES.map(v => {
+      const name = safeText(v.name);
+      const program = safeText(v.program);
+      const address = safeText(v.address);
+
+      const q = [name, address, "Madrid"].filter(Boolean).join(", ");
+      const maps = mapsUrlFromQuery(q);
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${name || 'esta sala'} en Google Maps`) : "";
+
+      return `
+        <article class="m-item">
+          <h4 class="m-title"><strong>${name}</strong></h4>
+          ${program ? `<p class="m-row">Programación: ${program}</p>` : ``}
+          ${address ? `<p class="m-row m-addr">Dirección: ${address} · ${pin}</p>` : ``}
+        </article>
+      `;
+    }).join('');
+
+    kList.insertAdjacentHTML('beforeend', `
+      <div class="k-divider" aria-hidden="true" style="height:18px;"></div>
+      <div class="k-subhead" style="margin-top:10px;">
+        <p class="k-kicker" style="margin:0 0 10px 0;">Salas recomendadas</p>
+      </div>
+      <div class="k-venues">
+        ${venuesHtml}
+      </div>
+    `);
   }
 
   // ---------- RENDER (MUSEOS) ----------
@@ -393,6 +494,13 @@ if (!modal || !mosaic) {
 
       if(cfg.mode === "museos"){
         renderMuseos(Array.isArray(data.items) ? data.items : []);
+        if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
+        endSwap();
+        return;
+      }
+
+      if(cfg.mode === "directo"){
+        renderDirecto(Array.isArray(data.items) ? data.items : []);
         if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
         endSwap();
         return;
