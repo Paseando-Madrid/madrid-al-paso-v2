@@ -81,12 +81,15 @@
   --active-lift: -3px;
   --active-scale: 1.035;
 
-  /* Overlay sheet sizing (HOJA vertical: alto manda) */
+  /* Overlay sheet sizing */
   --overlay-w: clamp(420px, 44vw, 620px);
   --overlay-pad: 120px; /* margen vertical interno contra canvas */
 
+  /* ✅ Opción C: hoja vertical garantizada pero variable por contenido */
+  --overlay-min-h: clamp(440px, calc(var(--cool-hero-h) * 0.62), calc(var(--cool-hero-h) - 220px));
+
   /* Fondo fantasma overlay */
-  --overlay-ghost-opacity: .16; /* sube/baja aquí */
+  --overlay-ghost-opacity: .20; /* antes .16 */
 }
 
 /* ======================================================================
@@ -752,6 +755,7 @@ img, video{ max-width: 100%; display: block; }
    - HOJA VERTICAL (lectura normal)
    - anclable por JS: left/top en viewport
    - fondo fantasma por CSS var: --overlay-bg-url (inyectada por JS)
+   - ✅ Opción C: altura variable (contenido) pero “siempre hoja” (min-height)
    ====================================================================== */
 .k-modal{
   position: fixed;
@@ -784,13 +788,22 @@ img, video{ max-width: 100%; display: block; }
   left: 0;            /* fallback (JS lo sobreescribe) */
   top: 10vh;          /* fallback (JS lo sobreescribe) */
   width: var(--overlay-w);
+
+  /* ✅ Opción C: variable por contenido, pero nunca “horizontal” */
+  min-height: var(--overlay-min-h);
   max-height: calc(var(--cool-hero-h) - var(--overlay-pad));
+
+  /* ✅ layout hoja */
+  display: flex;
+  flex-direction: column;
+
   margin: 0;
   overflow: hidden;
 
   --overlay-bg-url: none;
 
-  background: rgba(255,255,255,.92);
+  /* un pelín menos opaco para dejar respirar el fantasma */
+  background: rgba(255,255,255,.88);
   border-radius: 2px; /* hoja editorial */
   border: 1px solid rgba(0,0,0,.10);
   box-shadow: 0 18px 70px rgba(0,0,0,.18);
@@ -845,8 +858,8 @@ img, video{ max-width: 100%; display: block; }
   position:absolute;
   inset:0;
   background:
-    radial-gradient(900px 520px at 30% 20%, rgba(255,255,255,.78) 0%, rgba(255,255,255,.54) 40%, rgba(255,255,255,.86) 100%),
-    linear-gradient(180deg, rgba(255,255,255,.70) 0%, rgba(255,255,255,.92) 100%);
+    radial-gradient(900px 520px at 30% 20%, rgba(255,255,255,.66) 0%, rgba(255,255,255,.44) 42%, rgba(255,255,255,.78) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.58) 0%, rgba(255,255,255,.86) 100%);
   pointer-events:none;
   z-index: 1;
 }
@@ -909,12 +922,13 @@ img, video{ max-width: 100%; display: block; }
   color: rgba(17,17,17,.58);
 }
 
+/* ✅ flex child: ocupa el resto y scrollea dentro */
 .k-body{
-  position: relative;
-  z-index: 2;
   padding: 18px 34px 30px;
   overflow: auto;
-  max-height: calc((var(--cool-hero-h) - var(--overlay-pad)) - 150px);
+  flex: 1;
+  min-height: 0; /* clave para scroll en flex */
+  max-height: none; /* antes limitabas; ahora manda la hoja */
 }
 
 .k-list{ display: grid; gap: 14px; }
@@ -1041,6 +1055,7 @@ img, video{ max-width: 100%; display: block; }
     width: 100vw;
     height: 100vh;
     max-height: none;
+    min-height: 0;
     margin: 0;
     border-radius: 0;
 
