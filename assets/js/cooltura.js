@@ -29,7 +29,10 @@ if (!modal || !mosaic) {
   const tplPin   = document.getElementById('tpl-pin');
 
   const CFG = {
-    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",            json:"data/agenda-weekly.json",  mode:"items" },
+    // ✅ DIRECTO: apunta al JSON que genera tu workflow
+    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",            json:"data/directo-weekly.json", mode:"items" },
+
+    // Estos los dejamos listos para cuando automatices
     ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.", json:"data/kids-weekly.json",    mode:"items" },
     expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                 json:"data/agenda-monthly.json", mode:"group", group:"exhibitions" },
     cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",        json:"data/agenda-monthly.json", mode:"group", group:"theatre" },
@@ -440,4 +443,3 @@ if (!modal || !mosaic) {
   });
 
 }
-
