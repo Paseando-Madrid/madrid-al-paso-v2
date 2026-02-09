@@ -1,10 +1,81 @@
 {
-  "updatedAt": "2026-02-09T00:16:00.807Z",
+  "updatedAt": "2026-02-09T01:48:12.785Z",
   "groups": [
     {
       "category": "exhibitions",
-      "deck": "Selección automática desde agenda cultural de Madrid.",
-      "items": []
+      "deck": "Selección automática desde agenda cultural de Madrid (curada por prioridad editorial).",
+      "items": [
+        {
+          "title": "El Prado Multiplicado. La fotograf&iacute;a como memoria compartida",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/prado-multiplicado-fotografia-memoria-compartida-museo-prado"
+        },
+        {
+          "title": "29&ordm; Premio Internacional de Fotograf&iacute;a Humanitaria Luis Valtue&ntilde;a",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/premio-internacional-fotografia-humanitaria-luis-valtuena-fundacion-ortega-maranon"
+        },
+        {
+          "title": "Pato, patito",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/pato-patito-conde-duque"
+        },
+        {
+          "title": "Bol&eacute;ro",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/bolero-institut-francais"
+        },
+        {
+          "title": "&iexcl;Ay qu&eacute; l&iacute;o!",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/ay-lio-centro-cultural-pilar-miro"
+        },
+        {
+          "title": "Atl&eacute;tico de Madrid - CD Tenerife Femenino (Copa de la Reina. Semifinales. Ida)",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/atletico-madrid-cd-tenerife-femenino-copa-reina-centro-deportivo-alcala-henares"
+        },
+        {
+          "title": "Hijos de la Ruina",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/hijos-ruina-movistar-arena"
+        },
+        {
+          "title": "Eclosi&oacute;n. El C&iacute;rculo de Bellas Artes en los 80 y 90",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/eclosion-circulo-bellas-artes-80-90-circulo-bellas-artes"
+        },
+        {
+          "title": "Mozart Paradox",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/mozart-paradox-teatros-canal"
+        },
+        {
+          "title": "La quema",
+          "venue": "",
+          "address": "",
+          "start": null,
+          "url": "https://www.esmadrid.com/agenda/quema-museo-nacional-antropologia"
+        }
+      ]
     },
     {
       "category": "theatre",
