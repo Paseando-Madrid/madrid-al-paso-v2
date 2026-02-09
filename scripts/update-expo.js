@@ -2,9 +2,11 @@
  * scripts/update-expo.js
  * Genera: data/agenda-monthly.json
  * Fuente: Open Data esMadrid (XML)
- * Objetivo: EXPO curada por sedes prioridad + foco foto. 8 items máx.
+ * Objetivo: EXPO curada por sedes (prioridad) + fotografía + anti-ruido.
  *
- * Nota: En Node 18+ existe fetch global. No hace falta node-fetch.
+ * NOTA:
+ * - Node 18+ (GitHub Actions) trae fetch global.
+ * - Requiere: fast-xml-parser
  */
 
 import fs from "fs";
@@ -12,24 +14,49 @@ import { XMLParser } from "fast-xml-parser";
 
 const FEED_URL = "https://www.esmadrid.com/opendata/agenda_v1_es.xml";
 
-/* ===== Prioridad editorial de sedes ===== */
-const VENUE_PRIORITY_RAW = [
-  "Fundación Telefónica",
-  "Espacio Fundación Telefónica",
-  "Fundación Mapfre",
-  "Sala Recoletos",
-  "COAM",
-  "Colegio Oficial de Arquitectos",
-  "Colegio Oficial de Arquitectos de Madrid",
-  "La Casa Encendida",
-  "Círculo de Bellas Artes",
-  "Matadero",
-  "CaixaForum",
-  "Tabacalera",
-  "CondeDuque",
-  "CentroCentro"
-];
+/* ================== Editorial: sedes objetivo ================== */
+const VENUE_PRIORITY = [
+  "fundación telefónica",
+  "espacio fundación telefónica",
+  "fundacion telefonica",
+  "fundación mapfre",
+  "fundacion mapfre",
+  "coam",
+  "colegio oficial de arquitectos",
+  "colegio oficial de arquitectos de madrid",
+  "casa encendida",
+  "la casa encendida",
+  "círculo de bellas artes",
+  "circulo de bellas artes",
+  "matadero",
+  "caixaforum",
+  "caixa forum",
+  "tabacalera",
+  "conde duque",
+  "condeduque",
+  "centrocentro",
+  "centro centro"
+].map(norm);
 
+/* ================== Keywords EXPO (señales) ================== */
+const EXPO_KEYS = [
+  "exposición", "exposicion", "exposiciones",
+  "fotografía", "fotografia", "foto", "photography",
+  "muestra", "retrospectiva", "instalación", "instalacion",
+  "comisari", "colección", "coleccion",
+  "arte", "galería", "galeria",
+  "contemporáneo", "contemporaneo"
+].map(norm);
+
+/* ================== Anti-ruido (no queremos en EXPO) ================== */
+const EXCLUDE_KEYS = [
+  "fútbol", "futbol", "baloncesto", "tenis", "atletico", "atlético",
+  "real madrid", "copa", "liga", "partido", "semifinal", "ida", "vuelta",
+  "concierto", "gira", "tour", "entradas", "vip",
+  "teatro", "musical", "ópera", "opera", "danza", "performance"
+].map(norm);
+
+/* ================== Helpers ================== */
 function safeText(v){ return (v ?? "").toString().trim(); }
 
 function norm(s){
@@ -38,53 +65,7 @@ function norm(s){
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-/* Slugs típicos en URLs de esMadrid para reforzar la detección de sede */
-const VENUE_SLUG_HINTS = [
-  { slug: "fundacion-telefonica", venue: "Fundación Telefónica" },
-  { slug: "espacio-fundacion-telefonica", venue: "Fundación Telefónica" },
-  { slug: "fundacion-mapfre", venue: "Fundación Mapfre" },
-  { slug: "coam", venue: "COAM" },
-  { slug: "casa-encendida", venue: "La Casa Encendida" },
-  { slug: "circulo-bellas-artes", venue: "Círculo de Bellas Artes" },
-  { slug: "matadero", venue: "Matadero" },
-  { slug: "caixaforum", venue: "CaixaForum" },
-  { slug: "tabacalera", venue: "Tabacalera" },
-  { slug: "condeduque", venue: "CondeDuque" },
-  { slug: "centrocentro", venue: "CentroCentro" }
-];
-
-const VENUE_PRIORITY = VENUE_PRIORITY_RAW.map(v => norm(v));
-
-/* ===== Keywords expo ===== */
-const EXPO_KEYS = [
-  "exposicion", "exposición", "exposiciones",
-  "fotografia", "fotografía",
-  "muestra", "retrospectiva", "instalacion", "instalación",
-  "comisari", "coleccion", "colección",
-  "arte", "galeria", "galería"
-].map(norm);
-
-/* ===== Anti-ruido ===== */
-const EXCLUDE_KEYS = [
-  "futbol", "fútbol", "baloncesto", "tenis",
-  "atletico", "atlético", "real madrid", "copa", "liga",
-  "concierto", "gira", "tour", "entradas",
-  "musical", "opera", "ópera", "danza",
-  "partido", "semifinal", "ida", "vuelta"
-].map(norm);
-
-function toArray(v){ return !v ? [] : (Array.isArray(v) ? v : [v]); }
-
-function pickFirst(obj, keys){
-  for (const k of keys){
-    const v = obj?.[k];
-    if (v !== undefined && v !== null && safeText(v) !== "") return v;
-  }
-  return "";
-}
-
 function decodeHtmlEntities(str){
-  // suficiente para esMadrid sin meter libs
   return safeText(str)
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
@@ -100,15 +81,38 @@ function decodeHtmlEntities(str){
     .replace(/&iquest;/g, "¿");
 }
 
+function toArray(v){
+  if (!v) return [];
+  return Array.isArray(v) ? v : [v];
+}
+
+function pickFirst(obj, keys){
+  for (const k of keys){
+    const v = obj?.[k];
+    if (v !== undefined && v !== null && safeText(v) !== "") return v;
+  }
+  return "";
+}
+
+function deepStrings(obj, out = []){
+  if (!obj) return out;
+  if (typeof obj === "string" || typeof obj === "number") { out.push(String(obj)); return out; }
+  if (Array.isArray(obj)) { obj.forEach(x => deepStrings(x, out)); return out; }
+  if (typeof obj === "object") { Object.values(obj).forEach(v => deepStrings(v, out)); }
+  return out;
+}
+
 function toISODateGuess(v){
   const s = safeText(v);
   if(!s) return null;
 
+  // ISO (yyyy-mm-dd...)
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
     const d = new Date(s);
     return Number.isNaN(d.getTime()) ? null : d.toISOString();
   }
 
+  // dd/mm/yyyy
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (m) {
     const dd = m[1].padStart(2, "0");
@@ -122,146 +126,240 @@ function toISODateGuess(v){
   return Number.isNaN(d.getTime()) ? null : d.toISOString();
 }
 
+function fmtRange(startISO, endISO){
+  // Texto editorial simple (sin horas)
+  const fmt = (iso) => {
+    if(!iso) return "";
+    try{
+      const d = new Date(iso);
+      return d.toLocaleDateString("es-ES", { day:"2-digit", month:"short", year:"numeric" });
+    }catch{ return ""; }
+  };
+  const a = fmt(startISO);
+  const b = fmt(endISO);
+  if(a && b) return `${a} → ${b}`;
+  return a || b || "";
+}
+
 function mapsUrlFromQuery(q){
-  const query = safeText(q).trim();
+  const query = safeText(q);
   if(!query) return null;
   return `https://www.google.com/maps?q=${encodeURIComponent(query)}`;
 }
 
-/* 1) Recolectar “candidatos” robustamente caminando todo el XML parseado */
-function findCandidates(root){
-  const out = [];
-  function walk(node){
-    if (!node) return;
-    if (Array.isArray(node)) { node.forEach(walk); return; }
-    if (typeof node !== "object") return;
-
-    const title = pickFirst(node, ["title","titulo","name","nombre"]);
-    const link  = pickFirst(node, ["link","url","enlace","web"]);
-    if (title && link) out.push(node);
-
-    for (const k of Object.keys(node)) walk(node[k]);
-  }
-  walk(root);
-  return out;
-}
-
 function haystack(ev){
-  return norm(decodeHtmlEntities(JSON.stringify(ev)));
+  // texto completo del evento (para detectar sedes y keywords aunque estén en campos raros)
+  return norm(decodeHtmlEntities(deepStrings(ev).join(" | ")));
 }
 
-function inferVenueFromUrl(url){
-  const u = norm(url);
-  const hit = VENUE_SLUG_HINTS.find(h => u.includes(h.slug));
-  return hit ? hit.venue : "";
+/* ================== Extracción “loose” ================== */
+function pickTitle(ev){
+  const raw = pickFirst(ev, ["title", "titulo", "name", "nombre"]);
+  return decodeHtmlEntities(raw) || "—";
 }
 
-function inferVenueFromText(h){
-  const hit = VENUE_PRIORITY.find(v => h.includes(v));
-  if (!hit) return "";
-  // recupera “bonito” desde RAW (misma posición)
-  const idx = VENUE_PRIORITY.indexOf(hit);
-  return idx >= 0 ? VENUE_PRIORITY_RAW[idx] : "";
+function pickUrl(ev){
+  const u = pickFirst(ev, ["url", "link", "enlace", "web"]);
+  return safeText(u) || null;
 }
 
-/* Regla editorial: entra si (a) parece expo y (b) NO es ruido y (c) cae en sedes objetivo (texto o url) */
-function isExpoForUs(ev){
-  const h = haystack(ev);
-
-  const hasExpo = EXPO_KEYS.some(k => h.includes(k));
-  if(!hasExpo) return false;
-
-  const hasExcluded = EXCLUDE_KEYS.some(k => h.includes(k));
-  if(hasExcluded) return false;
-
-  const url = safeText(pickFirst(ev, ["link","url","enlace","web"]));
-  const venueByUrl = inferVenueFromUrl(url);
-  const venueByTxt = inferVenueFromText(h);
-
-  return Boolean(venueByUrl || venueByTxt);
+function pickDates(ev){
+  const startRaw = pickFirst(ev, [
+    "start","inicio","fechaInicio","fechainicio","dateStart","datestart","fecha","date"
+  ]);
+  const endRaw = pickFirst(ev, [
+    "end","fin","fechaFin","fechafin","dateEnd","dateend"
+  ]);
+  return { start: toISODateGuess(startRaw), end: toISODateGuess(endRaw) };
 }
 
-function extract(ev){
-  const title = decodeHtmlEntities(pickFirst(ev, ["title","titulo","name","nombre"])) || "—";
-  const url   = safeText(pickFirst(ev, ["link","url","enlace","web"])) || null;
-
-  const h = haystack(ev);
-
-  const venueLoose = decodeHtmlEntities(pickFirst(ev, [
-    "venue","lugar","place","localizacion","localización","location","centro","espacio","organizer","organizador"
+function pickVenueLoose(ev){
+  return safeText(pickFirst(ev, [
+    "venue","lugar","place","localizacion","localización","location",
+    "organizer","organizador","centro","espacio","entidad"
   ]));
-
-  const venue = venueLoose || inferVenueFromUrl(url || "") || inferVenueFromText(h) || "";
-
-  const address = decodeHtmlEntities(pickFirst(ev, ["address","direccion","dirección","streetAddress","dir"])) || "";
-
-  const startRaw = pickFirst(ev, ["start","inicio","fechaInicio","fechainicio","startDate","dateStart","fecha","date"]);
-  const endRaw   = pickFirst(ev, ["end","fin","fechaFin","fechafin","endDate","dateEnd"]);
-  const start = toISODateGuess(startRaw);
-  const end   = toISODateGuess(endRaw);
-
-  // Pin: sede + dirección si existe
-  const mapsQuery = [venue, address, "Madrid"].filter(Boolean).join(", ");
-  const mapsUrl = mapsUrlFromQuery(mapsQuery);
-
-  return { title, venue, address, start, end, url, mapsUrl };
 }
 
-function score(item){
+function pickAddressLoose(ev){
+  return safeText(pickFirst(ev, ["address","direccion","dirección","streetAddress","dir"]));
+}
+
+function inferVenueFromUrlOrText(url, h){
+  // 1) si el haystack contiene una sede prioritaria → esa
+  const hit = VENUE_PRIORITY.find(v => h.includes(v));
+  if(hit) return hit;
+
+  // 2) inferir por URL (slug) cuando el XML no rellena “venue”
+  const u = norm(url || "");
+  const rules = [
+    ["fundacion-telefonica", "Fundación Telefónica"],
+    ["fundacion-mapfre", "Fundación MAPFRE"],
+    ["coam", "COAM"],
+    ["casa-encendida", "La Casa Encendida"],
+    ["circulo-bellas-artes", "Círculo de Bellas Artes"],
+    ["matadero", "Matadero"],
+    ["caixaforum", "CaixaForum"],
+    ["tabacalera", "Tabacalera"],
+    ["conde-duque", "CondeDuque"],
+    ["condeduque", "CondeDuque"],
+    ["centrocentro", "CentroCentro"],
+    ["centro-centro", "CentroCentro"],
+    ["fundacion-ortega-maranon", "Fundación Ortega-Marañón"],
+    ["museo-del-prado", "Museo del Prado"],
+    ["museo-reina-sofia", "Museo Reina Sofía"],
+    ["thyssen", "Museo Thyssen-Bornemisza"]
+  ];
+  for (const [needle, label] of rules){
+    if(u.includes(needle)) return label;
+  }
+
+  return "";
+}
+
+/* ================== Clasificación EXPO ================== */
+function hasExpoSignals(h, title, url){
+  const t = norm(title);
+  const u = norm(url || "");
+  const signal =
+    EXPO_KEYS.some(k => h.includes(k) || t.includes(k)) ||
+    u.includes("exposicion") || u.includes("exposiciones") ||
+    // si está en sedes prioridad, le damos pase aunque el texto venga “pobre”
+    VENUE_PRIORITY.some(v => h.includes(v));
+  return signal;
+}
+
+function hasExcludedSignals(h, title, url){
+  const t = norm(title);
+  const u = norm(url || "");
+  const noisy = EXCLUDE_KEYS.some(k => h.includes(k) || t.includes(k) || u.includes(k));
+  return noisy;
+}
+
+function scoreItem(item){
+  // ranking editorial (en vez de “si no cumple, fuera”)
   let s = 0;
   const t = norm(item.title);
   const v = norm(item.venue);
+  const u = norm(item.url || "");
+  const h = norm(item._hay || "");
 
-  // prioridad: sedes
-  if (v && VENUE_PRIORITY.some(p => v.includes(p))) s += 20;
+  // sedes prioridad muy arriba
+  if (v && VENUE_PRIORITY.some(p => v.includes(p))) s += 30;
+  if (VENUE_PRIORITY.some(p => h.includes(p))) s += 15;
 
-  // prioridad: fotografía
-  if (t.includes("fotograf")) s += 8;
+  // fotografía arriba
+  if (t.includes("fotograf")) s += 12;
 
-  // si falta venue, baja (pero no mata)
-  if (!v) s -= 3;
+  // señales expo
+  if (EXPO_KEYS.some(k => t.includes(k))) s += 6;
+  if (u.includes("agenda")) s += 2;
 
-  // si hay start, un poco mejor
-  if (item.start) s += 2;
+  // penalizaciones
+  if (!item.venue) s -= 4;
+  if (hasExcludedSignals(h, item.title, item.url)) s -= 100;
 
   return s;
 }
 
+/* ================== Main ================== */
 async function main(){
-  const res = await fetch(FEED_URL, { cache: "no-store" });
+  const res = await fetch(FEED_URL, {
+    headers: { "user-agent": "paseandomadrid-bot/1.0" },
+    cache: "no-store"
+  });
   if (!res.ok) throw new Error(`esmadrid fetch failed: ${res.status}`);
 
   const xml = await res.text();
   const parser = new XMLParser({
     ignoreAttributes: false,
     attributeNamePrefix: "@_",
+    parseTagValue: true,
     trimValues: true
   });
-
   const parsed = parser.parse(xml);
-  const raw = findCandidates(parsed);
 
-  const expo = raw
-    .filter(isExpoForUs)
-    .map(extract)
-    .filter(it => it.title && it.url) // mínimos
-    .map(it => ({ ...it, _score: score(it) }))
-    .sort((a,b) => {
-      if (b._score !== a._score) return b._score - a._score;
-      const ta = a.start ? new Date(a.start).getTime() : Number.MAX_SAFE_INTEGER;
-      const tb = b.start ? new Date(b.start).getTime() : Number.MAX_SAFE_INTEGER;
-      return ta - tb;
-    });
+  // localizar eventos (estructura típica esMadrid)
+  const root = parsed?.agenda ?? parsed?.response ?? parsed;
+  const events =
+    root?.eventos?.evento ||
+    root?.eventos ||
+    root?.events?.event ||
+    root?.events ||
+    root?.evento ||
+    [];
 
-  // dedup title+venue
+  const list = toArray(events);
+
+  // 1) candidatos: cualquier cosa con url+title (si el feed viene “suelto”, esto salva)
+  const candidates = list
+    .map(ev => {
+      const title = pickTitle(ev);
+      const url = pickUrl(ev);
+      if(!title || !url) return null;
+
+      const h = haystack(ev);
+      const { start, end } = pickDates(ev);
+
+      let venue = pickVenueLoose(ev);
+      let address = pickAddressLoose(ev);
+
+      if(!venue) venue = inferVenueFromUrlOrText(url, h);
+
+      const dateText = fmtRange(start, end);
+      const mapsUrl = mapsUrlFromQuery([venue || title, "Madrid"].filter(Boolean).join(", "));
+
+      return {
+        title,
+        venue,
+        address: address || "",
+        start,
+        end,
+        dateText,
+        url,
+        mapsUrl,
+        _hay: h
+      };
+    })
+    .filter(Boolean);
+
+  // 2) filtro “suave”: señal expo + no ruido
+  const expoCandidates = candidates.filter(it => {
+    const h = it._hay || "";
+    return hasExpoSignals(h, it.title, it.url) && !hasExcludedSignals(h, it.title, it.url);
+  });
+
+  // 3) ranking editorial + dedup
   const seen = new Set();
-  const items = [];
-  for (const it of expo){
-    const key = norm(`${it.title}__${it.venue}`);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    items.push(it);
-    if (items.length >= 8) break;
+  const ranked = expoCandidates
+    .map(it => ({ ...it, _score: scoreItem(it) }))
+    .sort((a,b) => b._score - a._score)
+    .filter(it => {
+      const key = norm(`${it.title}__${it.venue}`);
+      if(seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 8)
+    .map(({ _score, _hay, ...rest }) => rest);
+
+  // 4) Fallback (clave): si por lo que sea quedó vacío, llenamos con “lo mejor disponible”
+  //    (pero siempre respetando anti-ruido)
+  if (ranked.length === 0) {
+    const seen2 = new Set();
+    const fallback = candidates
+      .map(it => ({ ...it, _score: scoreItem(it) }))
+      .filter(it => !hasExcludedSignals(it._hay || "", it.title, it.url))
+      .sort((a,b) => b._score - a._score)
+      .filter(it => {
+        const key = norm(`${it.title}__${it.venue}`);
+        if(seen2.has(key)) return false;
+        seen2.add(key);
+        return true;
+      })
+      .slice(0, 8)
+      .map(({ _score, _hay, ...rest }) => rest);
+
+    ranked.push(...fallback);
   }
 
   const out = {
@@ -269,8 +367,8 @@ async function main(){
     groups: [
       {
         category: "exhibitions",
-        deck: "Selección automática desde agenda cultural de Madrid (curada por sedes prioridad + foco fotografía).",
-        items
+        deck: "Selección automática desde agenda cultural de Madrid (curada por prioridad editorial).",
+        items: ranked
       },
       {
         category: "theatre",
@@ -283,7 +381,7 @@ async function main(){
   fs.mkdirSync("data", { recursive: true });
   fs.writeFileSync("data/agenda-monthly.json", JSON.stringify(out, null, 2), "utf8");
 
-  console.log("Expo updated:", items.length, "items");
+  console.log("Expo updated:", ranked.length, "items");
 }
 
 main().catch(err => {
