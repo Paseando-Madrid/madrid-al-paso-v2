@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-09T15:35:53.198Z",
+  "updatedAt": "2026-02-09T17:10:07.101Z",
   "groups": [
     {
       "category": "exhibitions",
@@ -12,46 +12,6 @@
           "dateText": "",
           "url": "https://www.esmadrid.com/agenda/fod-fueradentro-centrocentro",
           "mapsUrl": "https://www.google.com/maps?q=CentroCentro%2C%20de%20Cibeles%2C%201%2C%20Madrid"
-        },
-        {
-          "title": "Imminence. Siro Cugusi",
-          "venue": "",
-          "address": "de San Vicente, 36",
-          "dateText": "",
-          "url": "https://www.esmadrid.com/agenda/imminence-siro-cugusi-solo-csv",
-          "mapsUrl": "https://www.google.com/maps?q=Imminence.%20Siro%20Cugusi%2C%20de%20San%20Vicente%2C%2036%2C%20Madrid"
-        },
-        {
-          "title": "Edgar Degas. En la sombrerería",
-          "venue": "",
-          "address": "del Prado, 8",
-          "dateText": "",
-          "url": "https://www.esmadrid.com/agenda/edgar-degas-sombrereria-museo-nacional-thyssen-bornemisza",
-          "mapsUrl": "https://www.google.com/maps?q=Edgar%20Degas.%20En%20la%20sombrerer%C3%ADa%2C%20del%20Prado%2C%208%2C%20Madrid"
-        },
-        {
-          "title": "Saetas Semana Santa Madrid",
-          "venue": "",
-          "address": "-",
-          "dateText": "",
-          "url": "https://www.esmadrid.com/agenda/semana-santa-madrid/saetas",
-          "mapsUrl": "https://www.google.com/maps?q=Saetas%20Semana%20Santa%20Madrid%2C%20-%2C%20Madrid"
-        },
-        {
-          "title": "Mercado del Juguete de Madrid",
-          "venue": "",
-          "address": "",
-          "dateText": "",
-          "url": "https://www.esmadrid.com/agenda/mercado-juguete-madrid",
-          "mapsUrl": "https://www.google.com/maps?q=Mercado%20del%20Juguete%20de%20Madrid%2C%20Madrid"
-        },
-        {
-          "title": "Trenes históricos",
-          "venue": "",
-          "address": "Agustín de Foxa, s/n",
-          "dateText": "",
-          "url": "https://www.esmadrid.com/agenda/trenes-historicos-estacion-chamartin",
-          "mapsUrl": "https://www.google.com/maps?q=Trenes%20hist%C3%B3ricos%2C%20Agust%C3%ADn%20de%20Foxa%2C%20s%2Fn%2C%20Madrid"
         }
       ]
     },
