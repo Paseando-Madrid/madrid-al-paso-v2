@@ -109,8 +109,8 @@ const VENUE_RULES = [
   // COAM (variantes reales de agenda)
   ["servicio-historico-coam", "COAM"],
   ["matcoam-coam", "COAM"],
-  // este es “peligroso” por genérico -> lo dejamos más abajo
-  ["-coam", "COAM"],
+  // ⚠️ menos genérico (evita falsos positivos)
+  ["-coam-", "COAM"],
 
   // CentroCentro
   ["centro-centro", "CentroCentro"],
@@ -124,10 +124,9 @@ const VENUE_RULES = [
   ["conde-duque", "CondeDuque"],
   ["condeduque", "CondeDuque"],
 
-  // Tabacalera (ojo: en esMadrid muchas veces aparece como ficha /informacion-turistica)
+  // Tabacalera
   ["tabacalera-promocion-arte", "Tabacalera Promoción del Arte"],
   ["csa-tabacalera-lavapies", "CSA La Tabacalera (Lavapiés)"],
-  // genérico al final, por si algún service sí lo trae en web
   ["tabacalera", "Tabacalera"],
 ];
 
@@ -141,7 +140,6 @@ function inferVenueFromUrl(url){
 
 /**
  * Lista “válida” (para scoring y para el filtro institucional).
- * Aquí están las sedes que quieres que salgan en EXPO.
  */
 const VALID_VENUES = new Set([
   "Fundación Telefónica",
@@ -155,7 +153,6 @@ const VALID_VENUES = new Set([
   "CentroCentro",
   "CondeDuque",
   "Sala Alcalá 31",
-  // Tabacalera: solo si quieres permitirla; si no, bórralas de aquí
   "Tabacalera Promoción del Arte",
   "CSA La Tabacalera (Lavapiés)",
   "Tabacalera",
@@ -175,7 +172,7 @@ const VENUE_PRIORITY = [
   "tabacalera"
 ].map(norm);
 
-// Señales expo (suaves, pero exigimos sede válida)
+// Señales expo (suaves)
 const EXPO_KEYS = [
   "exposición","exposicion","exposiciones",
   "muestra","retrospectiva",
@@ -186,7 +183,7 @@ const EXPO_KEYS = [
   "contemporáneo","contemporaneo"
 ].map(norm);
 
-// Anti-ruido duro (incluye lo que se te coló)
+// Anti-ruido duro
 const EXCLUDE_KEYS = [
   // deporte
   "atlético","atletico","real madrid","copa","liga","partido","semifinal","ida","vuelta",
@@ -219,11 +216,9 @@ function scoreItem({ title, venue, url, hay }){
   const u = norm(url);
   const h = norm(hay);
 
-  // sedes prioridad
   if (VENUE_PRIORITY.some(p => v.includes(p))) s += 60;
   if (VENUE_PRIORITY.some(p => h.includes(p))) s += 20;
 
-  // señales expo
   if (t.includes("fotograf")) s += 10;
   if (EXPO_KEYS.some(k => t.includes(k))) s += 6;
 
@@ -253,30 +248,34 @@ async function main(){
     if (!titleRaw || !url) return null;
 
     const title = decodeHtmlEntities(titleRaw);
-
-    // Dirección (geoData.address suele ser "de Alcalá, 42")
     const address = safeText(s?.geoData?.address);
-
     const hay = norm(deepStrings(s).join(" | "));
 
-    // Anti-ruido primero
+    // Anti-ruido primero (siempre)
     if (isExcluded(hay) || isExcluded(title) || isExcluded(url)) return null;
 
-    // Señal EXPO mínima (si no hay señal, fuera)
-    if (!hasExpoSignals(hay) && !hasExpoSignals(title) && !hasExpoSignals(url)) return null;
+    // ✅ MEJORA: inferimos sede pronto por URL y decidimos si exigimos EXPO_KEYS
+    const inferredEarly = inferVenueFromUrl(url);
+    const isValidVenueFromUrl = inferredEarly && VALID_VENUES.has(inferredEarly);
+
+    // Señal EXPO mínima:
+    // - Si NO hay sede válida por URL, exigimos EXPO_KEYS
+    // - Si hay sede válida por URL, permitimos pasar aunque falten EXPO_KEYS (feed "pobre")
+    if (!isValidVenueFromUrl) {
+      if (!hasExpoSignals(hay) && !hasExpoSignals(title) && !hasExpoSignals(url)) return null;
+    }
 
     // 1) venue por campos (si existe)
     let venue =
       pickDeepByKeys(s, ["venue","lugar","place","centro","espacio","entity","entidad","organization","organizacion"]) ||
       "";
 
-    // 2) limpiar: si parece dirección (tiene número o empieza por "de "), no sirve
+    // 2) limpiar: si parece dirección, no sirve
     const venueLooksAddress = venue && (/\d/.test(venue) || norm(venue).startsWith("de "));
     if (!venue || venueLooksAddress) venue = "";
 
-    // 3) inferir por URL (reglas exactas)
-    const inferred = inferVenueFromUrl(url);
-    if (inferred) venue = inferred;
+    // 3) inferir por URL (reglas exactas) — usamos el inferredEarly
+    if (inferredEarly) venue = inferredEarly;
 
     // ✅ Regla editorial: EXPO institucional -> sin sede válida, fuera
     if (!venue || !VALID_VENUES.has(venue)) return null;
@@ -289,7 +288,6 @@ async function main(){
 
   console.log("Expo candidates:", candidates.length);
 
-  // ranking + dedup
   const seen = new Set();
   const ranked = candidates
     .map(it => ({ ...it, _score: scoreItem({ title: it.title, venue: it.venue, url: it.url, hay: it._hay }) }))
@@ -329,4 +327,3 @@ main().catch(err => {
   console.error(err);
   process.exit(1);
 });
-
