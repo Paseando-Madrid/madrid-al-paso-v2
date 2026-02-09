@@ -25,7 +25,7 @@ jobs:
           npm install fast-xml-parser@4
 
       - name: Run updater
-        run: node scripts/update-expo-monthly.js
+        run: node scripts/update-expo.js
 
       - name: Commit & push if changed
         run: |
