@@ -1,15 +1,67 @@
 {
-  "updatedAt": "2026-02-09T14:58:20.112Z",
+  "updatedAt": "2026-02-09T15:17:38.100Z",
   "groups": [
     {
       "category": "exhibitions",
-      "deck": "Selección automática desde agenda cultural de Madrid (curada por prioridad editorial).",
-      "items": []
-    },
-    {
-      "category": "theatre",
-      "deck": "Pendiente de automatización (siguiente paso).",
-      "items": []
+      "deck": "Selección automática desde la agenda cultural de Madrid.",
+      "items": [
+        {
+          "title": "Atl&eacute;tico de Madrid - CD Tenerife Femenino (Copa de la Reina. Semifinales. Ida)",
+          "venue": "de Gustavo Adolfo Bécquer, 64",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/atletico-madrid-cd-tenerife-femenino-copa-reina-centro-deportivo-alcala-henares",
+          "mapsUrl": "https://www.google.com/maps?q=de%20Gustavo%20Adolfo%20B%C3%A9cquer%2C%2064%2C%20Madrid"
+        },
+        {
+          "title": "Eclosi&oacute;n. El C&iacute;rculo de Bellas Artes en los 80 y 90",
+          "venue": "de Alcalá, 42",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/eclosion-circulo-bellas-artes-80-90-circulo-bellas-artes",
+          "mapsUrl": "https://www.google.com/maps?q=de%20Alcal%C3%A1%2C%2042%2C%20Madrid"
+        },
+        {
+          "title": "La quema",
+          "venue": "de Alfonso XII, 68",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/quema-museo-nacional-antropologia",
+          "mapsUrl": "https://www.google.com/maps?q=de%20Alfonso%20XII%2C%2068%2C%20Madrid"
+        },
+        {
+          "title": "Cigua Palmera: Cartograf&iacute;a del vuelo",
+          "venue": "de Atocha, 83",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/cigua-palmera-cartografia-vuelo-casa-artes-melia-collection",
+          "mapsUrl": "https://www.google.com/maps?q=de%20Atocha%2C%2083%2C%20Madrid"
+        },
+        {
+          "title": "Jordi Teixidor. No-res",
+          "venue": "de Alcalá, 31",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/jordi-teixidor-no-res-sala-alcala-31",
+          "mapsUrl": "https://www.google.com/maps?q=de%20Alcal%C3%A1%2C%2031%2C%20Madrid"
+        },
+        {
+          "title": "D&iacute;a y Noche. Ritmos del Alma",
+          "venue": "de Murillo, 2",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/dia-noche-ritmos-alma-real-jardin-botanico",
+          "mapsUrl": "https://www.google.com/maps?q=de%20Murillo%2C%202%2C%20Madrid"
+        },
+        {
+          "title": "Ecos de la moda rom&aacute;ntica",
+          "venue": "de San Mateo, 13",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/ecos-moda-romantica-museo-romanticismo",
+          "mapsUrl": "https://www.google.com/maps?q=de%20San%20Mateo%2C%2013%2C%20Madrid"
+        },
+        {
+          "title": "Once Again... (Statues Never Die)",
+          "venue": "de Serrano, 122",
+          "dateText": "",
+          "url": "https://www.esmadrid.com/agenda/once-again-statues-never-die-museo-lazaro-galdiano",
+          "mapsUrl": "https://www.google.com/maps?q=de%20Serrano%2C%20122%2C%20Madrid"
+        }
+      ]
     }
   ]
 }
