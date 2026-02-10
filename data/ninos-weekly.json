@@ -1,0 +1,38 @@
+"manualItems": [
+  {
+    "title": "Museo de la Luz",
+    "venue": "Museo de la Luz Madrid",
+    "hours": "L–V 11:00–21:00 · Sáb/Fest 10:00–21:00 · Dom 10:00–20:00",
+    "space": "",
+    "address": "Madrid",
+    "mapsQuery": "Museo de la Luz Madrid",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Museo%20de%20la%20Luz%20Madrid"
+  },
+  {
+    "title": "Nomad · Museo inmersivo (recomendado 7+)",
+    "venue": "Nomad Museo Inmersivo",
+    "hours": "L–D 10:00–22:00 (última entrada 20:30)",
+    "space": "",
+    "address": "Gran Vía, 78",
+    "mapsQuery": "Nomad Museo Inmersivo, Gran Vía 78, Madrid",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nomad%20Museo%20Inmersivo%2C%20Gran%20V%C3%ADa%2078%2C%20Madrid"
+  },
+  {
+    "title": "Faro de Moncloa (mirador)",
+    "venue": "Faro de Moncloa",
+    "hours": "Mar–Dom 09:30–20:00 (última subida 19:30) · Lunes cerrado",
+    "space": "",
+    "address": "Madrid",
+    "mapsQuery": "Faro de Moncloa, Madrid",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Faro%20de%20Moncloa%2C%20Madrid"
+  },
+  {
+    "title": "Teleférico de Madrid",
+    "venue": "Teleférico de Madrid (EMT)",
+    "hours": "Cerrado por reforma (sin servicio actualmente)",
+    "space": "",
+    "address": "Madrid",
+    "mapsQuery": "Teleférico de Madrid",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Telef%C3%A9rico%20de%20Madrid"
+  }
+]
