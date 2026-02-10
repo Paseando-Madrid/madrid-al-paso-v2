@@ -1,10 +1,10 @@
 /* Cooltura — Mosaic + Overlay anchored (premium)
    - NO rompe automatización JSON (/data)
    - Mantiene efecto hover dim/zoom
-   - Overlay tipo “hoja” anclada + fondo fantasma (ghost real) + CSS var --overlay-bg-url
+   - Overlay tipo “hoja” anclada + fondo fantasma (ghost real)
    - Swap premium al cambiar de card (sin brusquedad)
    - Museos: render editorial + pin 📍 (Google Maps en nueva pestaña)
-   - Directo: 8 conciertos + pin 📍 (sin Ticketmaster) + lista fija de salas recomendadas
+   - Directo: 8 conciertos + pin 📍 + lista fija de salas recomendadas
    - EXPO: renderer editorial (título bold + artistas + horario + hasta + dirección + pin)
 */
 
@@ -32,20 +32,19 @@ if (!modal || !mosaic) {
 
   const CFG = {
     // ✅ DIRECTO: apunta al JSON que genera tu workflow
-    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",             json:"data/directo-weekly.json",  mode:"directo" },
+    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",              json:"data/directo-weekly.json",  mode:"directo" },
 
-    // Estos los dejamos listos para cuando automatices
-    ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",  json:"data/kids-weekly.json",     mode:"items" },
+    // Listo para automatizar
+    ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",   json:"data/kids-weekly.json",     mode:"items" },
 
-    // ✅ EXPO: usa agenda-monthly.json con groups[ {category:"exhibitions"} ] (sin theatre)
-    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                  json:"data/agenda-monthly.json",  mode:"group", group:"exhibitions" },
+    // ✅ EXPO: agenda-monthly.json con groups[{category:"exhibitions"}]
+    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                   json:"data/agenda-monthly.json",  mode:"group", group:"exhibitions" },
 
-    // ⚠️ Cartelera: ya NO debe apuntar a agenda-monthly.json (porque lo limpiamos y solo es EXPO)
-    // Deja esto listo para un futuro updater de teatro (cuando exista el JSON).
-    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",         json:"data/theatre-monthly.json", mode:"items" },
+    // Cartelera (futuro): JSON independiente
+    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",          json:"data/theatre-monthly.json", mode:"items" },
 
-    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",             json:"data/museums.json",         mode:"museos" },
-    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",    json:"data/leisure.json",         mode:"items" }
+    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",              json:"data/museums.json",         mode:"museos" },
+    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",     json:"data/leisure.json",         mode:"items" }
   };
 
   // Lista fija (editorial) de salas recomendadas
@@ -269,7 +268,6 @@ if (!modal || !mosaic) {
     const safe = mapsUrl && isSafeHttpUrl(mapsUrl) ? mapsUrl : "";
     if(!safe) return "";
 
-    // Si existe tpl-pin, lo usamos (estilo consistente). Si no, fallback a <a> simple.
     if(tplPin && 'content' in tplPin){
       const tmp = tplPin.content.firstElementChild.cloneNode(true);
       tmp.href = safe;
@@ -284,13 +282,15 @@ if (!modal || !mosaic) {
 
   // ---------- RENDER (GENÉRICO) ----------
   function renderItems(items){
-    const max = Math.min(items.length, 8);
+    const list = Array.isArray(items) ? items : [];
+    const max = Math.min(list.length, 8);
+
     if(!max){
       kList.innerHTML = '<p class="k-empty">Ahora mismo no hay recomendaciones publicadas. Vuelve pronto.</p>';
       return;
     }
 
-    kList.innerHTML = items.slice(0, max).map(it => {
+    kList.innerHTML = list.slice(0, max).map(it => {
       const title = safeText(it.title) || "—";
       const venue = safeText(it.venue);
       const when  = fmtWhen(it.start);
@@ -298,8 +298,8 @@ if (!modal || !mosaic) {
       const metaParts = [venue, when].filter(Boolean);
       const meta = metaParts.join(' · ');
 
-      // ✅ PIN a Google Maps (no Ticketmaster)
-      const maps = mapsUrlFromQuery([venue, "Madrid"].filter(Boolean).join(", "));
+      // ✅ PIN: si el item trae mapsUrl lo respetamos; si no, construimos query
+      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery([venue, "Madrid"].filter(Boolean).join(", "));
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'la sala'} en Google Maps`) : "";
 
       return `
@@ -313,10 +313,8 @@ if (!modal || !mosaic) {
 
   // ---------- RENDER (DIRECTO: items + salas recomendadas) ----------
   function renderDirecto(items){
-    // 1) Conciertos (8) con pin
     renderItems(items);
 
-    // 2) Bloque salas recomendadas (debajo)
     const venuesHtml = DIRECTO_VENUES.map(v => {
       const name = safeText(v.name);
       const program = safeText(v.program);
@@ -445,7 +443,7 @@ if (!modal || !mosaic) {
   }
 
   // ---------- RENDER (EXPO) ----------
-  // Formato: título bold / artistas / (horario | metaRight) / dirección + pin
+  // Formato: título bold / artistas / (horario | metaRight/hasta) / dirección + pin
   function renderExpo(items){
     const list = Array.isArray(items) ? items : [];
     const max  = Math.min(list.length, 8);
@@ -457,19 +455,21 @@ if (!modal || !mosaic) {
 
     kList.innerHTML = list.slice(0, max).map(it => {
       const title   = safeText(it.title) || "—";
-      const artists = safeText(it.artists);
-      const hours   = safeText(it.hours);
-      const metaR   = safeText(it.metaRight);
-      const addr    = safeText(it.address);
+      const artists = safeText(it.artists); // puede venir vacío (ok)
+      const hours   = safeText(it.hours);   // puede venir vacío (ok)
+
+      // ✅ compat: tu updater trae dateText ("hasta X"). Si algún día añades metaRight, también.
+      const metaR   = safeText(it.metaRight || it.dateText);
+
+      const addr    = safeText(it.address); // street
       const venue   = safeText(it.venue);
       const url     = safeText(it.url);
 
-      // pin: preferimos mapsQuery del JSON; si no, construimos
+      // pin: si el JSON trae mapsUrl lo respetamos; si no, construimos query (o mapsQuery si la añades)
       const q = safeText(it.mapsQuery) || [venue, addr, 'Madrid'].filter(Boolean).join(', ');
-      const maps = mapsUrlFromQuery(q);
+      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'esta exposición'} en Google Maps`) : "";
 
-      // link: si viene url usable, envolvemos título (premium, sin “ver detalles”)
       const safeUrl = url && isSafeHttpUrl(url) ? url : "";
       const titleHtml = safeUrl
         ? `<a class="k-item-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer"><strong>${title}</strong></a>`
@@ -548,7 +548,6 @@ if (!modal || !mosaic) {
 
         if(g?.deck) kDeck.textContent = g.deck;
 
-        // ✅ EXPO usa renderer específico (porque su JSON no tiene "start" y tiene artists/hours/metaRight/address/pin)
         if(cfg.group === "exhibitions"){
           renderExpo(Array.isArray(g?.items) ? g.items : []);
         } else {
