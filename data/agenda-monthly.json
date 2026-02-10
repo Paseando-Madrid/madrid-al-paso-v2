@@ -1,69 +1,89 @@
 {
-  "updatedAt": "2026-02-10T08:08:56.973Z",
+  "updatedAt": "2026-02-10T10:43:44.348Z",
   "groups": [
     {
       "category": "exhibitions",
       "deck": "Selección automática desde el JSON oficial del Ayuntamiento (próximos 100 días). Curación por sedes.",
       "items": [
         {
-          "kind": "expo",
-          "title": "Ana Juan",
-          "artists": "CentroCentro",
+          "title": "'CLEOPATRA', LA EXPOSICIÓN INMERSIVA",
+          "venue": "Matadero Madrid",
+          "space": "",
           "hours": "",
-          "metaRight": "hasta 3 may",
-          "venue": "CentroCentro",
-          "address": "PLAZA CIBELES 1",
-          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
-          "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=70b80f933779b910VgnVCM200000f921e388RCRD",
-          "mapsUrl": "https://www.google.com/maps?q=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
+          "dateText": "hasta 28 feb",
+          "address": "PLAZA LEGAZPI 8",
+          "mapsQuery": "Matadero Madrid, PLAZA LEGAZPI 8, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PLAZA%20LEGAZPI%208%2C%20Madrid"
         },
         {
-          "kind": "expo",
-          "title": "Javier Garcerá",
-          "artists": "CentroCentro",
+          "title": "Exposición 'Legendaria II:  Mitos contados e ilustrados'",
+          "venue": "Matadero Madrid",
+          "space": "",
           "hours": "",
-          "metaRight": "hasta 3 may",
-          "venue": "CentroCentro",
-          "address": "PLAZA CIBELES 1",
-          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
-          "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=30ba4bc344e7b910VgnVCM100000891ecb1aRCRD",
-          "mapsUrl": "https://www.google.com/maps?q=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
+          "dateText": "hasta 1 mar",
+          "address": "PASEO CHOPERA 14",
+          "mapsQuery": "Matadero Madrid, PASEO CHOPERA 14, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PASEO%20CHOPERA%2014%2C%20Madrid"
         },
         {
-          "kind": "expo",
-          "title": "Luis Pérez Calvo",
-          "artists": "CentroCentro",
-          "hours": "",
-          "metaRight": "hasta 26 abr",
-          "venue": "CentroCentro",
-          "address": "PLAZA CIBELES 1",
-          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
-          "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=411cefc0c5e7b910VgnVCM100000891ecb1aRCRD",
-          "mapsUrl": "https://www.google.com/maps?q=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
+          "title": "Exposición: 'Fui sobre agua edificada' V Concurso de fotografía del Museo de Historia",
+          "venue": "Centro de Cultura Contemporánea Conde Duque",
+          "space": "Patio",
+          "hours": "12:00",
+          "dateText": "hasta 1 mar",
+          "address": "CALLE FUENCARRAL 78",
+          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE FUENCARRAL 78, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20FUENCARRAL%2078%2C%20Madrid"
         },
         {
-          "kind": "expo",
-          "title": "Debod 1954-1964",
-          "artists": "Museo de San Isidro. Los Orígenes de Madrid",
-          "hours": "",
-          "metaRight": "hasta 29 mar",
-          "venue": "Museo de San Isidro",
-          "address": "PLAZA SAN ANDRES 2",
-          "mapsQuery": "Museo de San Isidro, PLAZA SAN ANDRES 2, Madrid",
-          "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=f617690c5b499910VgnVCM200000f921e388RCRD",
-          "mapsUrl": "https://www.google.com/maps?q=Museo%20de%20San%20Isidro%2C%20PLAZA%20SAN%20ANDRES%202%2C%20Madrid"
+          "title": "Exposición: Cécile Chaminade, pianista y compositora francesa del siglo XIX",
+          "venue": "Centro de Cultura Contemporánea Conde Duque",
+          "space": "",
+          "hours": "00:00",
+          "dateText": "hasta 15 mar",
+          "address": "CALLE CONDE DUQUE 9",
+          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE CONDE DUQUE 9, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20CONDE%20DUQUE%209%2C%20Madrid"
         },
         {
-          "kind": "expo",
-          "title": "Diálogos",
-          "artists": "",
+          "title": "La Tullida Gallery, un Proyecto de Costa Badía, residente de arte y educación",
+          "venue": "Matadero Madrid",
+          "space": "",
           "hours": "",
-          "metaRight": "hasta 28 feb",
-          "venue": "Sala de exposiciones La Lonja · Casa del Reloj",
-          "address": "PASEO CHOPERA 10",
-          "mapsQuery": "Sala de exposiciones La Lonja · Casa del Reloj, PASEO CHOPERA 10, Madrid",
-          "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=58398ae8a772c910VgnVCM200000f921e388RCRD",
-          "mapsUrl": "https://www.google.com/maps?q=Sala%20de%20exposiciones%20La%20Lonja%20%C2%B7%20Casa%20del%20Reloj%2C%20PASEO%20CHOPERA%2010%2C%20Madrid"
+          "dateText": "hasta 17 jun",
+          "address": "PLAZA LEGAZPI 8",
+          "mapsQuery": "Matadero Madrid, PLAZA LEGAZPI 8, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PLAZA%20LEGAZPI%208%2C%20Madrid"
+        },
+        {
+          "title": "Mis preferidas",
+          "venue": "Matadero Madrid",
+          "space": "",
+          "hours": "",
+          "dateText": "hasta 27 feb",
+          "address": "CALLE NUÑEZ DE BALBOA 40",
+          "mapsQuery": "Matadero Madrid, CALLE NUÑEZ DE BALBOA 40, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20CALLE%20NU%C3%91EZ%20DE%20BALBOA%2040%2C%20Madrid"
+        },
+        {
+          "title": "Actividades del Centro Cultural Villa de Barajas",
+          "venue": "Centro de Cultura Contemporánea Conde Duque",
+          "space": "Patio",
+          "hours": "",
+          "dateText": "hasta 26 feb",
+          "address": "CALLE BOTICA 7",
+          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE BOTICA 7, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20BOTICA%207%2C%20Madrid"
+        },
+        {
+          "title": "Imágenes en diálogo, 4 formas de mir Arte",
+          "venue": "Centro de Cultura Contemporánea Conde Duque",
+          "space": "",
+          "hours": "08:30",
+          "dateText": "hasta 25 feb",
+          "address": "CALLE CONDE DUQUE 9",
+          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE CONDE DUQUE 9, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20CONDE%20DUQUE%209%2C%20Madrid"
         }
       ]
     }
