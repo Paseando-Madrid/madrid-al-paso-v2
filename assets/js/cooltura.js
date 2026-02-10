@@ -5,6 +5,7 @@
    - Swap premium al cambiar de card (sin brusquedad)
    - Museos: render editorial + pin 📍 (Google Maps en nueva pestaña)
    - Directo: 8 conciertos + pin 📍 (sin Ticketmaster) + lista fija de salas recomendadas
+   - EXPO: renderer editorial (título bold + artistas + horario + hasta + dirección + pin)
 */
 
 const modal  = document.getElementById('kModal');
@@ -31,58 +32,32 @@ if (!modal || !mosaic) {
 
   const CFG = {
     // ✅ DIRECTO: apunta al JSON que genera tu workflow
-    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",            json:"data/directo-weekly.json", mode:"directo" },
+    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",             json:"data/directo-weekly.json",  mode:"directo" },
 
     // Estos los dejamos listos para cuando automatices
-    ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.", json:"data/kids-weekly.json",    mode:"items" },
-    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                 json:"data/agenda-monthly.json", mode:"group", group:"exhibitions" },
-    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",        json:"data/agenda-monthly.json", mode:"group", group:"theatre" },
-    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",            json:"data/museums.json",        mode:"museos" },
-    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",   json:"data/leisure.json",        mode:"items" }
+    ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",  json:"data/kids-weekly.json",     mode:"items" },
+
+    // ✅ EXPO: usa agenda-monthly.json con groups[ {category:"exhibitions"} ] (sin theatre)
+    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                  json:"data/agenda-monthly.json",  mode:"group", group:"exhibitions" },
+
+    // ⚠️ Cartelera: ya NO debe apuntar a agenda-monthly.json (porque lo limpiamos y solo es EXPO)
+    // Deja esto listo para un futuro updater de teatro (cuando exista el JSON).
+    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",         json:"data/theatre-monthly.json", mode:"items" },
+
+    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",             json:"data/museums.json",         mode:"museos" },
+    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",    json:"data/leisure.json",         mode:"items" }
   };
 
   // Lista fija (editorial) de salas recomendadas
   const DIRECTO_VENUES = [
-    {
-      name: "Sala La Riviera",
-      program: "Conciertos y sesiones de gran formato (rock, pop, electrónica)",
-      address: "Paseo de la Virgen del Puerto, s/n"
-    },
-    {
-      name: "Café Berlín",
-      program: "Jazz, soul, funk, blues, world music",
-      address: "Costanilla de los Ángeles, 20"
-    },
-    {
-      name: "Teatro Eslava",
-      program: "Conciertos, electrónica, club nights y DJs",
-      address: "Calle del Arenal, 11"
-    },
-    {
-      name: "Sala Clamores",
-      program: "Jazz, soul, funk, blues y música afro",
-      address: "Calle de Alburquerque, 14"
-    },
-    {
-      name: "Siroko",
-      program: "Electrónica, indie, pop alternativo, DJs",
-      address: "Calle San Dimas, 3"
-    },
-    {
-      name: "El Perro de la Parte de Atrás del Coche",
-      program: "Rock, indie y alternativo",
-      address: "Calle Puebla, 15"
-    },
-    {
-      name: "Intruso Bar",
-      program: "Blues, funk, soul y jam sessions",
-      address: "Calle de Augusto Figueroa, 3"
-    },
-    {
-      name: "Sala El Sol",
-      program: "Rock, indie y alternativo",
-      address: "Calle Jardines, 3"
-    }
+    { name: "Sala La Riviera", program: "Conciertos y sesiones de gran formato (rock, pop, electrónica)", address: "Paseo de la Virgen del Puerto, s/n" },
+    { name: "Café Berlín", program: "Jazz, soul, funk, blues, world music", address: "Costanilla de los Ángeles, 20" },
+    { name: "Teatro Eslava", program: "Conciertos, electrónica, club nights y DJs", address: "Calle del Arenal, 11" },
+    { name: "Sala Clamores", program: "Jazz, soul, funk, blues y música afro", address: "Calle de Alburquerque, 14" },
+    { name: "Siroko", program: "Electrónica, indie, pop alternativo, DJs", address: "Calle San Dimas, 3" },
+    { name: "El Perro de la Parte de Atrás del Coche", program: "Rock, indie y alternativo", address: "Calle Puebla, 15" },
+    { name: "Intruso Bar", program: "Blues, funk, soul y jam sessions", address: "Calle de Augusto Figueroa, 3" },
+    { name: "Sala El Sol", program: "Rock, indie y alternativo", address: "Calle Jardines, 3" }
   ];
 
   // ---------- DIM / ACTIVE ----------
@@ -324,7 +299,6 @@ if (!modal || !mosaic) {
       const meta = metaParts.join(' · ');
 
       // ✅ PIN a Google Maps (no Ticketmaster)
-      // Preferimos query con sala + Madrid
       const maps = mapsUrlFromQuery([venue, "Madrid"].filter(Boolean).join(", "));
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'la sala'} en Google Maps`) : "";
 
@@ -470,6 +444,61 @@ if (!modal || !mosaic) {
     }).join('');
   }
 
+  // ---------- RENDER (EXPO) ----------
+  // Formato: título bold / artistas / (horario | metaRight) / dirección + pin
+  function renderExpo(items){
+    const list = Array.isArray(items) ? items : [];
+    const max  = Math.min(list.length, 8);
+
+    if(!max){
+      kList.innerHTML = '<p class="k-empty">Ahora mismo no hay exposiciones publicadas. Vuelve pronto.</p>';
+      return;
+    }
+
+    kList.innerHTML = list.slice(0, max).map(it => {
+      const title   = safeText(it.title) || "—";
+      const artists = safeText(it.artists);
+      const hours   = safeText(it.hours);
+      const metaR   = safeText(it.metaRight);
+      const addr    = safeText(it.address);
+      const venue   = safeText(it.venue);
+      const url     = safeText(it.url);
+
+      // pin: preferimos mapsQuery del JSON; si no, construimos
+      const q = safeText(it.mapsQuery) || [venue, addr, 'Madrid'].filter(Boolean).join(', ');
+      const maps = mapsUrlFromQuery(q);
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'esta exposición'} en Google Maps`) : "";
+
+      // link: si viene url usable, envolvemos título (premium, sin “ver detalles”)
+      const safeUrl = url && isSafeHttpUrl(url) ? url : "";
+      const titleHtml = safeUrl
+        ? `<a class="k-item-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer"><strong>${title}</strong></a>`
+        : `<strong>${title}</strong>`;
+
+      return `
+        <article class="k-item k-item--expo">
+          <div class="k-item-title">${titleHtml}</div>
+
+          ${artists ? `<div class="k-item-sub">${artists}</div>` : ``}
+
+          ${(hours || metaR) ? `
+            <div class="k-item-row k-item-row--meta">
+              ${hours ? `<span class="k-item-hours">${hours}</span>` : `<span></span>`}
+              ${metaR ? `<span class="k-item-metaRight">${metaR}</span>` : ``}
+            </div>
+          ` : ``}
+
+          ${(addr || pin) ? `
+            <div class="k-item-row k-item-row--addr">
+              ${addr ? `<span class="k-item-address">${addr}</span>` : `<span></span>`}
+              ${pin}
+            </div>
+          ` : ``}
+        </article>
+      `;
+    }).join('');
+  }
+
   // ---------- LOAD + RENDER ----------
   async function loadAndRender(key){
     const cfg = CFG[key];
@@ -518,7 +547,13 @@ if (!modal || !mosaic) {
         const g = groups.find(x => x.category === cfg.group);
 
         if(g?.deck) kDeck.textContent = g.deck;
-        renderItems(Array.isArray(g?.items) ? g.items : []);
+
+        // ✅ EXPO usa renderer específico (porque su JSON no tiene "start" y tiene artists/hours/metaRight/address/pin)
+        if(cfg.group === "exhibitions"){
+          renderExpo(Array.isArray(g?.items) ? g.items : []);
+        } else {
+          renderItems(Array.isArray(g?.items) ? g.items : []);
+        }
 
         if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
         endSwap();
