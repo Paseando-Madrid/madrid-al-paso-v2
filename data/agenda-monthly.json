@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-10T15:32:50.986Z",
+  "updatedAt": "2026-02-10T17:35:29.500Z",
   "groups": [
     {
       "category": "exhibitions",
@@ -17,13 +17,23 @@
         },
         {
           "title": "Exposición: 'Fui sobre agua edificada' V Concurso de fotografía del Museo de Historia",
-          "venue": "Centro de Cultura Contemporánea Conde Duque",
+          "venue": "Museo de Historia de Madrid",
           "space": "Patio",
           "hours": "",
           "dateText": "hasta 1 mar",
           "address": "CALLE FUENCARRAL 78",
-          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE FUENCARRAL 78, Madrid",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20FUENCARRAL%2078%2C%20Madrid"
+          "mapsQuery": "Museo de Historia de Madrid, CALLE FUENCARRAL 78, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Museo%20de%20Historia%20de%20Madrid%2C%20CALLE%20FUENCARRAL%2078%2C%20Madrid"
+        },
+        {
+          "title": "Exposición: Cécile Chaminade, pianista y compositora francesa del siglo XIX",
+          "venue": "Centro de Cultura Contemporánea Conde Duque",
+          "space": "",
+          "hours": "",
+          "dateText": "hasta 15 mar",
+          "address": "CALLE CONDE DUQUE 9",
+          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE CONDE DUQUE 9, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20CONDE%20DUQUE%209%2C%20Madrid"
         },
         {
           "title": "Ana Juan",
@@ -46,11 +56,21 @@
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PLAZA%20LEGAZPI%208%2C%20Madrid"
         },
         {
-          "title": "Exposición: Cécile Chaminade, pianista y compositora francesa del siglo XIX",
+          "title": "Exposición: Naturaleza de asfalto. Madrid hiperrealista. José Miguel Palacio.",
+          "venue": "Museo de Historia de Madrid",
+          "space": "",
+          "hours": "",
+          "dateText": "hasta 24 may",
+          "address": "CALLE FUENCARRAL 78",
+          "mapsQuery": "Museo de Historia de Madrid, CALLE FUENCARRAL 78, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Museo%20de%20Historia%20de%20Madrid%2C%20CALLE%20FUENCARRAL%2078%2C%20Madrid"
+        },
+        {
+          "title": "Imágenes en diálogo, 4 formas de mir Arte",
           "venue": "Centro de Cultura Contemporánea Conde Duque",
           "space": "",
           "hours": "",
-          "dateText": "hasta 15 mar",
+          "dateText": "hasta 25 feb",
           "address": "CALLE CONDE DUQUE 9",
           "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE CONDE DUQUE 9, Madrid",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20CONDE%20DUQUE%209%2C%20Madrid"
@@ -76,24 +96,14 @@
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PLAZA%20LEGAZPI%208%2C%20Madrid"
         },
         {
-          "title": "Exposición: Naturaleza de asfalto. Madrid hiperrealista. José Miguel Palacio.",
+          "title": "Microfestival Retrospectivas (Vol. 2)",
           "venue": "Centro de Cultura Contemporánea Conde Duque",
           "space": "",
           "hours": "",
-          "dateText": "hasta 24 may",
-          "address": "CALLE FUENCARRAL 78",
-          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE FUENCARRAL 78, Madrid",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20FUENCARRAL%2078%2C%20Madrid"
-        },
-        {
-          "title": "Illán Argüello. El emerger de Venus",
-          "venue": "CentroCentro",
-          "space": "",
-          "hours": "",
-          "dateText": "hasta 1 mar",
-          "address": "PLAZA CIBELES 1",
-          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
+          "dateText": "hasta 22 abr",
+          "address": "CALLE CONDE DUQUE 9",
+          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE CONDE DUQUE 9, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20CONDE%20DUQUE%209%2C%20Madrid"
         }
       ]
     }
