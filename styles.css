@@ -1044,6 +1044,41 @@ img, video{ max-width: 100%; display: block; }
 }
 
 /* ======================================================================
+   ✅ NIÑOS (overlay editorial)
+   - mismo sistema que EXPO
+   - jerarquía rápida: título → horas → lugar + pin
+   (Solo afecta a NIÑOS porque el JS añade .k-item--kids)
+   ====================================================================== */
+.k-item--kids{
+  padding: 14px 0;
+}
+
+.k-item--kids .k-item-title{
+  margin: 0;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  color: rgba(17,17,17,.96);
+  font-size: 16px;
+}
+
+.k-item--kids .k-item-hours{
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.25;
+  color: rgba(17,17,17,.60);
+}
+
+.k-item--kids .k-item-row--addr{
+  margin-top: 8px;
+}
+
+.k-item--kids .k-item-address{
+  color: rgba(17,17,17,.72);
+  font-size: 13.75px;
+  line-height: 1.35;
+}
+
+/* ======================================================================
    MUSEOS (overlay editorial) + PIN 📍
    ====================================================================== */
 .m-item{
