@@ -7,6 +7,7 @@
    - Directo: 8 conciertos + pin 📍 + lista fija de salas recomendadas
    - EXPO: renderer editorial (título bold SIN link + sede + sub-sede + (artistas opcional) + hasta + dirección + pin)
    - EXPO: sedes recomendadas manuales (CaixaForum, MAPFRE, Alcalá 31, Casa Encendida)
+   - NIÑOS: formato Expo (título → horario → lugar + pin) + orden: automáticos → manuales
 */
 
 const modal  = document.getElementById('kModal');
@@ -33,7 +34,16 @@ if (!modal || !mosaic) {
 
   const CFG = {
     directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",               json:"data/directo-weekly.json",  mode:"directo" },
-    ninos:     { title:"Disfrutar Madrid con niños", deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",    json:"data/kids-weekly.json",     mode:"items" },
+
+    // ✅ NIÑOS: preferimos data/ninos.json, con fallback al legacy kids-weekly.json
+    ninos:     {
+      title:"Disfrutar Madrid con niños",
+      deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",
+      json:"data/ninos.json",
+      fallbackJson:"data/kids-weekly.json",
+      mode:"kids"
+    },
+
     expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                    json:"data/agenda-monthly.json",  mode:"group",  group:"exhibitions" },
     cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",           json:"data/theatre-monthly.json", mode:"items" },
     museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",               json:"data/museums.json",         mode:"museos" },
@@ -282,6 +292,14 @@ if (!modal || !mosaic) {
     return `<a class="pm-pin" href="${safe}" target="_blank" rel="noopener noreferrer" aria-label="${ariaLabel || 'Ver ubicación en Google Maps'}">📍</a>`;
   }
 
+  function normalizeHoursForUI(hours){
+    let h = safeText(hours).trim();
+    if(!h) return "";
+    if (h === "00:00") return "";
+    if (/^\d{1,2}:\d{2}$/.test(h)) return ""; // hora suelta poco fiable
+    return h;
+  }
+
   // ---------- RENDER (GENÉRICO) ----------
   function renderItems(items){
     const list = Array.isArray(items) ? items : [];
@@ -310,6 +328,80 @@ if (!modal || !mosaic) {
         </div>
       `;
     }).join('');
+  }
+
+  // ---------- RENDER (NIÑOS: Expo-style + automáticos → manuales) ----------
+  // Formato por item:
+  //  - Título
+  //  - Horario (si existe)
+  //  - Lugar + pin (a la derecha)
+  //
+  // JSON soportados:
+  //  A) Nuevo: { updatedAt, autoItems:[...], manualItems:[...] }
+  //  B) Nuevo alt: { updatedAt, items:[...], manual:[...] }
+  //  C) Legacy: { updatedAt, items:[...] }  (se trata como autoItems)
+  function renderKidsFromData(data){
+    const autoItems =
+      (Array.isArray(data?.autoItems) && data.autoItems) ||
+      (Array.isArray(data?.items) && data.items) ||
+      [];
+
+    const manualItems =
+      (Array.isArray(data?.manualItems) && data.manualItems) ||
+      (Array.isArray(data?.manual) && data.manual) ||
+      [];
+
+    const autoMax = Math.min(autoItems.length, 10);
+    const manMax  = Math.min(manualItems.length, 8);
+
+    if(!autoMax && !manMax){
+      kList.innerHTML = '<p class="k-empty">Ahora mismo no hay planes publicados. Vuelve pronto.</p>';
+      return;
+    }
+
+    function renderKidItem(it){
+      const title = safeText(it.title) || "—";
+      const venue = safeText(it.venue).trim();
+      const space = safeText(it.space || it.subvenue).trim();
+      const hours = normalizeHoursForUI(it.hours);
+      const venueLine = [venue, space].filter(Boolean).join(" · ");
+
+      const addr = safeText(it.address).trim();
+      const q = safeText(it.mapsQuery) || [venueLine || venue, addr, "Madrid"].filter(Boolean).join(", ");
+      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueLine || venue || 'este lugar'} en Google Maps`) : "";
+
+      return `
+        <article class="k-item k-item--kids">
+          <div class="k-item-title"><strong>${title}</strong></div>
+          ${hours ? `<div class="k-item-hours">${hours}</div>` : ``}
+          <div class="k-item-row k-item-row--addr">
+            <span class="k-item-address">${venueLine || venue || ''}</span>
+            ${pin}
+          </div>
+        </article>
+      `;
+    }
+
+    let html = "";
+
+    // 1) Automáticos
+    if(autoMax){
+      html += autoItems.slice(0, autoMax).map(renderKidItem).join('');
+    }
+
+    // 2) Manuales (debajo)
+    if(manMax){
+      html += `
+        <div class="k-divider" aria-hidden="true" style="height:18px;"></div>
+        <div class="k-subhead" style="margin-top:10px;">
+          <p class="k-kicker" style="margin:0 0 10px 0;">Recomendaciones</p>
+        </div>
+      `;
+      html += manualItems.slice(0, manMax).map(renderKidItem).join('');
+    }
+
+    kList.innerHTML = html;
   }
 
   // ---------- RENDER (DIRECTO: items + salas recomendadas) ----------
@@ -444,12 +536,6 @@ if (!modal || !mosaic) {
   }
 
   // ---------- RENDER (EXPO) ----------
-  // Formato:
-  // - Título (bold, NO link)
-  // - Sede (venue + sub-sede)  [sub-sede sale de it.subvenue o it.space]
-  // - Artistas (si existe)
-  // - Meta: Horario (solo si es “texto bueno”) + hasta X
-  // - Dirección + pin
   function renderExpo(items){
     const list = Array.isArray(items) ? items : [];
     const max  = Math.min(list.length, 8);
@@ -462,18 +548,16 @@ if (!modal || !mosaic) {
     kList.innerHTML = list.slice(0, max).map(it => {
       const title = safeText(it.title) || "—";
 
-      // sede / subsede (en tu JSON viene "space"; permitimos también "subvenue")
       const venue    = safeText(it.venue).trim();
-      const subvenue = safeText(it.subvenue || it.space).trim(); // 👈 compatible con tu JSON
+      const subvenue = safeText(it.subvenue || it.space).trim();
       const artists  = safeText(it.artists).trim();
 
-      // horas: si viene vacío/00:00 o solo una hora (12:00) lo ocultamos
       let hours = safeText(it.hours).trim();
       if (!hours || hours === "00:00" || (/^\d{1,2}:\d{2}$/.test(hours))) {
         hours = "";
       }
 
-      const until = safeText(it.dateText).trim(); // “hasta X”
+      const until = safeText(it.dateText).trim();
       const addr  = safeText(it.address).trim();
 
       const venueLine = [venue, subvenue].filter(Boolean).join(" · ");
@@ -506,7 +590,6 @@ if (!modal || !mosaic) {
       `;
     }).join('');
 
-    // --- sedes recomendadas manuales (bloque al final) ---
     const venuesHtml = EXPO_VENUES.map(v => {
       const name = safeText(v.name);
       const address = safeText(v.address);
@@ -534,6 +617,21 @@ if (!modal || !mosaic) {
   }
 
   // ---------- LOAD + RENDER ----------
+  async function fetchJsonWithFallback(primary, fallback){
+    const tryFetch = async (url) => {
+      const res = await fetch(url, { cache: 'no-store' });
+      if(!res.ok) throw new Error(`fetch failed: ${url}`);
+      return res.json();
+    };
+
+    try{
+      return await tryFetch(primary);
+    }catch(err){
+      if(!fallback) throw err;
+      return await tryFetch(fallback);
+    }
+  }
+
   async function loadAndRender(key){
     const cfg = CFG[key];
     if(!cfg) return;
@@ -548,9 +646,7 @@ if (!modal || !mosaic) {
     openModal();
 
     try{
-      const res = await fetch(cfg.json, { cache: 'no-store' });
-      if(!res.ok) throw new Error("fetch failed");
-      const data = await res.json();
+      const data = await fetchJsonWithFallback(cfg.json, cfg.fallbackJson);
 
       const updated = data.updatedAt ? fmtDate(data.updatedAt) : "—";
       kMeta.textContent = `Actualizado: ${updated}`;
@@ -569,6 +665,13 @@ if (!modal || !mosaic) {
         return;
       }
 
+      if(cfg.mode === "kids"){
+        renderKidsFromData(data);
+        if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
+        endSwap();
+        return;
+      }
+
       if(cfg.mode === "items"){
         renderItems(Array.isArray(data.items) ? data.items : []);
         if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
@@ -580,7 +683,6 @@ if (!modal || !mosaic) {
         const groups = Array.isArray(data.groups) ? data.groups : [];
         const g = groups.find(x => x.category === cfg.group);
 
-        // ✅ EXPO: sustituimos deck “técnico” por uno editorial/SEO (sin depender del JSON)
         if(cfg.group === "exhibitions"){
           kDeck.textContent = "Programación en Madrid · Sedes culturales";
           renderExpo(Array.isArray(g?.items) ? g.items : []);
@@ -620,4 +722,3 @@ if (!modal || !mosaic) {
   });
 
 }
-
