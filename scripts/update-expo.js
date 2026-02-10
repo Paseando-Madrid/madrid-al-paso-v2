@@ -11,7 +11,7 @@
  *    - /actividades/Exposiciones
  *    - /actividades/ProgramacionDestacadaAgendaCultura
  *    - /actividades/ActividadesCulturales (solo si “huele” a expo)
- * - SOLO sedes permitidas (Matadero, Conde Duque, CentroCentro, Telefónica)
+ * - SOLO sedes permitidas (Matadero, Conde Duque, CentroCentro, Telefónica, Museo Historia)
  * - Sub-sede = "space" (Nave/Sala/Patio/Bóvedas…) SOLO visual (no afecta filtro)
  * - Horario: solo si es “real” (evita 00:00 / horas sueltas raras)
  * - NO obliga link al Ayuntamiento
@@ -80,6 +80,8 @@ const ALLOWED_VENUES = new Set([
   "Centro de Cultura Contemporánea Conde Duque",
   "CentroCentro",
   "Espacio Fundación Telefónica",
+  // ✅ nuevo: para que Fuencarral 78 no se recoloque como Conde Duque
+  "Museo de Historia de Madrid",
 ]);
 
 /**
@@ -88,6 +90,10 @@ const ALLOWED_VENUES = new Set([
  * - Intentar canónico por event-location exacto
  * - Si no, buscar needles fuertes en el haystack (title/desc/rel/address/org)
  * - SIN needles genéricos tipo "nave" o "patio"
+ *
+ * ⚠️ Importante:
+ * - "CALLE FUENCARRAL 78" es del Museo de Historia, NO de Conde Duque.
+ *   Antes estaba como needle de Conde Duque y por eso te lo pisaba.
  */
 const VENUE_RULES = [
   {
@@ -102,6 +108,21 @@ const VENUE_RULES = [
       "plaza matadero",
     ].map(norm),
   },
+
+  // ✅ NUEVO: Museo de Historia de Madrid (Fuencarral 78)
+  {
+    label: "Museo de Historia de Madrid",
+    needles: [
+      "museo de historia de madrid",
+      "museo historia de madrid",
+      "museo de historia",
+      "mhm", // por si en algún campo abrevia (no es genérico en el pool)
+      "calle fuencarral 78",
+      "fuencarral 78",
+      "28004", // distrito/CP a veces se cuela en address-area (se combina con otros needles)
+    ].map(norm),
+  },
+
   {
     label: "Centro de Cultura Contemporánea Conde Duque",
     needles: [
@@ -110,9 +131,10 @@ const VENUE_RULES = [
       "salas de exposiciones conde duque",
       "sala de exposiciones conde duque",
       "calle conde duque",
-      "calle fuencarral 78",
+      // ❌ ELIMINADO: "calle fuencarral 78" (eso es Museo de Historia)
     ].map(norm),
   },
+
   {
     label: "CentroCentro",
     needles: [
@@ -123,6 +145,7 @@ const VENUE_RULES = [
       "plaza de cibeles",
     ].map(norm),
   },
+
   {
     label: "Espacio Fundación Telefónica",
     needles: [
@@ -321,6 +344,7 @@ function scoreExpo({ venue, title, space, hay }){
   // Sedes prioritarias (ajustable)
   if (v.includes("matadero")) s += 42;
   if (v.includes("fundacion telefonica")) s += 40;
+  if (v.includes("museo de historia")) s += 38; // ✅ nuevo (entre telefónica y conde duque, ajustable)
   if (v.includes("conde duque")) s += 36;
   if (v.includes("centrocentro")) s += 34;
 
@@ -363,6 +387,7 @@ function selectEditorialTop(items){
   const venueOrder = [
     "Matadero Madrid",
     "Espacio Fundación Telefónica",
+    "Museo de Historia de Madrid", // ✅ nuevo
     "Centro de Cultura Contemporánea Conde Duque",
     "CentroCentro",
   ].filter(v => byVenue.has(v));
@@ -490,4 +515,3 @@ main().catch(err => {
   console.error(err);
   process.exit(1);
 });
-
