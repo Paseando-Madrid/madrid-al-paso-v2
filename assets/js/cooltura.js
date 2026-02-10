@@ -35,12 +35,11 @@ if (!modal || !mosaic) {
   const CFG = {
     directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",               json:"data/directo-weekly.json",  mode:"directo" },
 
-    // ✅ NIÑOS: preferimos data/ninos.json, con fallback al legacy kids-weekly.json
+    // ✅ NIÑOS (definitivo): semanal, un solo origen (sin fallback)
     ninos:     {
       title:"Disfrutar Madrid con niños",
       deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",
-      json:"data/ninos.json",
-      fallbackJson:"data/kids-weekly.json",
+      json:"data/ninos-weekly.json",
       mode:"kids"
     },
 
@@ -331,15 +330,6 @@ if (!modal || !mosaic) {
   }
 
   // ---------- RENDER (NIÑOS: Expo-style + automáticos → manuales) ----------
-  // Formato por item:
-  //  - Título
-  //  - Horario (si existe)
-  //  - Lugar + pin (a la derecha)
-  //
-  // JSON soportados:
-  //  A) Nuevo: { updatedAt, autoItems:[...], manualItems:[...] }
-  //  B) Nuevo alt: { updatedAt, items:[...], manual:[...] }
-  //  C) Legacy: { updatedAt, items:[...] }  (se trata como autoItems)
   function renderKidsFromData(data){
     const autoItems =
       (Array.isArray(data?.autoItems) && data.autoItems) ||
