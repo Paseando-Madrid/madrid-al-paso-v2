@@ -1,56 +1,71 @@
 {
-  "updatedAt": "2026-02-10T03:02:42.431Z",
+  "updatedAt": "2026-02-10T08:08:56.973Z",
   "groups": [
     {
       "category": "exhibitions",
       "deck": "Selección automática desde el JSON oficial del Ayuntamiento (próximos 100 días). Curación por sedes.",
       "items": [
         {
+          "kind": "expo",
           "title": "Ana Juan",
+          "artists": "CentroCentro",
+          "hours": "",
+          "metaRight": "hasta 3 may",
           "venue": "CentroCentro",
           "address": "PLAZA CIBELES 1",
-          "dateText": "hasta 3 may",
+          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
           "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=70b80f933779b910VgnVCM200000f921e388RCRD",
           "mapsUrl": "https://www.google.com/maps?q=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
         },
         {
+          "kind": "expo",
           "title": "Javier Garcerá",
+          "artists": "CentroCentro",
+          "hours": "",
+          "metaRight": "hasta 3 may",
           "venue": "CentroCentro",
           "address": "PLAZA CIBELES 1",
-          "dateText": "hasta 3 may",
+          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
           "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=30ba4bc344e7b910VgnVCM100000891ecb1aRCRD",
           "mapsUrl": "https://www.google.com/maps?q=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
         },
         {
+          "kind": "expo",
           "title": "Luis Pérez Calvo",
+          "artists": "CentroCentro",
+          "hours": "",
+          "metaRight": "hasta 26 abr",
           "venue": "CentroCentro",
           "address": "PLAZA CIBELES 1",
-          "dateText": "hasta 26 abr",
+          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
           "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=411cefc0c5e7b910VgnVCM100000891ecb1aRCRD",
           "mapsUrl": "https://www.google.com/maps?q=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
         },
         {
+          "kind": "expo",
           "title": "Debod 1954-1964",
+          "artists": "Museo de San Isidro. Los Orígenes de Madrid",
+          "hours": "",
+          "metaRight": "hasta 29 mar",
           "venue": "Museo de San Isidro",
           "address": "PLAZA SAN ANDRES 2",
-          "dateText": "hasta 29 mar",
+          "mapsQuery": "Museo de San Isidro, PLAZA SAN ANDRES 2, Madrid",
           "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=f617690c5b499910VgnVCM200000f921e388RCRD",
           "mapsUrl": "https://www.google.com/maps?q=Museo%20de%20San%20Isidro%2C%20PLAZA%20SAN%20ANDRES%202%2C%20Madrid"
         },
         {
+          "kind": "expo",
           "title": "Diálogos",
+          "artists": "",
+          "hours": "",
+          "metaRight": "hasta 28 feb",
           "venue": "Sala de exposiciones La Lonja · Casa del Reloj",
           "address": "PASEO CHOPERA 10",
-          "dateText": "hasta 28 feb",
+          "mapsQuery": "Sala de exposiciones La Lonja · Casa del Reloj, PASEO CHOPERA 10, Madrid",
           "url": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=58398ae8a772c910VgnVCM200000f921e388RCRD",
           "mapsUrl": "https://www.google.com/maps?q=Sala%20de%20exposiciones%20La%20Lonja%20%C2%B7%20Casa%20del%20Reloj%2C%20PASEO%20CHOPERA%2010%2C%20Madrid"
         }
       ]
-    },
-    {
-      "category": "theatre",
-      "deck": "Pendiente de automatización (siguiente paso).",
-      "items": []
     }
   ]
 }
