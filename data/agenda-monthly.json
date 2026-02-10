@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-02-10T10:43:44.348Z",
+  "updatedAt": "2026-02-10T15:32:50.986Z",
   "groups": [
     {
       "category": "exhibitions",
-      "deck": "Selección automática desde el JSON oficial del Ayuntamiento (próximos 100 días). Curación por sedes.",
+      "deck": "Programación en Madrid · Sedes culturales",
       "items": [
         {
           "title": "'CLEOPATRA', LA EXPOSICIÓN INMERSIVA",
@@ -16,34 +16,54 @@
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PLAZA%20LEGAZPI%208%2C%20Madrid"
         },
         {
-          "title": "Exposición 'Legendaria II:  Mitos contados e ilustrados'",
-          "venue": "Matadero Madrid",
-          "space": "",
-          "hours": "",
-          "dateText": "hasta 1 mar",
-          "address": "PASEO CHOPERA 14",
-          "mapsQuery": "Matadero Madrid, PASEO CHOPERA 14, Madrid",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PASEO%20CHOPERA%2014%2C%20Madrid"
-        },
-        {
           "title": "Exposición: 'Fui sobre agua edificada' V Concurso de fotografía del Museo de Historia",
           "venue": "Centro de Cultura Contemporánea Conde Duque",
           "space": "Patio",
-          "hours": "12:00",
+          "hours": "",
           "dateText": "hasta 1 mar",
           "address": "CALLE FUENCARRAL 78",
           "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE FUENCARRAL 78, Madrid",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20FUENCARRAL%2078%2C%20Madrid"
         },
         {
+          "title": "Ana Juan",
+          "venue": "CentroCentro",
+          "space": "",
+          "hours": "",
+          "dateText": "hasta 3 may",
+          "address": "PLAZA CIBELES 1",
+          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
+        },
+        {
+          "title": "Hombre que me hace daño, hombre que más feo se pone",
+          "venue": "Matadero Madrid",
+          "space": "",
+          "hours": "",
+          "dateText": "hasta 14 feb",
+          "address": "PLAZA LEGAZPI 8",
+          "mapsQuery": "Matadero Madrid, PLAZA LEGAZPI 8, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PLAZA%20LEGAZPI%208%2C%20Madrid"
+        },
+        {
           "title": "Exposición: Cécile Chaminade, pianista y compositora francesa del siglo XIX",
           "venue": "Centro de Cultura Contemporánea Conde Duque",
           "space": "",
-          "hours": "00:00",
+          "hours": "",
           "dateText": "hasta 15 mar",
           "address": "CALLE CONDE DUQUE 9",
           "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE CONDE DUQUE 9, Madrid",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20CONDE%20DUQUE%209%2C%20Madrid"
+        },
+        {
+          "title": "Antonio Serrano &amp; Kaele Jiménez",
+          "venue": "CentroCentro",
+          "space": "",
+          "hours": "",
+          "dateText": "hasta 12 mar",
+          "address": "PLAZA CIBELES 1",
+          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
         },
         {
           "title": "La Tullida Gallery, un Proyecto de Costa Badía, residente de arte y educación",
@@ -56,34 +76,24 @@
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20PLAZA%20LEGAZPI%208%2C%20Madrid"
         },
         {
-          "title": "Mis preferidas",
-          "venue": "Matadero Madrid",
-          "space": "",
-          "hours": "",
-          "dateText": "hasta 27 feb",
-          "address": "CALLE NUÑEZ DE BALBOA 40",
-          "mapsQuery": "Matadero Madrid, CALLE NUÑEZ DE BALBOA 40, Madrid",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%2C%20CALLE%20NU%C3%91EZ%20DE%20BALBOA%2040%2C%20Madrid"
-        },
-        {
-          "title": "Actividades del Centro Cultural Villa de Barajas",
-          "venue": "Centro de Cultura Contemporánea Conde Duque",
-          "space": "Patio",
-          "hours": "",
-          "dateText": "hasta 26 feb",
-          "address": "CALLE BOTICA 7",
-          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE BOTICA 7, Madrid",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20BOTICA%207%2C%20Madrid"
-        },
-        {
-          "title": "Imágenes en diálogo, 4 formas de mir Arte",
+          "title": "Exposición: Naturaleza de asfalto. Madrid hiperrealista. José Miguel Palacio.",
           "venue": "Centro de Cultura Contemporánea Conde Duque",
           "space": "",
-          "hours": "08:30",
-          "dateText": "hasta 25 feb",
-          "address": "CALLE CONDE DUQUE 9",
-          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE CONDE DUQUE 9, Madrid",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20CONDE%20DUQUE%209%2C%20Madrid"
+          "hours": "",
+          "dateText": "hasta 24 may",
+          "address": "CALLE FUENCARRAL 78",
+          "mapsQuery": "Centro de Cultura Contemporánea Conde Duque, CALLE FUENCARRAL 78, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20de%20Cultura%20Contempor%C3%A1nea%20Conde%20Duque%2C%20CALLE%20FUENCARRAL%2078%2C%20Madrid"
+        },
+        {
+          "title": "Illán Argüello. El emerger de Venus",
+          "venue": "CentroCentro",
+          "space": "",
+          "hours": "",
+          "dateText": "hasta 1 mar",
+          "address": "PLAZA CIBELES 1",
+          "mapsQuery": "CentroCentro, PLAZA CIBELES 1, Madrid",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=CentroCentro%2C%20PLAZA%20CIBELES%201%2C%20Madrid"
         }
       ]
     }
