@@ -962,6 +962,88 @@ img, video{ max-width: 100%; display: block; }
 .k-empty{ margin: 0; color: rgba(17,17,17,.70); }
 
 /* ======================================================================
+   ✅ PIN FIX (SIN RAYITA) — funciona incluso con .k-item a{underline…}
+   ====================================================================== */
+.pm-pin{
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+}
+.k-item a.pm-pin{
+  margin-top: 0 !important;
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+}
+
+/* ======================================================================
+   ✅ EXPO (overlay editorial): title bold / artists / hours + metaRight / address + pin
+   (Solo afecta a EXPO porque el JS añade .k-item--expo)
+   ====================================================================== */
+.k-item--expo{
+  padding: 14px 0;
+}
+
+.k-item--expo .k-item-title{
+  margin: 0;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  color: rgba(17,17,17,.96);
+  font-size: 16px;
+}
+
+.k-item--expo .k-item-link{
+  text-decoration: none;
+  border-bottom: 0;
+}
+
+.k-item--expo .k-item-sub{
+  margin-top: 4px;
+  color: rgba(17,17,17,.70);
+  font-size: 13.75px;
+  line-height: 1.35;
+}
+
+.k-item-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.k-item-row--meta{
+  margin-top: 10px;
+  color: rgba(17,17,17,.62);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.k-item-hours{
+  flex: 1;
+  min-width: 0;
+}
+
+.k-item-metaRight{
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.k-item-row--addr{
+  align-items: center;
+  margin-top: 10px;
+}
+
+.k-item-address{
+  flex: 1;
+  min-width: 0;
+  color: rgba(17,17,17,.72);
+  font-size: 13.75px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ======================================================================
    MUSEOS (overlay editorial) + PIN 📍
    ====================================================================== */
 .m-item{
@@ -1143,4 +1225,3 @@ img, video{ max-width: 100%; display: block; }
     transform: none;
   }
 }
-
