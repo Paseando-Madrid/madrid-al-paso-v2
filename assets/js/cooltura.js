@@ -8,7 +8,23 @@
    - EXPO: renderer editorial (título bold SIN link + sede + sub-sede + (artistas opcional) + hasta + dirección + pin)
    - EXPO: sedes recomendadas manuales (CaixaForum, MAPFRE, Alcalá 31, Casa Encendida)
    - NIÑOS: formato Expo (título → actividad/audiencia → horario → lugar + pin) + orden: automáticos → manuales
+
+   ✅ CLICK CONTRACT (premium, sin look de link):
+   - Automatizados (agenda): SOLO TÍTULO clicable → it.link (flag)
+   - Manuales "sedes/salas recomendadas": SOLO NOMBRE sede clicable → venue.url (flag)
+   - Manuales NIÑOS (manualItems): SOLO NOMBRE sede clicable → it.link (flag)
+
+   ✅ EXCEPCIÓN DIRECTO (AUTOMATIZADOS):
+   - En Directo, NO se usa it.link (evita Ticketmaster/venta)
+   - SOLO la sede (venue) puede ser clicable → programación de la sala (flag)
 */
+
+/* ============================
+   FLAGS (OFF por defecto)
+   ============================ */
+const ENABLE_OVERLAY_ITEM_LINKS = false;          // Agenda: SOLO título del evento → it.link
+const ENABLE_RECOMMENDED_VENUE_LINKS = false;     // Manuales (sedes/salas recomendadas + manualItems NIÑOS): SOLO nombre sede → venue.url / it.link
+const ENABLE_DIRECTO_AUTO_VENUE_LINKS = false;    // Directo (auto): SOLO sede clicable → programación de la sala (NO it.link)
 
 const modal  = document.getElementById('kModal');
 const mosaic = document.getElementById('kMosaic');
@@ -49,24 +65,24 @@ if (!modal || !mosaic) {
     alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",      json:"data/leisure.json",         mode:"items" }
   };
 
-  // Directo: salas recomendadas (editorial)
+  // Directo: salas recomendadas (editorial) + URL programación directa
   const DIRECTO_VENUES = [
-    { name: "Sala La Riviera", program: "Conciertos y sesiones de gran formato (rock, pop, electrónica)", address: "Paseo de la Virgen del Puerto, s/n" },
-    { name: "Café Berlín", program: "Jazz, soul, funk, blues, world music", address: "Costanilla de los Ángeles, 20" },
-    { name: "Teatro Eslava", program: "Conciertos, electrónica, club nights y DJs", address: "Calle del Arenal, 11" },
-    { name: "Sala Clamores", program: "Jazz, soul, funk, blues y música afro", address: "Calle de Alburquerque, 14" },
-    { name: "Siroko", program: "Electrónica, indie, pop alternativo, DJs", address: "Calle San Dimas, 3" },
-    { name: "El Perro de la Parte de Atrás del Coche", program: "Rock, indie y alternativo", address: "Calle Puebla, 15" },
-    { name: "Intruso Bar", program: "Blues, funk, soul y jam sessions", address: "Calle de Augusto Figueroa, 3" },
-    { name: "Sala El Sol", program: "Rock, indie y alternativo", address: "Calle Jardines, 3" }
+    { name: "Sala La Riviera", program: "Conciertos y sesiones de gran formato (rock, pop, electrónica)", address: "Paseo de la Virgen del Puerto, s/n", url: "https://salariviera.com/conciertossalariviera/" },
+    { name: "Café Berlín", program: "Jazz, soul, funk, blues, world music", address: "Costanilla de los Ángeles, 20", url: "https://berlincafe.es/programas/" },
+    { name: "Teatro Eslava", program: "Conciertos, electrónica, club nights y DJs", address: "Calle del Arenal, 11", url: "https://teatroeslava.com/conciertos/" },
+    { name: "Sala Clamores", program: "Jazz, soul, funk, blues y música afro", address: "Calle de Alburquerque, 14", url: "https://www.salaclamores.es/calendario" },
+    { name: "Siroko", program: "Electrónica, indie, pop alternativo, DJs", address: "Calle San Dimas, 3", url: "https://siroco.es/agenda/" },
+    { name: "El Perro de la Parte de Atrás del Coche", program: "Rock, indie y alternativo", address: "Calle Puebla, 15", url: "https://elperroclub.es/" },
+    { name: "Intruso Bar", program: "Blues, funk, soul y jam sessions", address: "Calle de Augusto Figueroa, 3", url: "https://www.intrusobar.com/" },
+    { name: "Sala El Sol", program: "Rock, indie y alternativo", address: "Calle Jardines, 3", url: "https://salaelsol.com/agenda/" }
   ];
 
-  // EXPO: sedes recomendadas (manuales)
+  // EXPO: sedes recomendadas (manuales) + URL programación/exposiciones
   const EXPO_VENUES = [
-    { name: "CaixaForum Madrid", address: "Paseo del Prado, 36" },
-    { name: "Fundación MAPFRE",  address: "Paseo de Recoletos, 23" },
-    { name: "Sala Alcalá 31",    address: "Calle de Alcalá, 31" },
-    { name: "La Casa Encendida", address: "Ronda de Valencia, 2" }
+    { name: "CaixaForum Madrid", address: "Paseo del Prado, 36", url: "https://caixaforum.org/es/madrid/exposiciones" },
+    { name: "Fundación MAPFRE",  address: "Paseo de Recoletos, 23", url: "https://www.fundacionmapfre.org/arte-y-cultura/exposiciones/" },
+    { name: "Sala Alcalá 31",    address: "Calle de Alcalá, 31", url: "https://www.comunidad.madrid/centros/sala-alcala-31" },
+    { name: "La Casa Encendida", address: "Ronda de Valencia, 2", url: "https://www.lacasaencendida.es/calendario" }
   ];
 
   // ---------- DIM / ACTIVE ----------
@@ -299,6 +315,37 @@ if (!modal || !mosaic) {
     return h;
   }
 
+  // ✅ Link invisible (NO cambia tipografía, NO subraya, NO colorea)
+  function invisibleLinkHTML(text, url, ariaLabel){
+    const t = safeText(text);
+    const safe = safeText(url).trim();
+    if(!t) return "";
+    if(!safe || !isSafeHttpUrl(safe)) return t;
+
+    const style = 'color:inherit;text-decoration:none;font:inherit;';
+    const aria = ariaLabel ? ` aria-label="${safeText(ariaLabel).replace(/"/g, '&quot;')}"` : '';
+    return `<a href="${safe}" target="_blank" rel="noopener noreferrer"${aria} style="${style}">${t}</a>`;
+  }
+
+  // Normaliza para matching de sedes (Directo)
+  function normKey(s){
+    return safeText(s)
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  // Busca URL de programación de una sede por "includes"
+  function programUrlForDirectoVenue(venueText){
+    const v = normKey(venueText);
+    if(!v) return "";
+    // match por inclusión sobre el array manual de sedes
+    const hit = DIRECTO_VENUES.find(x => v.includes(normKey(x.name)) || normKey(x.name).includes(v));
+    const url = hit?.url ? safeText(hit.url).trim() : "";
+    return isSafeHttpUrl(url) ? url : "";
+  }
+
   // Kids: etiquetas UI (actividad / audiencia / hora)
   function labelActivity(type){
     const t = safeText(type).trim().toLowerCase();
@@ -329,7 +376,6 @@ if (!modal || !mosaic) {
     if(time) return time;
 
     const dt = safeText(it.dtstart || it.start).trim();
-    // "2026-03-28 11:30:00.0" o ISO -> sacar HH:MM si aparece
     const m = dt.match(/(\d{2}:\d{2})/);
     return m ? m[1] : "";
   }
@@ -345,9 +391,14 @@ if (!modal || !mosaic) {
     }
 
     kList.innerHTML = list.slice(0, max).map(it => {
-      const title = safeText(it.title) || "—";
+      const titleText = safeText(it.title) || "—";
       const venue = safeText(it.venue);
       const when  = fmtWhen(it.start);
+
+      // ✅ Automatizados genéricos: SOLO título clicable → it.link (flag)
+      const title = (ENABLE_OVERLAY_ITEM_LINKS && isSafeHttpUrl(it.link))
+        ? invisibleLinkHTML(titleText, it.link, `Abrir ficha del evento: ${titleText}`)
+        : titleText;
 
       const metaParts = [venue, when].filter(Boolean);
       const meta = metaParts.join(' · ');
@@ -364,7 +415,45 @@ if (!modal || !mosaic) {
     }).join('');
   }
 
-  // ---------- RENDER (NIÑOS: Expo-style + automáticos → manuales) ----------
+  // ---------- RENDER (DIRECTO: ITEMS AUTO con excepción + salas recomendadas) ----------
+  function renderDirectoAutoItems(items){
+    const list = Array.isArray(items) ? items : [];
+    const max = Math.min(list.length, 8);
+
+    if(!max){
+      kList.innerHTML = '<p class="k-empty">Ahora mismo no hay conciertos publicados. Vuelve pronto.</p>';
+      return;
+    }
+
+    kList.innerHTML = list.slice(0, max).map(it => {
+      const titleText = safeText(it.title) || "—";
+      const venueText = safeText(it.venue).trim();
+      const when      = fmtWhen(it.start);
+
+      // ❗ Directo auto: título NO es link (evita Ticketmaster/venta)
+      const title = titleText;
+
+      // ✅ Directo auto: SOLO sede clicable → programación de sala (flag)
+      const venueProgramUrl = programUrlForDirectoVenue(venueText);
+      const venue = (ENABLE_DIRECTO_AUTO_VENUE_LINKS && venueProgramUrl)
+        ? invisibleLinkHTML(venueText, venueProgramUrl, `Abrir programación de ${venueText}`)
+        : venueText;
+
+      const metaParts = [venue, when].filter(Boolean);
+      const meta = metaParts.join(' · ');
+
+      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery([venueText, "Madrid"].filter(Boolean).join(", "));
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueText || 'esta sala'} en Google Maps`) : "";
+
+      return `
+        <div class="k-item">
+          <h4>${title}</h4>
+          <p>${meta ? `${meta} ${pin ? `· ${pin}` : ""}` : ""}</p>
+        </div>
+      `;
+    }).join('');
+  }
+
   function renderKidsFromData(data){
     const autoItems =
       (Array.isArray(data?.autoItems) && data.autoItems) ||
@@ -385,7 +474,11 @@ if (!modal || !mosaic) {
     }
 
     function renderKidItemAuto(it){
-      const title = safeText(it.title) || "—";
+      const titleText = safeText(it.title) || "—";
+
+      const title = (ENABLE_OVERLAY_ITEM_LINKS && isSafeHttpUrl(it.link))
+        ? invisibleLinkHTML(titleText, it.link, `Abrir ficha del plan: ${titleText}`)
+        : titleText;
 
       const venue = safeText(it.venue).trim();
       const space = safeText(it.space || it.subvenue).trim();
@@ -424,7 +517,8 @@ if (!modal || !mosaic) {
     }
 
     function renderKidItemManual(it){
-      const title = safeText(it.title) || "—";
+      const titleText = safeText(it.title) || "—";
+      const title = titleText; // Manual NIÑOS: el título NO es link
 
       const venue = safeText(it.venue).trim();
       const space = safeText(it.space || it.subvenue).trim();
@@ -436,12 +530,17 @@ if (!modal || !mosaic) {
       const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueLine || venue || 'este lugar'} en Google Maps`) : "";
 
+      const venueLabel = venueLine || venue || '';
+      const venueHTML = (ENABLE_RECOMMENDED_VENUE_LINKS && isSafeHttpUrl(it.link))
+        ? invisibleLinkHTML(venueLabel, it.link, `Abrir programación: ${venueLabel}`)
+        : safeText(venueLabel);
+
       return `
         <article class="k-item k-item--kids">
           <div class="k-item-title"><strong>${title}</strong></div>
           ${hours ? `<div class="k-item-hours">${hours}</div>` : ``}
           <div class="k-item-row k-item-row--addr">
-            <span class="k-item-address">${venueLine || venue || ''}</span>
+            <span class="k-item-address">${venueHTML}</span>
             ${pin}
           </div>
         </article>
@@ -450,12 +549,10 @@ if (!modal || !mosaic) {
 
     let html = "";
 
-    // 1) Automáticos (actividad · audiencia · hora)
     if(autoMax){
       html += autoItems.slice(0, autoMax).map(renderKidItemAuto).join('');
     }
 
-    // 2) Manuales (debajo)
     if(manMax){
       html += `
         <div class="k-divider" aria-hidden="true" style="height:18px;"></div>
@@ -469,14 +566,20 @@ if (!modal || !mosaic) {
     kList.innerHTML = html;
   }
 
-  // ---------- RENDER (DIRECTO: items + salas recomendadas) ----------
   function renderDirecto(items){
-    renderItems(items);
+    // ✅ Directo AUTO con excepción (venue link a programación, no it.link)
+    renderDirectoAutoItems(items);
 
+    // Salas recomendadas (manuales)
     const venuesHtml = DIRECTO_VENUES.map(v => {
       const name = safeText(v.name);
       const program = safeText(v.program);
       const address = safeText(v.address);
+      const url = safeText(v.url).trim();
+
+      const nameHTML = (ENABLE_RECOMMENDED_VENUE_LINKS && isSafeHttpUrl(url))
+        ? invisibleLinkHTML(name, url, `Abrir programación de ${name}`)
+        : safeText(name);
 
       const q = [name, address, "Madrid"].filter(Boolean).join(", ");
       const maps = mapsUrlFromQuery(q);
@@ -484,7 +587,7 @@ if (!modal || !mosaic) {
 
       return `
         <article class="m-item">
-          <h4 class="m-title"><strong>${name}</strong></h4>
+          <h4 class="m-title"><strong>${nameHTML}</strong></h4>
           ${program ? `<p class="m-row">Programación: ${program}</p>` : ``}
           ${address ? `<p class="m-row m-addr">Dirección: ${address} · ${pin}</p>` : ``}
         </article>
@@ -571,7 +674,6 @@ if (!modal || !mosaic) {
       return;
     }
 
-    // Fallback
     kList.innerHTML = list.slice(0, max).map(it => {
       const name  = safeText(it.name || it.title) || "—";
       const hours = safeText(it.hours || it.openingHours || it.horario);
@@ -611,20 +713,18 @@ if (!modal || !mosaic) {
     }
 
     kList.innerHTML = list.slice(0, max).map(it => {
-      const title = safeText(it.title) || "—";
+      const titleText = safeText(it.title) || "—";
+      const title = titleText; // EXPO: sin link (invariante)
 
       const venue    = safeText(it.venue).trim();
       const subvenue = safeText(it.subvenue || it.space).trim();
       const artists  = safeText(it.artists).trim();
 
       let hours = safeText(it.hours).trim();
-      if (!hours || hours === "00:00" || (/^\d{1,2}:\d{2}$/.test(hours))) {
-        hours = "";
-      }
+      if (!hours || hours === "00:00" || (/^\d{1,2}:\d{2}$/.test(hours))) hours = "";
 
       const until = safeText(it.dateText).trim();
       const addr  = safeText(it.address).trim();
-
       const venueLine = [venue, subvenue].filter(Boolean).join(" · ");
 
       const q = safeText(it.mapsQuery) || [venue, subvenue, addr, 'Madrid'].filter(Boolean).join(', ');
@@ -634,17 +734,14 @@ if (!modal || !mosaic) {
       return `
         <article class="k-item k-item--expo">
           <div class="k-item-title"><strong>${title}</strong></div>
-
           ${venueLine ? `<div class="k-item-sub">${venueLine}</div>` : ``}
           ${artists ? `<div class="k-item-sub">${artists}</div>` : ``}
-
           ${(hours || until) ? `
             <div class="k-item-row k-item-row--meta">
               ${hours ? `<span class="k-item-hours">${hours}</span>` : `<span></span>`}
               ${until ? `<span class="k-item-metaRight">${until}</span>` : ``}
             </div>
           ` : ``}
-
           ${(addr || pin) ? `
             <div class="k-item-row k-item-row--addr">
               ${addr ? `<span class="k-item-address">${addr}</span>` : `<span></span>`}
@@ -658,13 +755,19 @@ if (!modal || !mosaic) {
     const venuesHtml = EXPO_VENUES.map(v => {
       const name = safeText(v.name);
       const address = safeText(v.address);
+      const url = safeText(v.url).trim();
+
+      const nameHTML = (ENABLE_RECOMMENDED_VENUE_LINKS && isSafeHttpUrl(url))
+        ? invisibleLinkHTML(name, url, `Abrir programación de ${name}`)
+        : safeText(name);
+
       const q = [name, address, "Madrid"].filter(Boolean).join(", ");
       const maps = mapsUrlFromQuery(q);
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${name || 'esta sede'} en Google Maps`) : "";
 
       return `
         <article class="m-item">
-          <h4 class="m-title"><strong>${name}</strong></h4>
+          <h4 class="m-title"><strong>${nameHTML}</strong></h4>
           ${address ? `<p class="m-row m-addr">Dirección: ${address} · ${pin}</p>` : ``}
         </article>
       `;
@@ -713,7 +816,7 @@ if (!modal || !mosaic) {
     try{
       const data = await fetchJsonWithFallback(cfg.json, cfg.fallbackJson);
 
-      const updated = data.updatedAt ? fmtDate(data.updatedAt) : "—";
+      const updated = data.updatedAt ? new Date(data.updatedAt).toLocaleDateString('es-ES', { year:'numeric', month:'short', day:'2-digit' }) : "—";
       kMeta.textContent = `Actualizado: ${updated}`;
 
       if(cfg.mode === "museos"){
