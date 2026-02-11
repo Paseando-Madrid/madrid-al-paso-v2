@@ -1,10 +1,12 @@
 /**
- * Cooltura — Update ninos-weekly.json (SAFE MODE)
- * - Preserves schema: { updatedAt, autoItems, manualItems }
- * - autoItems is regenerated from municipal feed (embudo editorial por sedes)
- * - manualItems stays as-is from current file
+ * Cooltura — Update ninos-weekly.json (CURACIÓN FINA + UI PREMIUM)
+ * - Schema estable: { updatedAt, autoItems, manualItems }
+ * - autoItems: SOLO sedes allowlist (dura)
+ * - manualItems: se preserva tal cual en el JSON actual
+ * - Hora: NO mostrar “00:00” ni medianoche (dtstart 00:00:00.0) => time=""
+ * - Descripción: campo description (extracto editorial 180–220 chars aprox.)
  *
- * Node 18+ (fetch available)
+ * Node 18+ (fetch disponible)
  */
 
 import fs from "node:fs";
@@ -15,37 +17,28 @@ const FEED_URL =
 
 const OUT_PATH = path.join("data", "ninos-weekly.json");
 
-// ========= Filters (closed rules) =========
-// Embudo fuerte: SOLO sedes curadas (Centro/Chamberí/Legazpi + Retiro/Quinta por decisión editorial)
-const BASE_VENUES = [
-  // Retiro (títeres)
-  "teatro municipal de titeres",
-  "teatro municipal de títeres",
-  "teatro de titeres del retiro",
-  "teatro de títeres del retiro",
-
-  // Quinta (decisión editorial: se mantiene aunque no sea “centro”)
-  "espacio abierto quinta de los molinos",
-  "parque quinta de los molinos",
-
-  // Chamberí / Centro
-  "centro cultural galileo",
-  "conde duque",
-  "centro de cultura contemporanea conde duque",
-  "centro cultural clara del rey",
-
-  // Arganzuela / Legazpi
+// ========= Curación (AUTOMATIZADO) — SOLO sedes permitidas =========
+// Regla dura: en autoItems solo entran eventos cuyo event-location matchea (includes, normalizado) alguna de estas sedes:
+const ALLOWED_VENUES = [
+  "matadero madrid",
   "centro cultural casa del reloj",
-  "matadero madrid"
+  "centro cultural galileo",
+  "centro de cultura contemporanea conde duque",
+  "centro de cultura contemporánea conde duque",
+  "conde duque",
+  "centro cultural clara del rey",
+  "museo abc"
 ];
 
-// “Auto if enters” (do NOT make base venues)
-const SOFT_VENUES = ["circo price", "teatro circo price", "caixaforum"];
+// Fuera explícitamente por curación (aunque pudieran pasar por keywords)
+const EXCLUDE_VENUE_KEYS = [
+  "centro cultural lope de vega"
+];
 
 // Si aparece cualquiera de estos, fuera (aunque sea sede buena)
-const EXCLUDE_KEYS = ["campamento", "campus"];
+const EXCLUDE_TEXT_KEYS = ["campamento", "campus"];
 
-// Tipos de la fuente admitidos
+// Tipos de la fuente admitidos (mantengo tu set; la curación principal es sedes + infantil)
 const ALLOWED_SOURCE_TYPES = new Set([
   "ProgramacionDestacadaAgendaCultura",
   "Talleres",
@@ -82,9 +75,11 @@ function includesAny(text, keys) {
   return keys.some((k) => t.includes(norm(k)));
 }
 
-function venueMatch(venue, list) {
-  const v = norm(venue);
-  return list.some((k) => v.includes(norm(k)));
+function venueAllowed(venueRaw) {
+  const v = norm(venueRaw);
+  if (!v) return false;
+  if (includesAny(v, EXCLUDE_VENUE_KEYS)) return false;
+  return ALLOWED_VENUES.some((k) => v.includes(norm(k)));
 }
 
 function looksInfantil(text) {
@@ -194,14 +189,32 @@ function dateText(dtstart) {
   return s ? s.split(" ")[0] : "";
 }
 
-// Hora robusta: usa `time` si existe; si no, saca HH:MM de dtstart
-function timeText(ev) {
-  const t = safeStr(ev?.time);
-  if (t) return t;
+function isMidnightDtstart(dtstart) {
+  const s = safeStr(dtstart);
+  if (!s) return false;
+  // Casos típicos: "2026-03-28 00:00:00.0" o ISO "...T00:00:00..."
+  return (
+    s.includes(" 00:00:00") ||
+    s.includes("T00:00:00") ||
+    /(\s|T)00:00:00(\.0+)?/.test(s)
+  );
+}
 
-  const s = safeStr(ev?.dtstart);
-  const m = s.match(/(\d{2}:\d{2})/);
-  return m ? m[1] : "";
+// Hora robusta + regla premium: NO devolver "00:00" ni medianoche
+function timeText(ev) {
+  const raw = safeStr(ev?.time);
+  const dt  = safeStr(ev?.dtstart);
+
+  // Si dtstart es medianoche => sin hora real
+  if (isMidnightDtstart(dt)) return "";
+
+  // Si hay time, respétalo salvo "00:00"
+  if (raw) return raw === "00:00" ? "" : raw;
+
+  // Si no hay time, extrae HH:MM de dtstart, pero elimina "00:00"
+  const m = dt.match(/(\d{2}:\d{2})/);
+  if (!m) return "";
+  return m[1] === "00:00" ? "" : m[1];
 }
 
 function ensureAddress(ev) {
@@ -221,7 +234,7 @@ function buildMapsQuery(venue, address) {
   return "Madrid";
 }
 
-// Teatro: solo entra si parece infantil/familiar (evita Lope de Vega + teatro adulto)
+// Teatro: solo entra si parece infantil/familiar (evita teatro adulto)
 function isAllowedTheatre(text, ageRange) {
   const t = norm(text);
   if (ageRange) return true;
@@ -238,6 +251,42 @@ function isAllowedTheatre(text, ageRange) {
     t.includes("circo") ||
     t.includes("magia")
   );
+}
+
+// Limpieza ligera de HTML y prefijos L1/L2
+function stripHtmlBasic(s) {
+  return safeStr(s)
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(/<\/p>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// description editorial 180–220 aprox.
+function buildEditorialDescription(raw) {
+  let d = stripHtmlBasic(raw);
+
+  // Quitar prefijos tipo "L1:" "L2:"
+  d = d.replace(/\bL\d:\s*/gi, "");
+
+  // Limpieza adicional
+  d = d.replace(/\s+/g, " ").trim();
+
+  if (!d) return "";
+
+  // Si es muy corta, la dejamos tal cual
+  if (d.length <= 220) return d;
+
+  // Recorte suave: intenta cortar cerca de 220 sin partir palabra
+  const max = 220;
+  const min = 180;
+
+  let cut = d.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  if (lastSpace > min) cut = cut.slice(0, lastSpace);
+
+  return cut.replace(/[,:;.\s]+$/g, "") + "…";
 }
 
 async function main() {
@@ -263,19 +312,17 @@ async function main() {
 
   for (const ev of graph) {
     const title = safeStr(ev.title);
-    const description = safeStr(ev.description);
-    const text = `${title} ${description}`.trim();
+    const descriptionRaw = safeStr(ev.description);
+    const text = `${title} ${stripHtmlBasic(descriptionRaw)}`.trim();
     if (!text) continue;
 
     // Hard excludes (campamentos/campus)
-    if (includesAny(text, EXCLUDE_KEYS)) continue;
+    if (includesAny(text, EXCLUDE_TEXT_KEYS)) continue;
 
     const venue = safeStr(ev["event-location"]);
-    const inBase = venueMatch(venue, BASE_VENUES);
-    const inSoft = venueMatch(venue, SOFT_VENUES);
 
-    // ✅ Embudo editorial: SOLO sedes base o soft (NO temporadas por barrios)
-    if (!(inBase || inSoft)) continue;
+    // ✅ Allowlist dura de sedes
+    if (!venueAllowed(venue)) continue;
 
     const sourceType = getSourceType(ev["@type"]);
     if (!sourceType || !ALLOWED_SOURCE_TYPES.has(sourceType)) continue;
@@ -298,7 +345,7 @@ async function main() {
       norm(audienceRaw).includes("famil") ||
       !!ageRange;
 
-    // Si no es infantil/familia, fuera (embudo con niños)
+    // Si no es infantil/familia, fuera
     if (!infantil) continue;
 
     const uid = safeStr(ev.uid);
@@ -316,6 +363,12 @@ async function main() {
     // ✅ Teatro: solo si es infantil/familiar
     if (type === "teatro" && !isAllowedTheatre(text, ageRange)) continue;
 
+    // ✅ Hora premium: no “00:00” ni medianoche
+    const time = timeText(ev);
+
+    // ✅ Description editorial 180–220
+    const description = buildEditorialDescription(descriptionRaw);
+
     autoItems.push({
       uid,
       title,
@@ -323,7 +376,7 @@ async function main() {
       dtstart: safeStr(ev.dtstart),
       dtend: safeStr(ev.dtend),
       dateText: dateText(ev.dtstart),
-      time: timeText(ev),
+      time, // "" si no hay hora real
       type,
       sourceType,
       audience: audienceFinal(audienceRaw, text, ageRange),
@@ -334,11 +387,12 @@ async function main() {
       address,
       mapsQuery,
       mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`,
-      tags: tagsFor(text, type, ageRange)
+      tags: tagsFor(text, type, ageRange),
+      description // ✅ nuevo campo para overlay
     });
   }
 
-  // Sort stable
+  // Sort estable
   autoItems.sort(
     (a, b) =>
       (a.dateText || "").localeCompare(b.dateText || "") ||
