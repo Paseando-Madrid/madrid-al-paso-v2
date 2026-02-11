@@ -17,8 +17,10 @@ const FEED_URL =
 
 const OUT_PATH = path.join("data", "ninos-weekly.json");
 
-// ========= Curación (AUTOMATIZADO) — SOLO sedes permitidas =========
-// Regla dura: en autoItems solo entran eventos cuyo event-location matchea (includes, normalizado) alguna de estas sedes:
+/* ==========================================================
+   🎯 ALLOWLIST DURA — SOLO ESTAS SEDES
+   ========================================================== */
+
 const ALLOWED_VENUES = [
   "matadero madrid",
   "centro cultural casa del reloj",
@@ -27,18 +29,20 @@ const ALLOWED_VENUES = [
   "centro de cultura contemporánea conde duque",
   "conde duque",
   "centro cultural clara del rey",
-  "museo abc"
+  "museo abc",
+
+  // Retiro
+  "teatro municipal de titeres",
+  "teatro municipal de títeres"
 ];
 
-// Fuera explícitamente por curación (aunque pudieran pasar por keywords)
+// Exclusión explícita
 const EXCLUDE_VENUE_KEYS = [
   "centro cultural lope de vega"
 ];
 
-// Si aparece cualquiera de estos, fuera (aunque sea sede buena)
 const EXCLUDE_TEXT_KEYS = ["campamento", "campus"];
 
-// Tipos de la fuente admitidos (mantengo tu set; la curación principal es sedes + infantil)
 const ALLOWED_SOURCE_TYPES = new Set([
   "ProgramacionDestacadaAgendaCultura",
   "Talleres",
@@ -47,8 +51,12 @@ const ALLOWED_SOURCE_TYPES = new Set([
   "CuentacuentosTiteresMarionetas",
   "ExcursionesItinerariosVisitas",
   "FiestasCarnavales",
-  "Exposiciones" // conditional
+  "Exposiciones"
 ]);
+
+/* ==========================================================
+   UTILIDADES
+   ========================================================== */
 
 function norm(s) {
   return String(s || "")
@@ -120,9 +128,6 @@ function extractAgeRange(text) {
   m = t.match(/\+(\d{1,2})/);
   if (m) return `${m[1]}+`;
 
-  m = t.match(/(\d{1,2})\s*y\s*(\d{1,2})\s*anos/);
-  if (m) return `${m[1]}–${m[2]}`;
-
   return null;
 }
 
@@ -133,7 +138,7 @@ function mapType(sourceType, text) {
 
   if (sourceType === "TeatroPerformance") {
     if (t.includes("titer") || t.includes("títer") || t.includes("marionet") || t.includes("guiñol")) return "titeres";
-    if (t.includes("circo") || t.includes("payaso") || t.includes("magia")) return "familia";
+    if (t.includes("circo") || t.includes("magia")) return "familia";
     return "teatro";
   }
 
@@ -147,43 +152,6 @@ function mapType(sourceType, text) {
   return "actividad";
 }
 
-function audienceFinal(audienceRaw, text, ageRange) {
-  const a = norm(audienceRaw);
-  const t = norm(text);
-
-  if (a.includes("niñ") || a.includes("infantil")) return "niños";
-  if (a.includes("famil")) return "familia";
-  if (ageRange) return "niños";
-  if (t.includes("familia") || t.includes("familiar") || t.includes("en familia")) return "familia";
-  if (t.includes("niñ") || t.includes("infantil") || t.includes("peques") || t.includes("bebe")) return "niños";
-  return "familia";
-}
-
-function tagsFor(text, type, ageRange) {
-  const t = norm(text);
-  const tags = new Set();
-
-  if (
-    t.includes("en familia") ||
-    t.includes("familiar") ||
-    t.includes("familia") ||
-    ["visita", "titeres", "teatro"].includes(type)
-  ) {
-    tags.add("diversion-en-familia");
-  }
-
-  if (
-    t.includes("todos los publicos") ||
-    t.includes("apto para todos los publicos") ||
-    (["visita", "titeres", "teatro"].includes(type) && !ageRange)
-  ) {
-    tags.add("todos-los-publicos");
-  }
-
-  if (ageRange && ageRange.includes("–")) tags.delete("todos-los-publicos");
-  return [...tags];
-}
-
 function dateText(dtstart) {
   const s = safeStr(dtstart);
   return s ? s.split(" ")[0] : "";
@@ -191,69 +159,21 @@ function dateText(dtstart) {
 
 function isMidnightDtstart(dtstart) {
   const s = safeStr(dtstart);
-  if (!s) return false;
-  // Casos típicos: "2026-03-28 00:00:00.0" o ISO "...T00:00:00..."
-  return (
-    s.includes(" 00:00:00") ||
-    s.includes("T00:00:00") ||
-    /(\s|T)00:00:00(\.0+)?/.test(s)
-  );
+  return /(\s|T)00:00:00(\.0+)?/.test(s);
 }
 
-// Hora robusta + regla premium: NO devolver "00:00" ni medianoche
 function timeText(ev) {
   const raw = safeStr(ev?.time);
   const dt  = safeStr(ev?.dtstart);
 
-  // Si dtstart es medianoche => sin hora real
   if (isMidnightDtstart(dt)) return "";
+  if (raw && raw !== "00:00") return raw;
 
-  // Si hay time, respétalo salvo "00:00"
-  if (raw) return raw === "00:00" ? "" : raw;
-
-  // Si no hay time, extrae HH:MM de dtstart, pero elimina "00:00"
   const m = dt.match(/(\d{2}:\d{2})/);
   if (!m) return "";
   return m[1] === "00:00" ? "" : m[1];
 }
 
-function ensureAddress(ev) {
-  return safeStr(ev?.address?.["street-address"] || "");
-}
-
-function ensureUrl(ev) {
-  return safeStr(ev?.link || "");
-}
-
-function buildMapsQuery(venue, address) {
-  const v = safeStr(venue);
-  const a = safeStr(address);
-  if (v && a) return `${v}, ${a}, Madrid`;
-  if (v) return `${v} Madrid`;
-  if (a) return `${a} Madrid`;
-  return "Madrid";
-}
-
-// Teatro: solo entra si parece infantil/familiar (evita teatro adulto)
-function isAllowedTheatre(text, ageRange) {
-  const t = norm(text);
-  if (ageRange) return true;
-
-  return (
-    t.includes("infantil") ||
-    t.includes("familiar") ||
-    t.includes("en familia") ||
-    t.includes("niñ") ||
-    t.includes("titer") ||
-    t.includes("títer") ||
-    t.includes("marionet") ||
-    t.includes("guiñol") ||
-    t.includes("circo") ||
-    t.includes("magia")
-  );
-}
-
-// Limpieza ligera de HTML y prefijos L1/L2
 function stripHtmlBasic(s) {
   return safeStr(s)
     .replace(/<br\s*\/?>/gi, " ")
@@ -263,110 +183,71 @@ function stripHtmlBasic(s) {
     .trim();
 }
 
-// description editorial 180–220 aprox.
 function buildEditorialDescription(raw) {
   let d = stripHtmlBasic(raw);
-
-  // Quitar prefijos tipo "L1:" "L2:"
   d = d.replace(/\bL\d:\s*/gi, "");
-
-  // Limpieza adicional
-  d = d.replace(/\s+/g, " ").trim();
-
   if (!d) return "";
-
-  // Si es muy corta, la dejamos tal cual
   if (d.length <= 220) return d;
 
-  // Recorte suave: intenta cortar cerca de 220 sin partir palabra
   const max = 220;
   const min = 180;
-
   let cut = d.slice(0, max);
   const lastSpace = cut.lastIndexOf(" ");
   if (lastSpace > min) cut = cut.slice(0, lastSpace);
-
   return cut.replace(/[,:;.\s]+$/g, "") + "…";
 }
 
+/* ==========================================================
+   MAIN
+   ========================================================== */
+
 async function main() {
-  // 1) Read current file (preserve manualItems)
+
   let current = { updatedAt: new Date().toISOString(), autoItems: [], manualItems: [] };
   if (fs.existsSync(OUT_PATH)) {
     try {
       current = JSON.parse(fs.readFileSync(OUT_PATH, "utf8"));
-    } catch {
-      current = { updatedAt: new Date().toISOString(), autoItems: [], manualItems: [] };
-    }
+    } catch {}
   }
 
-  // 2) Fetch feed
   const res = await fetch(FEED_URL, { headers: { accept: "application/json" } });
   if (!res.ok) throw new Error(`Fetch failed: ${res.status} ${res.statusText}`);
   const data = await res.json();
   const graph = Array.isArray(data?.["@graph"]) ? data["@graph"] : [];
 
-  // 3) Build autoItems
   const autoItems = [];
   const seen = new Set();
 
   for (const ev of graph) {
+
     const title = safeStr(ev.title);
     const descriptionRaw = safeStr(ev.description);
     const text = `${title} ${stripHtmlBasic(descriptionRaw)}`.trim();
     if (!text) continue;
 
-    // Hard excludes (campamentos/campus)
     if (includesAny(text, EXCLUDE_TEXT_KEYS)) continue;
 
     const venue = safeStr(ev["event-location"]);
-
-    // ✅ Allowlist dura de sedes
     if (!venueAllowed(venue)) continue;
 
     const sourceType = getSourceType(ev["@type"]);
     if (!sourceType || !ALLOWED_SOURCE_TYPES.has(sourceType)) continue;
 
-    // Exposiciones conditional for “visita con niños”
-    if (sourceType === "Exposiciones") {
-      const t = norm(text);
-      const ok =
-        (t.includes("visita") || t.includes("recorrido") || t.includes("guiada")) &&
-        (t.includes("niñ") || t.includes("famil") || extractAgeRange(text));
-      if (!ok) continue;
-    }
-
-    const audienceRaw = safeStr(ev.audience);
     const ageRange = extractAgeRange(text);
-
-    const infantil =
-      looksInfantil(text) ||
-      norm(audienceRaw).includes("niñ") ||
-      norm(audienceRaw).includes("famil") ||
-      !!ageRange;
-
-    // Si no es infantil/familia, fuera
+    const infantil = looksInfantil(text) || !!ageRange;
     if (!infantil) continue;
 
     const uid = safeStr(ev.uid);
     if (!uid || seen.has(uid)) continue;
     seen.add(uid);
 
-    const url = ensureUrl(ev);
+    const url = safeStr(ev.link);
     if (!url) continue;
 
-    const address = ensureAddress(ev);
-    const mapsQuery = buildMapsQuery(venue, address);
+    const address = safeStr(ev?.address?.["street-address"] || "");
+    const mapsQuery = venue ? `${venue} Madrid` : "Madrid";
 
-    const type = mapType(sourceType, text);
-
-    // ✅ Teatro: solo si es infantil/familiar
-    if (type === "teatro" && !isAllowedTheatre(text, ageRange)) continue;
-
-    // ✅ Hora premium: no “00:00” ni medianoche
     const time = timeText(ev);
-
-    // ✅ Description editorial 180–220
     const description = buildEditorialDescription(descriptionRaw);
 
     autoItems.push({
@@ -376,10 +257,9 @@ async function main() {
       dtstart: safeStr(ev.dtstart),
       dtend: safeStr(ev.dtend),
       dateText: dateText(ev.dtstart),
-      time, // "" si no hay hora real
-      type,
+      time,
+      type: mapType(sourceType, text),
       sourceType,
-      audience: audienceFinal(audienceRaw, text, ageRange),
       ageRange: ageRange || "",
       free: Number(ev.free) === 1,
       price: safeStr(ev.price),
@@ -387,20 +267,16 @@ async function main() {
       address,
       mapsQuery,
       mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`,
-      tags: tagsFor(text, type, ageRange),
-      description // ✅ nuevo campo para overlay
+      description
     });
   }
 
-  // Sort estable
-  autoItems.sort(
-    (a, b) =>
-      (a.dateText || "").localeCompare(b.dateText || "") ||
-      (a.time || "").localeCompare(b.time || "") ||
-      a.title.localeCompare(b.title)
+  autoItems.sort((a, b) =>
+    (a.dateText || "").localeCompare(b.dateText || "") ||
+    (a.time || "").localeCompare(b.time || "") ||
+    a.title.localeCompare(b.title)
   );
 
-  // 4) Output — preserve manualItems EXACTLY
   const out = {
     updatedAt: new Date().toISOString(),
     autoItems,
