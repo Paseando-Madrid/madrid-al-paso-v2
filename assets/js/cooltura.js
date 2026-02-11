@@ -7,7 +7,7 @@
    - Directo: 8 conciertos + pin 📍 + lista fija de salas recomendadas
    - EXPO: renderer editorial (título bold SIN link + sede + sub-sede + (artistas opcional) + hasta + dirección + pin)
    - EXPO: sedes recomendadas manuales (CaixaForum, MAPFRE, Alcalá 31, Casa Encendida)
-   - NIÑOS: formato Expo (título → horario → lugar + pin) + orden: automáticos → manuales
+   - NIÑOS: formato Expo (título → actividad/audiencia → horario → lugar + pin) + orden: automáticos → manuales
 */
 
 const modal  = document.getElementById('kModal');
@@ -299,6 +299,41 @@ if (!modal || !mosaic) {
     return h;
   }
 
+  // Kids: etiquetas UI (actividad / audiencia / hora)
+  function labelActivity(type){
+    const t = safeText(type).trim().toLowerCase();
+    if(!t) return "";
+    const map = {
+      "taller": "Taller",
+      "teatro": "Teatro",
+      "titeres": "Títeres",
+      "títeres": "Títeres",
+      "visita": "Visita",
+      "actividad": "Actividad",
+      "familia": "Familia"
+    };
+    return map[t] || (t.charAt(0).toUpperCase() + t.slice(1));
+  }
+
+  function labelAudience(aud){
+    const a = safeText(aud).trim().toLowerCase();
+    if(!a) return "";
+    if(a.includes("niñ")) return "Niños";
+    if(a.includes("famil")) return "Familia";
+    if(a.includes("todos")) return "Todos los públicos";
+    return a.charAt(0).toUpperCase() + a.slice(1);
+  }
+
+  function timeFromKidItem(it){
+    const time = safeText(it.time).trim();
+    if(time) return time;
+
+    const dt = safeText(it.dtstart || it.start).trim();
+    // "2026-03-28 11:30:00.0" o ISO -> sacar HH:MM si aparece
+    const m = dt.match(/(\d{2}:\d{2})/);
+    return m ? m[1] : "";
+  }
+
   // ---------- RENDER (GENÉRICO) ----------
   function renderItems(items){
     const list = Array.isArray(items) ? items : [];
@@ -349,8 +384,48 @@ if (!modal || !mosaic) {
       return;
     }
 
-    function renderKidItem(it){
+    function renderKidItemAuto(it){
       const title = safeText(it.title) || "—";
+
+      const venue = safeText(it.venue).trim();
+      const space = safeText(it.space || it.subvenue).trim();
+      const venueLine = [venue, space].filter(Boolean).join(" · ");
+
+      const addr = safeText(it.address).trim();
+
+      const act = labelActivity(it.type);
+      const aud = labelAudience(it.audience);
+      const time = timeFromKidItem(it);
+
+      const metaTop = [act, aud].filter(Boolean).join(" · ");
+      const metaTime = time ? `🕒 ${time}` : "";
+
+      const q = safeText(it.mapsQuery) || [venueLine || venue, addr, "Madrid"].filter(Boolean).join(", ");
+      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueLine || venue || 'este lugar'} en Google Maps`) : "";
+
+      return `
+        <article class="k-item k-item--kids">
+          <div class="k-item-title"><strong>${title}</strong></div>
+
+          ${(metaTop || metaTime) ? `
+            <div class="k-item-row k-item-row--meta">
+              ${metaTop ? `<span class="k-item-hours">${metaTop}</span>` : `<span></span>`}
+              ${metaTime ? `<span class="k-item-metaRight">${metaTime}</span>` : ``}
+            </div>
+          ` : ``}
+
+          <div class="k-item-row k-item-row--addr">
+            <span class="k-item-address">${venueLine || venue || ''}</span>
+            ${pin}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderKidItemManual(it){
+      const title = safeText(it.title) || "—";
+
       const venue = safeText(it.venue).trim();
       const space = safeText(it.space || it.subvenue).trim();
       const hours = normalizeHoursForUI(it.hours);
@@ -375,9 +450,9 @@ if (!modal || !mosaic) {
 
     let html = "";
 
-    // 1) Automáticos
+    // 1) Automáticos (actividad · audiencia · hora)
     if(autoMax){
-      html += autoItems.slice(0, autoMax).map(renderKidItem).join('');
+      html += autoItems.slice(0, autoMax).map(renderKidItemAuto).join('');
     }
 
     // 2) Manuales (debajo)
@@ -388,7 +463,7 @@ if (!modal || !mosaic) {
           <p class="k-kicker" style="margin:0 0 10px 0;">Recomendaciones</p>
         </div>
       `;
-      html += manualItems.slice(0, manMax).map(renderKidItem).join('');
+      html += manualItems.slice(0, manMax).map(renderKidItemManual).join('');
     }
 
     kList.innerHTML = html;
