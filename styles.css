@@ -962,9 +962,23 @@ img, video{ max-width: 100%; display: block; }
 .k-empty{ margin: 0; color: rgba(17,17,17,.70); }
 
 /* ======================================================================
-   ✅ PIN FIX (SIN RAYITA) — funciona incluso con .k-item a{underline…}
+   ✅ PIN (único, consolidado): SIN RAYITA + estilo premium
    ====================================================================== */
 .pm-pin{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.70);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+  vertical-align: middle;
+
+  /* sin subrayado incluso si .k-item a{ underline } */
   text-decoration: none !important;
   border-bottom: 0 !important;
 }
@@ -973,10 +987,18 @@ img, video{ max-width: 100%; display: block; }
   text-decoration: none !important;
   border-bottom: 0 !important;
 }
+.pm-pin:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.88);
+  border-color: rgba(0,0,0,.16);
+}
+.pm-pin__icon{
+  font-size: 16px;
+  line-height: 1;
+}
 
 /* ======================================================================
-   ✅ EXPO (overlay editorial): title bold / artists / hours + metaRight / address + pin
-   (Solo afecta a EXPO porque el JS añade .k-item--expo)
+   ✅ EXPO (overlay editorial)
    ====================================================================== */
 .k-item--expo{
   padding: 14px 0;
@@ -1045,9 +1067,6 @@ img, video{ max-width: 100%; display: block; }
 
 /* ======================================================================
    ✅ NIÑOS (overlay editorial)
-   - mismo sistema que EXPO
-   - jerarquía rápida: título → horas → lugar + pin
-   (Solo afecta a NIÑOS porque el JS añade .k-item--kids)
    ====================================================================== */
 .k-item--kids{
   padding: 14px 0;
@@ -1113,29 +1132,40 @@ img, video{ max-width: 100%; display: block; }
   flex-wrap: wrap;
 }
 
-/* Pin premium (abre en pestaña nueva → no sales de tu web) */
-.pm-pin{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  border: 1px solid rgba(0,0,0,.10);
-  background: rgba(255,255,255,.70);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  transition: transform .18s ease, background .18s ease, border-color .18s ease;
-  vertical-align: middle;
+/* ======================================================================
+   ✅ OVERLAY — UNIFICAR TIPOGRAFÍA (TODO COMO MUSEOS)
+   - Solo dentro del scroll (.k-body/.k-list)
+   - No toca el header
+   ====================================================================== */
+
+/* Área scrolleable: base serif */
+.k-body,
+.k-list{
+  font-family: var(--font-serif);
 }
-.pm-pin:hover{
-  transform: translateY(-1px);
-  background: rgba(255,255,255,.88);
-  border-color: rgba(0,0,0,.16);
+
+/* Títulos de items: serif + peso Museos */
+.k-list .k-item h4,
+.k-list .k-item-title,
+.k-list .m-title{
+  font-family: var(--font-serif);
+  font-weight: 300;
 }
-.pm-pin__icon{
-  font-size: 16px;
-  line-height: 1;
+
+/* Strong en títulos: Museos */
+.k-list .k-item-title strong,
+.k-list .m-title strong{
+  font-weight: 500;
+}
+
+/* Texto secundario: sans (más legible, como Museos) */
+.k-list .k-item p,
+.k-list .k-item-sub,
+.k-list .k-item-hours,
+.k-list .k-item-row--meta,
+.k-list .k-item-address,
+.k-list .m-row{
+  font-family: var(--font-sans);
 }
 
 /* ======================================================================
