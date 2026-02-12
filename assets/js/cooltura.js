@@ -17,21 +17,25 @@
    ✅ EXCEPCIÓN DIRECTO (AUTOMATIZADOS):
    - En Directo, NO se usa it.link (evita Ticketmaster/venta)
    - SOLO la sede (venue) puede ser clicable → programación de la sala (flag)
+
+   ✅ CARTELERA (compat con updater):
+   - theatre[]: { title, author, director, cast[], startDate/endDate/dateText, venue, address, mapsQuery, mapsUrl }
+   - dance[]:   { title, company, choreographer, director?, startDate/endDate/dateText, venue, address, mapsQuery, mapsUrl }
+   - `deck` no se pinta por defecto (si quieres, lo activamos luego por flag)
 */
 
-/* ============================
-   FLAGS (OFF por defecto)
-   ============================ */
-const ENABLE_OVERLAY_ITEM_LINKS = false;          // Agenda: SOLO título del evento → it.link
-const ENABLE_RECOMMENDED_VENUE_LINKS = false;     // Manuales (sedes/salas recomendadas + manualItems NIÑOS): SOLO nombre sede → venue.url / it.link
-const ENABLE_DIRECTO_AUTO_VENUE_LINKS = false;    // Directo (auto): SOLO sede clicable → programación de la sala (NO it.link)
+(() => {
+  /* ============================
+     FLAGS (OFF por defecto)
+     ============================ */
+  const ENABLE_OVERLAY_ITEM_LINKS = false;          // Agenda: SOLO título del evento → it.link
+  const ENABLE_RECOMMENDED_VENUE_LINKS = false;     // Manuales (sedes/salas recomendadas + manualItems NIÑOS): SOLO nombre sede → venue.url / it.link
+  const ENABLE_DIRECTO_AUTO_VENUE_LINKS = false;    // Directo (auto): SOLO sede clicable → programación de la sala (NO it.link)
 
-const modal  = document.getElementById('kModal');
-const mosaic = document.getElementById('kMosaic');
+  const modal  = document.getElementById('kModal');
+  const mosaic = document.getElementById('kMosaic');
 
-if (!modal || !mosaic) {
-  // No rompe nada si Cooltura no existe en otra página
-} else {
+  if (!modal || !mosaic) return; // No rompe nada si Cooltura no existe en otra página
 
   const kTitle = document.getElementById('kTitle');
   const kDeck  = document.getElementById('kDeck');
@@ -91,7 +95,30 @@ if (!modal || !mosaic) {
     { name: "La Casa Encendida", address: "Ronda de Valencia, 2", url: "https://www.lacasaencendida.es/calendario" }
   ];
 
-  // ---------- DIM / ACTIVE ----------
+  /* ============================
+     SECURITY / ROBUSTNESS
+     ============================ */
+  function escapeHtml(s){
+    const t = (s ?? '').toString();
+    return t
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  function safeText(v){ return (v ?? '').toString(); }
+
+  function safeTextTrim(v){
+    return safeText(v).replace(/\s+/g,' ').trim();
+  }
+
+  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+  /* ============================
+     DIM / ACTIVE
+     ============================ */
   let hoverTimer = null;
   let clearTimer = null;
 
@@ -128,10 +155,10 @@ if (!modal || !mosaic) {
 
   mosaic.addEventListener('pointerleave', () => scheduleClear());
 
-  // ---------- OVERLAY: BG + POSITION + HEIGHT ----------
+  /* ============================
+     OVERLAY: BG + POSITION + HEIGHT
+     ============================ */
   let anchorCard = null;
-
-  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
   function getCardBgUrl(cardEl){
     const photo = cardEl?.querySelector('.k-photo');
@@ -195,14 +222,18 @@ if (!modal || !mosaic) {
     }
   }
 
-  // ---------- SWAP ----------
+  /* ============================
+     SWAP
+     ============================ */
   function beginSwap(){ if(sheet) sheet.classList.add('is-swap'); }
   function endSwap(){
     if(!sheet) return;
     requestAnimationFrame(() => requestAnimationFrame(() => sheet.classList.remove('is-swap')));
   }
 
-  // ---------- MODAL ----------
+  /* ============================
+     MODAL
+     ============================ */
   function openModal(){
     if (!modal.classList.contains('is-open')) {
       modal.setAttribute('aria-hidden','false');
@@ -263,7 +294,9 @@ if (!modal || !mosaic) {
     }
   }, { passive: true });
 
-  // ---------- HELPERS ----------
+  /* ============================
+     HELPERS
+     ============================ */
   function fmtWhen(start){
     if(!start) return "";
     try {
@@ -274,11 +307,16 @@ if (!modal || !mosaic) {
     } catch { return ""; }
   }
 
-  function safeText(v){ return (v ?? '').toString(); }
+  function fmtDay(iso){
+    if(!iso) return "";
+    try {
+      return new Date(iso).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
+    } catch { return ""; }
+  }
 
   /** ✅ Google Maps con “Guardar” (search api=1) */
   function mapsUrlFromQuery(q){
-    const query = safeText(q).trim();
+    const query = safeTextTrim(q);
     if(!query) return "";
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
   }
@@ -296,6 +334,8 @@ if (!modal || !mosaic) {
     const safe = mapsUrl && isSafeHttpUrl(mapsUrl) ? mapsUrl : "";
     if(!safe) return "";
 
+    const aria = escapeHtml(ariaLabel || 'Ver ubicación en Google Maps');
+
     if(tplPin && 'content' in tplPin){
       const tmp = tplPin.content.firstElementChild.cloneNode(true);
       tmp.href = safe;
@@ -305,11 +345,11 @@ if (!modal || !mosaic) {
       return wrap.innerHTML;
     }
 
-    return `<a class="pm-pin" href="${safe}" target="_blank" rel="noopener noreferrer" aria-label="${ariaLabel || 'Ver ubicación en Google Maps'}">📍</a>`;
+    return `<a class="pm-pin" href="${safe}" target="_blank" rel="noopener noreferrer" aria-label="${aria}">📍</a>`;
   }
 
   function normalizeHoursForUI(hours){
-    let h = safeText(hours).trim();
+    let h = safeTextTrim(hours);
     if(!h) return "";
     if (h === "00:00") return "";
     if (/^\d{1,2}:\d{2}$/.test(h)) return ""; // hora suelta poco fiable
@@ -319,13 +359,13 @@ if (!modal || !mosaic) {
   // ✅ Link invisible (NO cambia tipografía, NO subraya, NO colorea)
   function invisibleLinkHTML(text, url, ariaLabel){
     const t = safeText(text);
-    const safe = safeText(url).trim();
+    const safe = safeTextTrim(url);
     if(!t) return "";
-    if(!safe || !isSafeHttpUrl(safe)) return t;
+    if(!safe || !isSafeHttpUrl(safe)) return escapeHtml(t);
 
     const style = 'color:inherit;text-decoration:none;font:inherit;';
-    const aria = ariaLabel ? ` aria-label="${safeText(ariaLabel).replace(/"/g, '&quot;')}"` : '';
-    return `<a href="${safe}" target="_blank" rel="noopener noreferrer"${aria} style="${style}">${t}</a>`;
+    const aria = ariaLabel ? ` aria-label="${escapeHtml(safeText(ariaLabel))}"` : '';
+    return `<a href="${safe}" target="_blank" rel="noopener noreferrer"${aria} style="${style}">${escapeHtml(t)}</a>`;
   }
 
   // Normaliza para matching de sedes (Directo)
@@ -342,13 +382,13 @@ if (!modal || !mosaic) {
     const v = normKey(venueText);
     if(!v) return "";
     const hit = DIRECTO_VENUES.find(x => v.includes(normKey(x.name)) || normKey(x.name).includes(v));
-    const url = hit?.url ? safeText(hit.url).trim() : "";
+    const url = hit?.url ? safeTextTrim(hit.url) : "";
     return isSafeHttpUrl(url) ? url : "";
   }
 
   // Kids: etiquetas UI (actividad / audiencia / hora)
   function labelActivity(type){
-    const t = safeText(type).trim().toLowerCase();
+    const t = safeTextTrim(type).toLowerCase();
     if(!t) return "";
     const map = {
       "taller": "Taller",
@@ -363,7 +403,7 @@ if (!modal || !mosaic) {
   }
 
   function labelAudience(aud){
-    const a = safeText(aud).trim().toLowerCase();
+    const a = safeTextTrim(aud).toLowerCase();
     if(!a) return "";
     if(a.includes("niñ")) return "Niños";
     if(a.includes("famil")) return "Familia";
@@ -372,15 +412,17 @@ if (!modal || !mosaic) {
   }
 
   function timeFromKidItem(it){
-    const time = safeText(it.time).trim();
+    const time = safeTextTrim(it?.time);
     if(time) return time;
 
-    const dt = safeText(it.dtstart || it.start).trim();
+    const dt = safeTextTrim(it?.dtstart || it?.start);
     const m = dt.match(/(\d{2}:\d{2})/);
     return m ? m[1] : "";
   }
 
-  // ---------- RENDER (GENÉRICO) ----------
+  /* ============================
+     RENDER (GENÉRICO)
+     ============================ */
   function renderItems(items){
     const list = Array.isArray(items) ? items : [];
     const max = Math.min(list.length, 8);
@@ -391,30 +433,32 @@ if (!modal || !mosaic) {
     }
 
     kList.innerHTML = list.slice(0, max).map(it => {
-      const titleText = safeText(it.title) || "—";
-      const venue = safeText(it.venue);
-      const when  = fmtWhen(it.start);
+      const titleText = safeTextTrim(it?.title) || "—";
+      const venueText = safeTextTrim(it?.venue);
+      const whenText  = fmtWhen(it?.start);
 
-      const title = (ENABLE_OVERLAY_ITEM_LINKS && isSafeHttpUrl(it.link))
+      const titleHTML = (ENABLE_OVERLAY_ITEM_LINKS && isSafeHttpUrl(it?.link))
         ? invisibleLinkHTML(titleText, it.link, `Abrir ficha del evento: ${titleText}`)
-        : titleText;
+        : `<span>${escapeHtml(titleText)}</span>`;
 
-      const metaParts = [venue, when].filter(Boolean);
+      const metaParts = [venueText, whenText].filter(Boolean).map(escapeHtml);
       const meta = metaParts.join(' · ');
 
-      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery([venue, "Madrid"].filter(Boolean).join(", "));
-      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'este lugar'} en Google Maps`) : "";
+      const maps = safeTextTrim(it?.mapsUrl) || mapsUrlFromQuery([venueText, "Madrid"].filter(Boolean).join(", "));
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueText || 'este lugar'} en Google Maps`) : "";
 
       return `
         <div class="k-item">
-          <h4>${title}</h4>
-          <p>${meta ? `${meta} ${pin ? `· ${pin}` : ""}` : ""}</p>
+          <h4>${titleHTML}</h4>
+          <p>${meta ? `${meta}${pin ? ` · ${pin}` : ""}` : ""}</p>
         </div>
       `;
     }).join('');
   }
 
-  // ---------- RENDER (DIRECTO: ITEMS AUTO con excepción + salas recomendadas) ----------
+  /* ============================
+     RENDER (DIRECTO: ITEMS AUTO con excepción + salas recomendadas)
+     ============================ */
   function renderDirectoAutoItems(items){
     const list = Array.isArray(items) ? items : [];
     const max = Math.min(list.length, 8);
@@ -425,27 +469,27 @@ if (!modal || !mosaic) {
     }
 
     kList.innerHTML = list.slice(0, max).map(it => {
-      const titleText = safeText(it.title) || "—";
-      const venueText = safeText(it.venue).trim();
-      const when      = fmtWhen(it.start);
+      const titleText = safeTextTrim(it?.title) || "—";
+      const venueText = safeTextTrim(it?.venue);
+      const whenText  = fmtWhen(it?.start);
 
-      const title = titleText;
+      const titleHTML = `<span>${escapeHtml(titleText)}</span>`;
 
       const venueProgramUrl = programUrlForDirectoVenue(venueText);
-      const venue = (ENABLE_DIRECTO_AUTO_VENUE_LINKS && venueProgramUrl)
+      const venueHTML = (ENABLE_DIRECTO_AUTO_VENUE_LINKS && venueProgramUrl)
         ? invisibleLinkHTML(venueText, venueProgramUrl, `Abrir programación de ${venueText}`)
-        : venueText;
+        : escapeHtml(venueText);
 
-      const metaParts = [venue, when].filter(Boolean);
+      const metaParts = [venueHTML, escapeHtml(whenText)].filter(Boolean);
       const meta = metaParts.join(' · ');
 
-      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery([venueText, "Madrid"].filter(Boolean).join(", "));
+      const maps = safeTextTrim(it?.mapsUrl) || mapsUrlFromQuery([venueText, "Madrid"].filter(Boolean).join(", "));
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueText || 'esta sala'} en Google Maps`) : "";
 
       return `
         <div class="k-item">
-          <h4>${title}</h4>
-          <p>${meta ? `${meta} ${pin ? `· ${pin}` : ""}` : ""}</p>
+          <h4>${titleHTML}</h4>
+          <p>${meta ? `${meta}${pin ? ` · ${pin}` : ""}` : ""}</p>
         </div>
       `;
     }).join('');
@@ -471,32 +515,32 @@ if (!modal || !mosaic) {
     }
 
     function renderKidItemAuto(it){
-      const titleText = safeText(it.title) || "—";
+      const titleText = safeTextTrim(it?.title) || "—";
 
-      const title = (ENABLE_OVERLAY_ITEM_LINKS && isSafeHttpUrl(it.link))
+      const titleHTML = (ENABLE_OVERLAY_ITEM_LINKS && isSafeHttpUrl(it?.link))
         ? invisibleLinkHTML(titleText, it.link, `Abrir ficha del plan: ${titleText}`)
-        : titleText;
+        : escapeHtml(titleText);
 
-      const venue = safeText(it.venue).trim();
-      const space = safeText(it.space || it.subvenue).trim();
+      const venue = safeTextTrim(it?.venue);
+      const space = safeTextTrim(it?.space || it?.subvenue);
       const venueLine = [venue, space].filter(Boolean).join(" · ");
 
-      const addr = safeText(it.address).trim();
+      const addr = safeTextTrim(it?.address);
 
-      const act = labelActivity(it.type);
-      const aud = labelAudience(it.audience);
+      const act  = labelActivity(it?.type);
+      const aud  = labelAudience(it?.audience);
       const time = timeFromKidItem(it);
 
-      const metaTop = [act, aud].filter(Boolean).join(" · ");
-      const metaTime = time ? `🕒 ${time}` : "";
+      const metaTop  = [act, aud].filter(Boolean).map(escapeHtml).join(" · ");
+      const metaTime = time ? `🕒 ${escapeHtml(time)}` : "";
 
-      const q = safeText(it.mapsQuery) || [venueLine || venue, addr, "Madrid"].filter(Boolean).join(", ");
-      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
+      const q = safeTextTrim(it?.mapsQuery) || [venueLine || venue, addr, "Madrid"].filter(Boolean).join(", ");
+      const maps = safeTextTrim(it?.mapsUrl) || mapsUrlFromQuery(q);
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueLine || venue || 'este lugar'} en Google Maps`) : "";
 
       return `
         <article class="k-item k-item--kids">
-          <div class="k-item-title"><strong>${title}</strong></div>
+          <div class="k-item-title"><strong>${titleHTML}</strong></div>
 
           ${(metaTop || metaTime) ? `
             <div class="k-item-row k-item-row--meta">
@@ -506,7 +550,7 @@ if (!modal || !mosaic) {
           ` : ``}
 
           <div class="k-item-row k-item-row--addr">
-            <span class="k-item-address">${venueLine || venue || ''}</span>
+            <span class="k-item-address">${escapeHtml(venueLine || venue || '')}</span>
             ${pin}
           </div>
         </article>
@@ -514,28 +558,28 @@ if (!modal || !mosaic) {
     }
 
     function renderKidItemManual(it){
-      const titleText = safeText(it.title) || "—";
-      const title = titleText;
+      const titleText = safeTextTrim(it?.title) || "—";
+      const titleHTML = escapeHtml(titleText);
 
-      const venue = safeText(it.venue).trim();
-      const space = safeText(it.space || it.subvenue).trim();
-      const hours = normalizeHoursForUI(it.hours);
+      const venue = safeTextTrim(it?.venue);
+      const space = safeTextTrim(it?.space || it?.subvenue);
+      const hours = normalizeHoursForUI(it?.hours);
       const venueLine = [venue, space].filter(Boolean).join(" · ");
 
-      const addr = safeText(it.address).trim();
-      const q = safeText(it.mapsQuery) || [venueLine || venue, addr, "Madrid"].filter(Boolean).join(", ");
-      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
+      const addr = safeTextTrim(it?.address);
+      const q = safeTextTrim(it?.mapsQuery) || [venueLine || venue, addr, "Madrid"].filter(Boolean).join(", ");
+      const maps = safeTextTrim(it?.mapsUrl) || mapsUrlFromQuery(q);
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueLine || venue || 'este lugar'} en Google Maps`) : "";
 
       const venueLabel = venueLine || venue || '';
-      const venueHTML = (ENABLE_RECOMMENDED_VENUE_LINKS && isSafeHttpUrl(it.link))
+      const venueHTML = (ENABLE_RECOMMENDED_VENUE_LINKS && isSafeHttpUrl(it?.link))
         ? invisibleLinkHTML(venueLabel, it.link, `Abrir programación: ${venueLabel}`)
-        : safeText(venueLabel);
+        : escapeHtml(venueLabel);
 
       return `
         <article class="k-item k-item--kids">
-          <div class="k-item-title"><strong>${title}</strong></div>
-          ${hours ? `<div class="k-item-hours">${hours}</div>` : ``}
+          <div class="k-item-title"><strong>${titleHTML}</strong></div>
+          ${hours ? `<div class="k-item-hours">${escapeHtml(hours)}</div>` : ``}
           <div class="k-item-row k-item-row--addr">
             <span class="k-item-address">${venueHTML}</span>
             ${pin}
@@ -567,14 +611,14 @@ if (!modal || !mosaic) {
     renderDirectoAutoItems(items);
 
     const venuesHtml = DIRECTO_VENUES.map(v => {
-      const name = safeText(v.name);
-      const program = safeText(v.program);
-      const address = safeText(v.address);
-      const url = safeText(v.url).trim();
+      const name = safeTextTrim(v.name);
+      const program = safeTextTrim(v.program);
+      const address = safeTextTrim(v.address);
+      const url = safeTextTrim(v.url);
 
       const nameHTML = (ENABLE_RECOMMENDED_VENUE_LINKS && isSafeHttpUrl(url))
         ? invisibleLinkHTML(name, url, `Abrir programación de ${name}`)
-        : safeText(name);
+        : escapeHtml(name);
 
       const q = [name, address, "Madrid"].filter(Boolean).join(", ");
       const maps = mapsUrlFromQuery(q);
@@ -583,8 +627,8 @@ if (!modal || !mosaic) {
       return `
         <article class="m-item">
           <h4 class="m-title"><strong>${nameHTML}</strong></h4>
-          ${program ? `<p class="m-row">Programación: ${program}</p>` : ``}
-          ${address ? `<p class="m-row m-addr">Dirección: ${address} · ${pin}</p>` : ``}
+          ${program ? `<p class="m-row">Programación: ${escapeHtml(program)}</p>` : ``}
+          ${address ? `<p class="m-row m-addr">Dirección: ${escapeHtml(address)} · ${pin}</p>` : ``}
         </article>
       `;
     }).join('');
@@ -600,7 +644,9 @@ if (!modal || !mosaic) {
     `);
   }
 
-  // ---------- RENDER (MUSEOS) ----------
+  /* ============================
+     RENDER (MUSEOS)
+     ============================ */
   function renderMuseos(items){
     const list = Array.isArray(items) ? items : [];
     const max  = Math.min(list.length, 10);
@@ -624,17 +670,17 @@ if (!modal || !mosaic) {
         const addrText    = node.querySelector('.m-addr-text');
         const addrPin     = node.querySelector('.m-addr-pin');
 
-        const name  = safeText(it.name || it.title);
-        const hours = safeText(it.hours || it.openingHours || it.horario);
-        const free  = safeText(it.free  || it.freeHours     || it.gratis);
-        const addr  = safeText(it.address || it.direccion);
+        const name  = safeTextTrim(it.name || it.title);
+        const hours = safeTextTrim(it.hours || it.openingHours || it.horario);
+        const free  = safeTextTrim(it.free  || it.freeHours     || it.gratis);
+        const addr  = safeTextTrim(it.address || it.direccion);
 
         if(titleStrong) titleStrong.textContent = name || "—";
         if(rowHours) rowHours.textContent = hours ? `Horario: ${hours}` : '';
         if(rowFree)  rowFree.textContent  = free  ? `Día gratuito: ${free}` : '';
         if(addrText) addrText.textContent = addr ? `Dirección: ${addr} · ` : '';
 
-        let maps = safeText(it.mapsUrl || it.maps || it.gmaps);
+        let maps = safeTextTrim(it.mapsUrl || it.maps || it.gmaps);
         if(!maps){
           const q = [name, addr, 'Madrid'].filter(Boolean).join(', ');
           maps = mapsUrlFromQuery(q);
@@ -670,12 +716,12 @@ if (!modal || !mosaic) {
     }
 
     kList.innerHTML = list.slice(0, max).map(it => {
-      const name  = safeText(it.name || it.title) || "—";
-      const hours = safeText(it.hours || it.openingHours || it.horario);
-      const free  = safeText(it.free  || it.freeHours     || it.gratis);
-      const addr  = safeText(it.address || it.direccion);
+      const name  = safeTextTrim(it.name || it.title) || "—";
+      const hours = safeTextTrim(it.hours || it.openingHours || it.horario);
+      const free  = safeTextTrim(it.free  || it.freeHours     || it.gratis);
+      const addr  = safeTextTrim(it.address || it.direccion);
 
-      let maps = safeText(it.mapsUrl || it.maps || it.gmaps);
+      let maps = safeTextTrim(it.mapsUrl || it.maps || it.gmaps);
       if(!maps){
         const q = [name, addr, 'Madrid'].filter(Boolean).join(', ');
         maps = mapsUrlFromQuery(q);
@@ -683,21 +729,23 @@ if (!modal || !mosaic) {
       if(!isSafeHttpUrl(maps)) maps = "";
 
       const pin = maps
-        ? `<a class="pm-pin" href="${maps}" target="_blank" rel="noopener noreferrer" aria-label="Ver ubicación de ${name} en Google Maps">📍</a>`
+        ? `<a class="pm-pin" href="${maps}" target="_blank" rel="noopener noreferrer" aria-label="Ver ubicación de ${escapeHtml(name)} en Google Maps">📍</a>`
         : ``;
 
       return `
         <article class="m-item">
-          <h4 class="m-title"><strong>${name}</strong></h4>
-          ${hours ? `<p class="m-row">Horario: ${hours}</p>` : ``}
-          ${free ? `<p class="m-row">Día gratuito: ${free}</p>` : ``}
-          ${addr ? `<p class="m-row m-addr">Dirección: ${addr} · ${pin}</p>` : ``}
+          <h4 class="m-title"><strong>${escapeHtml(name)}</strong></h4>
+          ${hours ? `<p class="m-row">Horario: ${escapeHtml(hours)}</p>` : ``}
+          ${free ? `<p class="m-row">Día gratuito: ${escapeHtml(free)}</p>` : ``}
+          ${addr ? `<p class="m-row m-addr">Dirección: ${escapeHtml(addr)} · ${pin}</p>` : ``}
         </article>
       `;
     }).join('');
   }
 
-  // ---------- RENDER (EXPO) ----------
+  /* ============================
+     RENDER (EXPO)
+     ============================ */
   function renderExpo(items){
     const list = Array.isArray(items) ? items : [];
     const max  = Math.min(list.length, 8);
@@ -708,38 +756,38 @@ if (!modal || !mosaic) {
     }
 
     kList.innerHTML = list.slice(0, max).map(it => {
-      const titleText = safeText(it.title) || "—";
-      const title = titleText; // EXPO: sin link (invariante)
+      const titleText = safeTextTrim(it?.title) || "—";
+      const title = escapeHtml(titleText); // EXPO: sin link (invariante)
 
-      const venue    = safeText(it.venue).trim();
-      const subvenue = safeText(it.subvenue || it.space).trim();
-      const artists  = safeText(it.artists).trim();
+      const venue    = safeTextTrim(it?.venue);
+      const subvenue = safeTextTrim(it?.subvenue || it?.space);
+      const artists  = safeTextTrim(it?.artists);
 
-      let hours = safeText(it.hours).trim();
+      let hours = safeTextTrim(it?.hours);
       if (!hours || hours === "00:00" || (/^\d{1,2}:\d{2}$/.test(hours))) hours = "";
 
-      const until = safeText(it.dateText).trim();
-      const addr  = safeText(it.address).trim();
+      const until = safeTextTrim(it?.dateText);
+      const addr  = safeTextTrim(it?.address);
       const venueLine = [venue, subvenue].filter(Boolean).join(" · ");
 
-      const q = safeText(it.mapsQuery) || [venue, subvenue, addr, 'Madrid'].filter(Boolean).join(', ');
-      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
+      const q = safeTextTrim(it?.mapsQuery) || [venue, subvenue, addr, 'Madrid'].filter(Boolean).join(', ');
+      const maps = safeTextTrim(it?.mapsUrl) || mapsUrlFromQuery(q);
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venueLine || venue || 'esta exposición'} en Google Maps`) : "";
 
       return `
         <article class="k-item k-item--expo">
           <div class="k-item-title"><strong>${title}</strong></div>
-          ${venueLine ? `<div class="k-item-sub">${venueLine}</div>` : ``}
-          ${artists ? `<div class="k-item-sub">${artists}</div>` : ``}
+          ${venueLine ? `<div class="k-item-sub">${escapeHtml(venueLine)}</div>` : ``}
+          ${artists ? `<div class="k-item-sub">${escapeHtml(artists)}</div>` : ``}
           ${(hours || until) ? `
             <div class="k-item-row k-item-row--meta">
-              ${hours ? `<span class="k-item-hours">${hours}</span>` : `<span></span>`}
-              ${until ? `<span class="k-item-metaRight">${until}</span>` : ``}
+              ${hours ? `<span class="k-item-hours">${escapeHtml(hours)}</span>` : `<span></span>`}
+              ${until ? `<span class="k-item-metaRight">${escapeHtml(until)}</span>` : ``}
             </div>
           ` : ``}
           ${(addr || pin) ? `
             <div class="k-item-row k-item-row--addr">
-              ${addr ? `<span class="k-item-address">${addr}</span>` : `<span></span>`}
+              ${addr ? `<span class="k-item-address">${escapeHtml(addr)}</span>` : `<span></span>`}
               ${pin}
             </div>
           ` : ``}
@@ -748,13 +796,13 @@ if (!modal || !mosaic) {
     }).join('');
 
     const venuesHtml = EXPO_VENUES.map(v => {
-      const name = safeText(v.name);
-      const address = safeText(v.address);
-      const url = safeText(v.url).trim();
+      const name = safeTextTrim(v.name);
+      const address = safeTextTrim(v.address);
+      const url = safeTextTrim(v.url);
 
       const nameHTML = (ENABLE_RECOMMENDED_VENUE_LINKS && isSafeHttpUrl(url))
         ? invisibleLinkHTML(name, url, `Abrir programación de ${name}`)
-        : safeText(name);
+        : escapeHtml(name);
 
       const q = [name, address, "Madrid"].filter(Boolean).join(", ");
       const maps = mapsUrlFromQuery(q);
@@ -763,7 +811,7 @@ if (!modal || !mosaic) {
       return `
         <article class="m-item">
           <h4 class="m-title"><strong>${nameHTML}</strong></h4>
-          ${address ? `<p class="m-row m-addr">Dirección: ${address} · ${pin}</p>` : ``}
+          ${address ? `<p class="m-row m-addr">Dirección: ${escapeHtml(address)} · ${pin}</p>` : ``}
         </article>
       `;
     }).join('');
@@ -779,10 +827,9 @@ if (!modal || !mosaic) {
     `);
   }
 
-  // ---------- RENDER (CARTELERA: premium theatre/dance) ----------
-  // Espera campos (cuando el updater A los meta):
-  // theatre[]: { title, author, director, cast[], dateText|startDate/endDate, venue, mapsUrl }
-  // dance[]:   { title, company, choreography, director?, dateText|startDate/endDate, venue, mapsUrl }
+  /* ============================
+     RENDER (CARTELERA: premium theatre/dance)
+     ============================ */
   function renderCarteleraFromWeekly(data){
     const theatre = Array.isArray(data?.theatre) ? data.theatre : [];
     const dance   = Array.isArray(data?.dance) ? data.dance : [];
@@ -796,67 +843,85 @@ if (!modal || !mosaic) {
     }
 
     const whenLine = (it) => {
-      const dt = safeText(it.dateText).trim();
+      const dt = safeTextTrim(it?.dateText);
       if(dt) return dt;
-      const a = safeText(it.startDate).trim();
-      const b = safeText(it.endDate).trim();
-      if(a && b) return `${fmtWhen(a)} → ${fmtWhen(b)}`;
-      if(a) return fmtWhen(a);
+
+      const end = safeTextTrim(it?.endDate);
+      const start = safeTextTrim(it?.startDate);
+
+      // editorial: prioriza "Hasta" si hay endDate
+      if(end){
+        const d = fmtDay(end);
+        return d ? `Hasta ${d}` : "";
+      }
+      if(start){
+        const d = fmtDay(start);
+        return d ? `Desde ${d}` : "";
+      }
       return "";
     };
 
     const venueLine = (it) => {
-      const venue = safeText(it.venue).trim();
-      const addr  = safeText(it.address).trim();
-      const q = safeText(it.mapsQuery) || [venue, addr, "Madrid"].filter(Boolean).join(", ");
-      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
+      const venue = safeTextTrim(it?.venue);
+      const addr  = safeTextTrim(it?.address);
+      const q = safeTextTrim(it?.mapsQuery) || [venue, addr, "Madrid"].filter(Boolean).join(", ");
+      const maps = safeTextTrim(it?.mapsUrl) || mapsUrlFromQuery(q);
       const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'este lugar'} en Google Maps`) : "";
-      const text = venue || "—";
+      const text = escapeHtml(venue || "—");
       return `${text}${pin ? ` · ${pin}` : ""}`;
     };
 
+    const compactCast = (it) => {
+      const arr = Array.isArray(it?.cast) ? it.cast : [];
+      return arr.map(x => safeTextTrim(x)).filter(Boolean).slice(0, 3);
+    };
+
     const renderTheatre = (it) => {
-      const title = safeText(it.title) || "—";
+      const title = escapeHtml(safeTextTrim(it?.title) || "—");
 
-      const author   = safeText(it.author || it.credits || "").trim();
-      const director = safeText(it.director || "").trim();
-
-      const castRaw = Array.isArray(it.cast) ? it.cast : (safeText(it.cast || "").trim() ? safeText(it.cast).split("·") : []);
-      const cast = castRaw.map(s => safeText(s).trim()).filter(Boolean).slice(0, 3);
+      // ✅ Semántica: author/director/cast son “ficha”; `credits` NO es autor (suele ser subtítulo)
+      const author   = safeTextTrim(it?.author);
+      const director = safeTextTrim(it?.director);
+      const cast     = compactCast(it);
 
       const when = whenLine(it);
       const venue = venueLine(it);
 
+      // `credits` como “Ficha” opcional SOLO si no hay autor/director/cast
+      const credits = safeTextTrim(it?.credits);
+      const showCredits = !!credits && !author && !director && !cast.length;
+
       return `
         <article class="k-item k-item--cartelera">
           <div class="k-item-title"><strong>${title}</strong></div>
-          ${author ? `<div class="k-item-sub">${author}</div>` : ``}
-          ${director ? `<div class="k-item-sub">Dirección: ${director}</div>` : ``}
-          ${cast.length ? `<div class="k-item-sub">Con: ${cast.join(" · ")}</div>` : ``}
-          ${when ? `<div class="k-item-sub">${when}</div>` : ``}
+          ${author ? `<div class="k-item-sub">Autoría: ${escapeHtml(author)}</div>` : ``}
+          ${director ? `<div class="k-item-sub">Dirección: ${escapeHtml(director)}</div>` : ``}
+          ${cast.length ? `<div class="k-item-sub">Con: ${escapeHtml(cast.join(" · "))}</div>` : ``}
+          ${showCredits ? `<div class="k-item-sub">${escapeHtml(credits)}</div>` : ``}
+          ${when ? `<div class="k-item-sub">${escapeHtml(when)}</div>` : ``}
           <div class="k-item-sub">${venue}</div>
         </article>
       `;
     };
 
     const renderDance = (it) => {
-      const title = safeText(it.title) || "—";
+      const title = escapeHtml(safeTextTrim(it?.title) || "—");
 
-      const company = safeText(it.company || it.venueCompany || "").trim();
-      const choreo  = safeText(it.choreography || it.coreografia || "").trim();
-      const director = safeText(it.director || "").trim();
+      const company = safeTextTrim(it?.company);
+      // ✅ compat: acepta choreographer (updater), y cae a choreography/coreografia si viniera antiguo
+      const choreo  = safeTextTrim(it?.choreographer || it?.choreography || it?.coreografia);
+      const director = safeTextTrim(it?.director);
 
       const when = whenLine(it);
       const venue = venueLine(it);
 
-      // Dirección SOLO si existe (y si quieres, luego: solo si distinta de coreografía)
       return `
         <article class="k-item k-item--cartelera">
           <div class="k-item-title"><strong>${title}</strong></div>
-          ${company ? `<div class="k-item-sub">${company}</div>` : ``}
-          ${choreo ? `<div class="k-item-sub">Coreografía: ${choreo}</div>` : ``}
-          ${director ? `<div class="k-item-sub">Dirección: ${director}</div>` : ``}
-          ${when ? `<div class="k-item-sub">${when}</div>` : ``}
+          ${company ? `<div class="k-item-sub">${escapeHtml(company)}</div>` : ``}
+          ${choreo ? `<div class="k-item-sub">Coreografía: ${escapeHtml(choreo)}</div>` : ``}
+          ${director ? `<div class="k-item-sub">Dirección: ${escapeHtml(director)}</div>` : ``}
+          ${when ? `<div class="k-item-sub">${escapeHtml(when)}</div>` : ``}
           <div class="k-item-sub">${venue}</div>
         </article>
       `;
@@ -881,7 +946,9 @@ if (!modal || !mosaic) {
     kList.innerHTML = html;
   }
 
-  // ---------- LOAD + RENDER ----------
+  /* ============================
+     LOAD + RENDER
+     ============================ */
   async function fetchJsonWithFallback(primary, fallback){
     const tryFetch = async (url) => {
       const bust = url.includes("?") ? `&v=${Date.now()}` : `?v=${Date.now()}`;
@@ -983,7 +1050,9 @@ if (!modal || !mosaic) {
     }
   }
 
-  // ---------- CLICK CARDS ----------
+  /* ============================
+     CLICK CARDS
+     ============================ */
   cards.forEach(btn => {
     btn.addEventListener('click', () => {
       clearTimeout(hoverTimer);
@@ -997,4 +1066,4 @@ if (!modal || !mosaic) {
     });
   });
 
-}
+})();
