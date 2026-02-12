@@ -1,1 +1,41 @@
 
+name: Update Cartelera (Weekly)
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Lunes 06:00 UTC (semanal)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-cartelera:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies (deterministic)
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run updater
+        run: node scripts/update-cartelera-weekly.js
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add data/cartelera-weekly.json
+          git diff --cached --quiet || (git commit -m "Update cartelera weekly" && git push)
