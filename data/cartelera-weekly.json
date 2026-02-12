@@ -1,6 +1,87 @@
 {
-  "updatedAt": null,
-  "theatre": [],
+  "updatedAt": "2026-02-12T01:57:51.608Z",
+  "theatre": [
+    {
+      "source": "nave10",
+      "kind": "theatre",
+      "title": "Tres noches en Ítaca",
+      "credits": "",
+      "deck": "Cuando la madre muere, el muro cae y la muerte está ahí, enfrente, ya ineludible.Una mujer, cerca de los 50, deja a su familia y su trabajo de profesora de griego en un instituto para irse a vivir a una isla g…",
+      "startDate": "2026-02-06T18:30:55",
+      "endDate": "2026-03-08T22:55:55",
+      "dateText": "",
+      "venue": "Nave 10 Matadero",
+      "address": "Plaza de Legazpi, 8, Madrid",
+      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
+      "link": "https://www.nave10matadero.es/actividades/tres-noches-en-itaca",
+      "image": "https://www.nave10matadero.es/sites/default/files/2026-01/ITACA_@geraldineleloutre_0290 copia.jpg"
+    },
+    {
+      "source": "nave10",
+      "kind": "theatre",
+      "title": "Niebla",
+      "credits": "",
+      "deck": "El personaje se sacrifica para ver lo que nosotros no podemos ver.Fernanda Orazi, directora invitada en este 25|26, decide otorgarle un reconocimiento especial al personaje. Lo hace a partir de la condición qu…",
+      "startDate": "2026-03-20T18:30:55",
+      "endDate": "2026-04-12T21:55:55",
+      "dateText": "",
+      "venue": "Nave 10 Matadero",
+      "address": "Plaza de Legazpi, 8, Madrid",
+      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
+      "link": "https://www.nave10matadero.es/actividades/niebla",
+      "image": "https://www.nave10matadero.es/sites/default/files/2025-10/7 - Niebla.jpg"
+    },
+    {
+      "source": "nave10",
+      "kind": "theatre",
+      "title": "Guayominí",
+      "credits": "",
+      "deck": "Según la ley de la gravedad de Newton un cuerpo tarda más en subir que en bajar.Roi, que está cantando en la final de un importante concurso europeo de canciones, porque ganó otro concurso nacional tres meses …",
+      "startDate": "2026-04-24T17:30:55",
+      "endDate": "2026-05-17T21:55:55",
+      "dateText": "",
+      "venue": "Nave 10 Matadero",
+      "address": "Plaza de Legazpi, 8, Madrid",
+      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
+      "link": "https://www.nave10matadero.es/actividades/guayomini",
+      "image": "https://www.nave10matadero.es/sites/default/files/2025-12/9 - Guayomini - Fotografia Geraldine Leloutre.jpg"
+    },
+    {
+      "source": "nave10",
+      "kind": "theatre",
+      "title": "Ubú",
+      "credits": "",
+      "deck": "Monsieur Ubú es un ser innoble, y por eso mismo se parece bastante (de ombligo para abajo) a nosotros mismos.Alfred Jarry, autor de la cita, cambió el teatro de su tiempo creando el personaje de Ubú, caricatur…",
+      "startDate": "2026-05-28T17:30:55",
+      "endDate": "2026-06-21T21:55:55",
+      "dateText": "",
+      "venue": "Nave 10 Matadero",
+      "address": "Plaza de Legazpi, 8, Madrid",
+      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
+      "link": "https://www.nave10matadero.es/actividades/ubu",
+      "image": "https://www.nave10matadero.es/sites/default/files/2025-10/9 - Ubú.jpg"
+    },
+    {
+      "source": "nave10",
+      "kind": "theatre",
+      "title": "Niño de Elche y Paul B. Preciado",
+      "credits": "",
+      "deck": "Dos referentes imprescindibles de la cultura contemporánea cierran la temporada. Música, literatura y pensamiento en forma de conferencia escénica, de la mano de dos artistas que apuestan por la visibilidad y …",
+      "startDate": "2026-06-26T06:00:00",
+      "endDate": "2026-06-28T21:55:55",
+      "dateText": "",
+      "venue": "Nave 10 Matadero",
+      "address": "Plaza de Legazpi, 8, Madrid",
+      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
+      "link": "https://www.nave10matadero.es/actividades/nino-de-elche-y-paul-b-preciado",
+      "image": "https://www.nave10matadero.es/sites/default/files/2025-11/Niño de Elche _©Juan Trujillo.png"
+    }
+  ],
   "dance": [],
   "meta": {
     "limits": {
@@ -9,4 +90,3 @@
     }
   }
 }
-
