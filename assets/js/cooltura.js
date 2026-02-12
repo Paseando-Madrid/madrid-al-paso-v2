@@ -48,24 +48,27 @@ if (!modal || !mosaic) {
   const tplMuseo = document.getElementById('tpl-museo');
   const tplPin   = document.getElementById('tpl-pin');
 
+  // ✅ Rutas robustas: ./data/... (evita path raro) + cache-bust
+  const DATA = (p) => `./${String(p || '').replace(/^\.\//,'').replace(/^\/+/,'')}`;
+
   const CFG = {
-    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",               json:"data/directo-weekly.json",   mode:"directo" },
+    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",               json: DATA("data/directo-weekly.json"),   mode:"directo" },
 
     // ✅ NIÑOS (definitivo): semanal, un solo origen (sin fallback)
     ninos:     {
       title:"Disfrutar Madrid con niños",
       deck:"Planes culturales y fáciles para hacerlo con ellos esta semana.",
-      json:"data/ninos-weekly.json",
+      json: DATA("data/ninos-weekly.json"),
       mode:"kids"
     },
 
-    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                    json:"data/agenda-monthly.json",   mode:"group",  group:"exhibitions" },
+    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                    json: DATA("data/agenda-monthly.json"),   mode:"group",  group:"exhibitions" },
 
     // ✅ CARTELERA: usa el JSON real publicado (schema theatre/dance)
-    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",           json:"data/cartelera-weekly.json", mode:"cartelera" },
+    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",           json: DATA("data/cartelera-weekly.json"), mode:"cartelera" },
 
-    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",               json:"data/museums.json",          mode:"museos" },
-    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",      json:"data/leisure.json",          mode:"items" }
+    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",               json: DATA("data/museums.json"),          mode:"museos" },
+    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",      json: DATA("data/leisure.json"),          mode:"items" }
   };
 
   // Directo: salas recomendadas (editorial) + URL programación directa
@@ -261,11 +264,6 @@ if (!modal || !mosaic) {
   }, { passive: true });
 
   // ---------- HELPERS ----------
-  function fmtDate(d){
-    try { return new Date(d).toLocaleDateString('es-ES', { year:'numeric', month:'short', day:'2-digit' }); }
-    catch { return "—"; }
-  }
-
   function fmtWhen(start){
     if(!start) return "";
     try {
@@ -343,7 +341,6 @@ if (!modal || !mosaic) {
   function programUrlForDirectoVenue(venueText){
     const v = normKey(venueText);
     if(!v) return "";
-    // match por inclusión sobre el array manual de sedes
     const hit = DIRECTO_VENUES.find(x => v.includes(normKey(x.name)) || normKey(x.name).includes(v));
     const url = hit?.url ? safeText(hit.url).trim() : "";
     return isSafeHttpUrl(url) ? url : "";
@@ -398,7 +395,6 @@ if (!modal || !mosaic) {
       const venue = safeText(it.venue);
       const when  = fmtWhen(it.start);
 
-      // ✅ Automatizados genéricos: SOLO título clicable → it.link (flag)
       const title = (ENABLE_OVERLAY_ITEM_LINKS && isSafeHttpUrl(it.link))
         ? invisibleLinkHTML(titleText, it.link, `Abrir ficha del evento: ${titleText}`)
         : titleText;
@@ -433,10 +429,8 @@ if (!modal || !mosaic) {
       const venueText = safeText(it.venue).trim();
       const when      = fmtWhen(it.start);
 
-      // ❗ Directo auto: título NO es link (evita Ticketmaster/venta)
       const title = titleText;
 
-      // ✅ Directo auto: SOLO sede clicable → programación de sala (flag)
       const venueProgramUrl = programUrlForDirectoVenue(venueText);
       const venue = (ENABLE_DIRECTO_AUTO_VENUE_LINKS && venueProgramUrl)
         ? invisibleLinkHTML(venueText, venueProgramUrl, `Abrir programación de ${venueText}`)
@@ -521,7 +515,7 @@ if (!modal || !mosaic) {
 
     function renderKidItemManual(it){
       const titleText = safeText(it.title) || "—";
-      const title = titleText; // Manual NIÑOS: el título NO es link
+      const title = titleText;
 
       const venue = safeText(it.venue).trim();
       const space = safeText(it.space || it.subvenue).trim();
@@ -570,10 +564,8 @@ if (!modal || !mosaic) {
   }
 
   function renderDirecto(items){
-    // ✅ Directo AUTO con excepción (venue link a programación, no it.link)
     renderDirectoAutoItems(items);
 
-    // Salas recomendadas (manuales)
     const venuesHtml = DIRECTO_VENUES.map(v => {
       const name = safeText(v.name);
       const program = safeText(v.program);
@@ -787,46 +779,85 @@ if (!modal || !mosaic) {
     `);
   }
 
-  // ---------- RENDER (CARTELERA: weekly theatre/dance schema) ----------
+  // ---------- RENDER (CARTELERA: premium theatre/dance) ----------
+  // Espera campos (cuando el updater A los meta):
+  // theatre[]: { title, author, director, cast[], dateText|startDate/endDate, venue, mapsUrl }
+  // dance[]:   { title, company, choreography, director?, dateText|startDate/endDate, venue, mapsUrl }
   function renderCarteleraFromWeekly(data){
     const theatre = Array.isArray(data?.theatre) ? data.theatre : [];
     const dance   = Array.isArray(data?.dance) ? data.dance : [];
 
-    const tMax = Math.min(theatre.length, 10);
-    const dMax = Math.min(dance.length, 3);
+    const tMax = Math.min(theatre.length, 12);
+    const dMax = Math.min(dance.length, 8);
 
     if(!tMax && !dMax){
       kList.innerHTML = '<p class="k-empty">Ahora mismo no hay cartelera publicada. Vuelve pronto.</p>';
       return;
     }
 
-    const renderOne = (it) => {
-      const titleText = safeText(it.title) || "—";
-      const title = titleText; // Cartelera: sin link (premium, no look de link por defecto)
+    const whenLine = (it) => {
+      const dt = safeText(it.dateText).trim();
+      if(dt) return dt;
+      const a = safeText(it.startDate).trim();
+      const b = safeText(it.endDate).trim();
+      if(a && b) return `${fmtWhen(a)} → ${fmtWhen(b)}`;
+      if(a) return fmtWhen(a);
+      return "";
+    };
 
-      const credits = safeText(it.credits).trim();
-      const deck    = safeText(it.deck).trim();
-
+    const venueLine = (it) => {
       const venue = safeText(it.venue).trim();
       const addr  = safeText(it.address).trim();
-
-      const when =
-        safeText(it.dateText).trim() ||
-        (it.startDate ? fmtWhen(it.startDate) : "");
-
       const q = safeText(it.mapsQuery) || [venue, addr, "Madrid"].filter(Boolean).join(", ");
       const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
-      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'este teatro'} en Google Maps`) : "";
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'este lugar'} en Google Maps`) : "";
+      const text = venue || "—";
+      return `${text}${pin ? ` · ${pin}` : ""}`;
+    };
 
-      const metaParts = [when, venue].filter(Boolean);
-      const meta = metaParts.join(" · ");
+    const renderTheatre = (it) => {
+      const title = safeText(it.title) || "—";
+
+      const author   = safeText(it.author || it.credits || "").trim();
+      const director = safeText(it.director || "").trim();
+
+      const castRaw = Array.isArray(it.cast) ? it.cast : (safeText(it.cast || "").trim() ? safeText(it.cast).split("·") : []);
+      const cast = castRaw.map(s => safeText(s).trim()).filter(Boolean).slice(0, 3);
+
+      const when = whenLine(it);
+      const venue = venueLine(it);
 
       return `
         <article class="k-item k-item--cartelera">
           <div class="k-item-title"><strong>${title}</strong></div>
-          ${credits ? `<div class="k-item-sub">${credits}</div>` : ``}
-          ${deck ? `<p class="k-item-deck">${deck}</p>` : ``}
-          ${meta ? `<p class="k-item-meta">${meta}${pin ? ` · ${pin}` : ""}</p>` : (pin ? `<p class="k-item-meta">${pin}</p>` : ``)}
+          ${author ? `<div class="k-item-sub">${author}</div>` : ``}
+          ${director ? `<div class="k-item-sub">Dirección: ${director}</div>` : ``}
+          ${cast.length ? `<div class="k-item-sub">Con: ${cast.join(" · ")}</div>` : ``}
+          ${when ? `<div class="k-item-sub">${when}</div>` : ``}
+          <div class="k-item-sub">${venue}</div>
+        </article>
+      `;
+    };
+
+    const renderDance = (it) => {
+      const title = safeText(it.title) || "—";
+
+      const company = safeText(it.company || it.venueCompany || "").trim();
+      const choreo  = safeText(it.choreography || it.coreografia || "").trim();
+      const director = safeText(it.director || "").trim();
+
+      const when = whenLine(it);
+      const venue = venueLine(it);
+
+      // Dirección SOLO si existe (y si quieres, luego: solo si distinta de coreografía)
+      return `
+        <article class="k-item k-item--cartelera">
+          <div class="k-item-title"><strong>${title}</strong></div>
+          ${company ? `<div class="k-item-sub">${company}</div>` : ``}
+          ${choreo ? `<div class="k-item-sub">Coreografía: ${choreo}</div>` : ``}
+          ${director ? `<div class="k-item-sub">Dirección: ${director}</div>` : ``}
+          ${when ? `<div class="k-item-sub">${when}</div>` : ``}
+          <div class="k-item-sub">${venue}</div>
         </article>
       `;
     };
@@ -834,7 +865,7 @@ if (!modal || !mosaic) {
     let html = "";
 
     if(tMax){
-      html += theatre.slice(0, tMax).map(renderOne).join("");
+      html += theatre.slice(0, tMax).map(renderTheatre).join("");
     }
 
     if(dMax){
@@ -844,7 +875,7 @@ if (!modal || !mosaic) {
           <p class="k-kicker" style="margin:0 0 10px 0;">Danza</p>
         </div>
       `;
-      html += dance.slice(0, dMax).map(renderOne).join("");
+      html += dance.slice(0, dMax).map(renderDance).join("");
     }
 
     kList.innerHTML = html;
@@ -853,7 +884,8 @@ if (!modal || !mosaic) {
   // ---------- LOAD + RENDER ----------
   async function fetchJsonWithFallback(primary, fallback){
     const tryFetch = async (url) => {
-      const res = await fetch(url, { cache: 'no-store' });
+      const bust = url.includes("?") ? `&v=${Date.now()}` : `?v=${Date.now()}`;
+      const res = await fetch(`${url}${bust}`, { cache: 'no-store' });
       if(!res.ok) throw new Error(`fetch failed ${res.status}: ${url}`);
       return res.json();
     };
@@ -868,7 +900,10 @@ if (!modal || !mosaic) {
 
   async function loadAndRender(key){
     const cfg = CFG[key];
-    if(!cfg) return;
+    if(!cfg){
+      console.warn('[Cooltura overlay] CFG missing for family=', key, 'Check data-family on card.');
+      return;
+    }
 
     beginSwap();
 
@@ -906,7 +941,6 @@ if (!modal || !mosaic) {
         return;
       }
 
-      // ✅ CARTELERA (schema theatre/dance)
       if(cfg.mode === "cartelera"){
         renderCarteleraFromWeekly(data);
         if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
@@ -929,7 +963,6 @@ if (!modal || !mosaic) {
           kDeck.textContent = "Programación en Madrid · Sedes culturales";
           renderExpo(Array.isArray(g?.items) ? g.items : []);
         } else {
-          if(g?.deck) kDeck.textContent = g.deck;
           renderItems(Array.isArray(g?.items) ? g.items : []);
         }
 
@@ -942,7 +975,6 @@ if (!modal || !mosaic) {
       if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
       endSwap();
     } catch (err) {
-      // ✅ Debug sin romper UI
       console.error('[Cooltura overlay] load failed:', err, 'family=', key, 'json=', CFG?.[key]?.json);
       kMeta.textContent = 'No se pudo cargar la información.';
       kList.innerHTML = '<p class="k-empty">Cuando subas los JSON en /data, este overlay se llenará automáticamente.</p>';
