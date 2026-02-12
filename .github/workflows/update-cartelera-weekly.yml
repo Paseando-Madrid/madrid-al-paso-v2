@@ -2,7 +2,7 @@ name: Update Cartelera (Weekly)
 
 on:
   schedule:
-    - cron: "0 6 * * 1" # Lunes 06:00 UTC (semanal)
+    - cron: "0 6 * * 1" # Lunes 06:00 UTC
   workflow_dispatch:
 
 permissions:
@@ -22,8 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm init -y
-          npm install cheerio@1
+          npm ci || (npm init -y && npm i cheerio@1)
 
       - name: Run updater
         run: node scripts/update-cartelera-weekly.js
@@ -34,4 +33,3 @@ jobs:
           git config user.email "github-actions@users.noreply.github.com"
           git add data/cartelera-weekly.json
           git diff --cached --quiet || (git commit -m "Update cartelera weekly" && git push)
-
