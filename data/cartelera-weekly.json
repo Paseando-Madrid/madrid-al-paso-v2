@@ -1,1 +1,356 @@
-
+{
+  "updatedAt": "2026-02-12T23:19:10.003Z",
+  "theatre": [
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Lautaro Delgado Tymruk y Sofía Brito",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-12 00:00:00",
+      "endDate": "2026-02-15 23:59:59",
+      "dateText": "",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/sere-sofia-brito-lautaro-delgado-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_BRITO.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Bambalina Teatre Practicable",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-14 00:00:00",
+      "endDate": "2026-02-15 23:59:59",
+      "dateText": "",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/caja-juguetes-bambalina-teatre-canal-teatralia-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/bambalinawebTC-543x314-1.jpg"
+    },
+    {
+      "source": "nave10",
+      "kind": "theatre",
+      "title": "Tres noches en Ítaca",
+      "credits": "",
+      "deck": "Cuando la madre muere, el muro cae y la muerte está ahí, enfrente, ya ineludible.Una mujer, cerca de los 50, deja a su familia y su trabajo de profesora de griego en un instituto para irse a vivir a una isla g…",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-06T18:30:55",
+      "endDate": "2026-03-08T22:55:55",
+      "dateText": "",
+      "venue": "Nave 10 Matadero",
+      "address": "Plaza de Legazpi, 8, Madrid",
+      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
+      "link": "https://www.nave10matadero.es/actividades/tres-noches-en-itaca",
+      "image": "https://www.nave10matadero.es/sites/default/files/2026-01/ITACA_@geraldineleloutre_0290 copia.jpg"
+    },
+    {
+      "source": "nave10",
+      "kind": "theatre",
+      "title": "Niebla",
+      "credits": "",
+      "deck": "El personaje se sacrifica para ver lo que nosotros no podemos ver.Fernanda Orazi, directora invitada en este 25|26, decide otorgarle un reconocimiento especial al personaje. Lo hace a partir de la condición qu…",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-03-20T18:30:55",
+      "endDate": "2026-04-12T21:55:55",
+      "dateText": "",
+      "venue": "Nave 10 Matadero",
+      "address": "Plaza de Legazpi, 8, Madrid",
+      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
+      "link": "https://www.nave10matadero.es/actividades/niebla",
+      "image": "https://www.nave10matadero.es/sites/default/files/2025-10/7 - Niebla.jpg"
+    },
+    {
+      "source": "pradillo",
+      "kind": "theatre",
+      "title": "Las que tienen que servir",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "2026-06-23T23:59:59.000Z",
+      "dateText": "Citas a confirmar trimestralmente desde el 13 de enero hasta el 23 de junio de 2026 los MARTES de 10:00 a 11:30 H.",
+      "venue": "Teatro Pradillo",
+      "address": "C. de Pradillo, 12, Madrid",
+      "mapsQuery": "Teatro Pradillo, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Pradillo%2C%20Madrid",
+      "link": "https://www.teatropradillo.com/las-que-tienen-que-servir/",
+      "image": ""
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Gula / Gola",
+      "credits": "Creación y dirección Pau Matas Nogué y Oriol Pla Solina",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "Temporada Alta y Teatre Nacional de Catalunya, con la colaboración del Teatre Sagarra de Santa Coloma de Gramenet",
+      "choreographer": "",
+      "cast": [
+        "Oriol Pla Solina"
+      ],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/gula-gola/",
+      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/12/G.WEB2_-scaled.jpg?_t=1768832949"
+    },
+    {
+      "source": "cdn-maria-guerrero",
+      "kind": "theatre",
+      "title": "Grito, boda y sangre",
+      "credits": "Basada en Bodas de sangre de Federico García Lorca, así como en fragmentos de otras de sus obras y poemas. Dramaturgia Iker Azkoitia Dirección Ángela Ibáñez Ca…",
+      "deck": "",
+      "author": "Iker Azkoitia",
+      "director": "Ángela Ibáñez Castaño",
+      "company": "Centro Dramático Nacional",
+      "choreographer": "Lucile Préat",
+      "cast": [
+        "Mari López",
+        "Emma Vallejo"
+      ],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro María Guerrero",
+      "address": "C. de Tamayo y Baus, 4, Madrid",
+      "mapsQuery": "Teatro María Guerrero, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/",
+      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/GBS__WEB2-scaled.jpg?_t=1770212719"
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Constelaciones",
+      "credits": "Texto Nick Payne Versión y dirección Sergio Peris-Mencheta",
+      "deck": "",
+      "author": "Nick Payne",
+      "director": "Sergio Peris-Mencheta",
+      "company": "Centro Dramático Nacional y Barco Pirata",
+      "choreographer": "Amaya Galeote",
+      "cast": [
+        "Jordi Coll",
+        "Diego Monzón",
+        "Paula Muñoz",
+        "María Pascual",
+        "David Pérez-Bayona",
+        "Clara Serrano"
+      ],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
+      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/C_WEB4-scaled.jpg?_t=1770886396"
+    },
+    {
+      "source": "teatroespanol",
+      "kind": "theatre",
+      "title": "Luces de bohemia",
+      "credits": "Ramón del Valle-Inclán",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "23 Enero7 Marzo 2026",
+      "venue": "Teatro Español",
+      "address": "Pl. de Santa Ana, 4, Madrid",
+      "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
+      "link": "https://www.teatroespanol.es/luces-de-bohemia",
+      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2024/10/luces_bohemia_prensa_02_0.jpg.webp?itok=CSC8eDsO"
+    },
+    {
+      "source": "teatrodelbarrio",
+      "kind": "theatre",
+      "title": "Federico. No hay olvido, ni sueño: Carne viva",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "7 septiembre 2025 - 1 marzo 2026",
+      "venue": "Teatro del Barrio",
+      "address": "C. de Zurita, 20, Madrid",
+      "mapsQuery": "Teatro del Barrio, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
+      "link": "https://teatrodelbarrio.com/federico-no-hay-olvido-ni-sueno-carne-viva/",
+      "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1267.jpg"
+    }
+  ],
+  "dance": [
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "People Watching",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-12 00:00:00",
+      "endDate": "2026-02-13 23:59:59",
+      "dateText": "",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/people-watching-play-dead/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_PLAYDEAD.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Compañía Daniel Abreu",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-26 00:00:00",
+      "endDate": "2026-02-28 23:59:59",
+      "dateText": "",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/compania-daniel-abreu-capitulo-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_151225_ABREU.jpg"
+    }
+  ],
+  "meta": {
+    "limits": {
+      "theatreMax": 10,
+      "danceMax": 2
+    },
+    "caps": {
+      "theatre": {
+        "nave10": 2,
+        "cdn-maria-guerrero": 1,
+        "cdn-valle-inclan": 2,
+        "teatrodelbarrio": 1,
+        "pradillo": 1,
+        "teatroespanol": 1,
+        "canal": 2,
+        "matadero": 0
+      },
+      "dance": {
+        "canal": 2
+      }
+    },
+    "sources": {
+      "theatre": [
+        "canal",
+        "nave10",
+        "pradillo",
+        "cdn-valle-inclan",
+        "cdn-maria-guerrero",
+        "teatroespanol",
+        "teatrodelbarrio"
+      ],
+      "dance": [
+        "canal"
+      ]
+    },
+    "counts": {
+      "theatreCollected": 81,
+      "danceCollected": 10,
+      "theatreUnique": 81,
+      "danceUnique": 10,
+      "theatreActive": 80,
+      "danceActive": 10,
+      "theatreFinal": 10,
+      "danceFinal": 2
+    },
+    "collectedBySource": {
+      "theatre": {
+        "cdn-valle-inclan": 6,
+        "cdn-maria-guerrero": 8,
+        "canal": 34,
+        "nave10": 5,
+        "teatroespanol": 4,
+        "pradillo": 5,
+        "teatrodelbarrio": 19
+      },
+      "dance": {
+        "canal": 10
+      }
+    },
+    "mix": {
+      "theatre": {
+        "canal": 2,
+        "nave10": 2,
+        "pradillo": 1,
+        "cdn-valle-inclan": 2,
+        "cdn-maria-guerrero": 1,
+        "teatroespanol": 1,
+        "teatrodelbarrio": 1
+      },
+      "dance": {
+        "canal": 2
+      }
+    },
+    "errors": [
+      {
+        "source": "cdn",
+        "venue": "month:2/2026",
+        "message": "WAF HTML (attempt 1, action=get-cdn-events). Snip: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" conte"
+      },
+      {
+        "source": "cdn",
+        "venue": "month:2/2026",
+        "message": "WAF HTML (attempt 1, action=get_cdn_events). Snip: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" conte"
+      }
+    ]
+  }
+}
