@@ -1,5 +1,5 @@
 /**
- * Update Cartelera (Weekly) — COOLtura
+ * Update Cartelera (Weekly) — COOLtura  ✅ ÚLTIMA VERSIÓN (con ENRIQUECIMIENTO CDN)
  * - Genera /data/cartelera-weekly.json
  * - Agenda plural y curada (cupo por fuente)
  * - Teatro: 10 items (mix garantizado)
@@ -7,6 +7,12 @@
  * - Sin venta de entradas en salida
  * - Pin Google Maps siempre (search api=1)
  * - Rotación por fecha de finalización (endDate) + filtro vencidos
+ *
+ * + Enriquecimiento PRO (sin romper nada):
+ *   - Para CDN (dramatico.inaem.gob.es): entra en la ficha (link) y extrae
+ *     author/texto, director/dirección, cast/reparto, company/compañía, etc.
+ *   - También intenta startDate/endDate desde JSON-LD si existe.
+ *   - Mantiene compatibilidad: conserva credits/deck y añade campos opcionales.
  *
  * Requiere: npm i cheerio@1
  */
@@ -45,6 +51,7 @@ const CAPS_DANCE = {
 const UA =
   "Mozilla/5.0 (compatible; PaseandoMadridBot/1.0; +https://paseando-madrid.github.io/)";
 
+/** Throttle para no “parecer bot agresivo” */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /* =========================================================
@@ -143,7 +150,7 @@ async function requestWithRetry(url, opts = {}, { tries = 3, allowStatuses = [] 
       throw new Error(`HTTP ${res.status} for ${url}`);
     } catch (e) {
       lastErr = e;
-      await sleep(400 * (i + 1));
+      await sleep(450 * (i + 1));
     }
   }
   throw lastErr;
@@ -290,17 +297,32 @@ function sortByEndThenStart(items) {
   });
 }
 
+/**
+ * ✅ Compat: no rompe nada
+ * Añadimos campos opcionales para overlay premium (si no existen, quedan vacíos).
+ */
 function sanitizeForOutput(it) {
   // NO venta entradas: no incluimos offers/tickets nunca.
   return {
     source: it.source,
     kind: it.kind,
     title: it.title,
+
+    // legacy (siguen existiendo)
     credits: it.credits || "",
     deck: it.deck || "",
+
+    // nuevas (opcionales)
+    author: it.author || "",          // Texto / Dramaturgia / Autor
+    director: it.director || "",      // Dirección / Versión y dirección / Dirección escénica
+    company: it.company || "",        // Compañía / Producción (si aparece)
+    choreographer: it.choreographer || "", // Coreografía (danza)
+    cast: Array.isArray(it.cast) ? it.cast.slice(0, 6) : [],
+
     startDate: it.startDate || "",
     endDate: it.endDate || "",
     dateText: it.dateText || "",
+
     venue: it.venue || "",
     address: it.address || "",
     mapsQuery: it.mapsQuery || "",
@@ -324,9 +346,9 @@ function pickWithCaps(items, totalMax, capsBySource) {
     if (picked.length >= totalMax) break;
     const src = it.source || "other";
 
-    if (!(src in capsBySource)) continue;         // fuente no permitida
+    if (!(src in capsBySource)) continue; // fuente no permitida
     const cap = capsBySource[src];
-    if (cap === 0) continue;                       // excluida
+    if (cap === 0) continue; // excluida
     const n = counts.get(src) || 0;
     if (n >= cap) continue;
 
@@ -383,6 +405,177 @@ function tallyBySource(items) {
 }
 
 /* =========================================================
+   ✅ ENRIQUECIMIENTO: Dramático (CDN) por ficha /evento/*
+   - Extrae EQUIPO (Texto / Dirección / Reparto / etc.)
+   - Extrae startDate/endDate desde JSON-LD si existe
+   ========================================================= */
+
+function extractJsonLdObjects(html) {
+  const $ = cheerio.load(html);
+  const scripts = $('script[type="application/ld+json"]')
+    .map((_, el) => $(el).html())
+    .get()
+    .filter(Boolean);
+
+  const out = [];
+  for (const raw of scripts) {
+    const txt = String(raw).trim();
+    if (!txt) continue;
+    try {
+      const parsed = JSON.parse(txt);
+      if (Array.isArray(parsed)) parsed.forEach((o) => out.push(o));
+      else if (parsed && typeof parsed === "object") {
+        if (Array.isArray(parsed["@graph"])) parsed["@graph"].forEach((o) => out.push(o));
+        else out.push(parsed);
+      }
+    } catch (_) {}
+  }
+  return out;
+}
+
+function pickEventFromJsonLd(arr) {
+  const events = arr.filter(
+    (o) => o && typeof o === "object" && /Event$/i.test(String(o["@type"] || ""))
+  );
+  if (events.length) return events[0];
+  return arr.find((o) => o && typeof o === "object" && o.name && o.url) || null;
+}
+
+function normKeyLabel(s) {
+  return normSpace(s)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function splitPeopleList(s) {
+  const t = normSpace(s);
+  if (!t) return [];
+  // separadores comunes: coma, punto y coma, salto, "·", "|"
+  const raw = t
+    .replace(/\s*[•·|]\s*/g, ", ")
+    .replace(/\s*;\s*/g, ", ")
+    .replace(/\s*\/\s*/g, ", ")
+    .replace(/\s+y\s+/gi, ", "); // “A y B” -> lista (best-effort)
+  const parts = raw
+    .split(",")
+    .map((x) => normSpace(x))
+    .filter(Boolean);
+  // dedupe simple
+  return [...new Set(parts)];
+}
+
+function parseEquipoBoxFromDramatico($) {
+  // Ejemplo que tú viste:
+  // <div class="equipo box-line d-none d-lg-block">
+  //   <h3>EQUIPO</h3>
+  //   <div class="content">
+  //     <div class="item"><h4>Texto</h4><p>Nick Payne</p></div>
+  // ...
+  //   </div>
+  // </div>
+  const out = {};
+  const cast = [];
+
+  const boxes = $("div.equipo.box-line");
+  boxes.each((_, el) => {
+    const $box = $(el);
+    const $items = $box.find(".content .item");
+    $items.each((__, it) => {
+      const label = normKeyLabel($(it).find("h4").first().text());
+      const val = normSpace($(it).find("p").first().text());
+      if (!label || !val) return;
+
+      // Mapeos “teatro”
+      if (label === "texto" || label === "dramaturgia" || label === "autor") out.author = val;
+      else if (label.includes("version") && label.includes("direccion")) out.director = val;
+      else if (label === "direccion" || label === "direccion escenica") out.director = val;
+      else if (label === "reparto" || label === "interpretacion" || label === "intérpretes") {
+        cast.push(...splitPeopleList(val));
+      } else if (label === "compania" || label === "compañia" || label === "produccion") {
+        out.company = val;
+      } else if (label === "coreografia" || label === "coreografía") {
+        out.choreographer = val;
+      } else {
+        // si quisieras, aquí puedes guardar extras en el futuro
+      }
+    });
+  });
+
+  if (cast.length) out.cast = [...new Set(cast)].slice(0, 8);
+  return out;
+}
+
+function extractOgImage($) {
+  const og = $('meta[property="og:image"]').attr("content") || "";
+  if (og) return og;
+  const tw = $('meta[name="twitter:image"]').attr("content") || "";
+  return tw || "";
+}
+
+async function enrichDramaticoEventPage(item, errors) {
+  if (!item?.link || !/dramatico\.inaem\.gob\.es\/evento\//.test(item.link)) return item;
+
+  try {
+    const html = await fetchText(item.link, {
+      headers: {
+        accept: "text/html,*/*;q=0.9",
+        referer: "https://dramatico.inaem.gob.es/",
+        origin: "https://dramatico.inaem.gob.es"
+      }
+    });
+
+    const $ = cheerio.load(html);
+
+    // EQUIPO -> author/director/cast/company/choreographer
+    const equipo = parseEquipoBoxFromDramatico($);
+
+    // JSON-LD -> fechas si existen
+    const jsonLd = extractJsonLdObjects(html);
+    const ev = pickEventFromJsonLd(jsonLd);
+
+    const enriched = { ...item };
+
+    // Fechas (si la ficha las trae)
+    if (ev?.startDate && !enriched.startDate) enriched.startDate = String(ev.startDate);
+    if (ev?.endDate && !enriched.endDate) enriched.endDate = String(ev.endDate);
+
+    // Imagen si falta
+    if (!enriched.image) {
+      const og = extractOgImage($);
+      if (og) enriched.image = og;
+    }
+
+    // Campos equipo (no pisamos si ya viene relleno por otra fuente)
+    if (equipo.author && !enriched.author) enriched.author = equipo.author;
+    if (equipo.director && !enriched.director) enriched.director = equipo.director;
+    if (equipo.company && !enriched.company) enriched.company = equipo.company;
+    if (equipo.choreographer && !enriched.choreographer) enriched.choreographer = equipo.choreographer;
+    if (Array.isArray(equipo.cast) && equipo.cast.length && (!Array.isArray(enriched.cast) || !enriched.cast.length)) {
+      enriched.cast = equipo.cast;
+    }
+
+    // Fallback “credits” (para que el overlay actual tenga algo bonito)
+    // Si no hay credits, armamos una línea editorial ligera.
+    if (!enriched.credits) {
+      const bits = [];
+      if (enriched.author) bits.push(enriched.author);
+      if (enriched.director) bits.push(enriched.director);
+      enriched.credits = bits.slice(0, 2).join(" · ");
+    }
+
+    return enriched;
+  } catch (e) {
+    errors.push({
+      source: "cdn",
+      venue: item.source,
+      message: `CDN enrich failed for ${item.link}: ${String(e?.message || e)}`
+    });
+    return item;
+  }
+}
+
+/* =========================================================
    FUENTES (CARTELERA)
    ========================================================= */
 
@@ -393,30 +586,57 @@ function tallyBySource(items) {
  * action=get-cdn-events mes/year
  *
  * Nota: el endpoint NO filtra por sede; venueKey aquí es etiqueta.
+ *
+ * ✅ Importante: si da 400, intentamos acción alternativa get_cdn_events (fallback).
  */
-async function scrapeCDNMonth({ venueKey, venueName }, month, year, errors) {
+async function fetchCDNJson(month, year) {
   const url = "https://dramatico.inaem.gob.es/wp-admin/admin-ajax.php";
-  const body = new URLSearchParams({
-    action: "get-cdn-events",
-    mes: String(month),
-    year: String(year)
-  }).toString();
 
-  const json = await fetchJsonSafe(
-    url,
-    {
-      method: "POST",
-      headers: {
-        accept: "application/json, text/plain, */*",
-        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "x-requested-with": "XMLHttpRequest",
-        origin: "https://dramatico.inaem.gob.es",
-        referer: "https://dramatico.inaem.gob.es/"
-      },
-      body
-    },
-    { tries: 3 }
-  );
+  const tryActions = ["get-cdn-events", "get_cdn_events"];
+  let lastErr = null;
+
+  for (const action of tryActions) {
+    const body = new URLSearchParams({
+      action,
+      mes: String(month),
+      year: String(year)
+    }).toString();
+
+    try {
+      const res = await requestWithRetry(
+        url,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-requested-with": "XMLHttpRequest",
+            origin: "https://dramatico.inaem.gob.es",
+            referer: "https://dramatico.inaem.gob.es/"
+          },
+          body
+        },
+        { tries: 3, allowStatuses: [400] }
+      );
+
+      if (res.ok) {
+        const txt = res.text();
+        if (looksLikeHtml(txt)) throw new Error("Expected JSON but got HTML");
+        return JSON.parse(txt);
+      }
+
+      // si 400, probamos siguiente action
+      lastErr = new Error(`HTTP ${res.status} for CDN action=${action}`);
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+
+  throw lastErr || new Error("CDN JSON fetch failed");
+}
+
+async function scrapeCDNMonth({ venueKey, venueName }, month, year) {
+  const json = await fetchCDNJson(month, year);
 
   const out = [];
   const days = Array.isArray(json?.response) ? json.response : [];
@@ -436,13 +656,27 @@ async function scrapeCDNMonth({ venueKey, venueName }, month, year, errors) {
         source: venueKey,
         kind: "theatre",
         title,
+
+        // legacy (dejamos algo si viene)
         credits: stripHtml(ev?.subtitulo || ""),
         deck: "",
+
+        // nuevas (opcionales, se rellenan con enrich)
+        author: "",
+        director: "",
+        company: "",
+        choreographer: "",
+        cast: [],
+
         startDate: "",
         endDate: "",
         dateText: "",
+
         venue: venueName,
-        address: "C. de Plazuela de Ana Diosdado, 1, Madrid",
+        address:
+          venueKey === "cdn-maria-guerrero"
+            ? "C. de Tamayo y Baus, 4, Madrid"
+            : "C. de Plazuela de Ana Diosdado, 1, Madrid",
         mapsQuery: `${venueName}, Madrid`,
         mapsUrl: toMapsUrl(`${venueName}, Madrid`),
         link,
@@ -472,8 +706,8 @@ async function scrapeCDN(errors) {
   const out = [];
   for (const v of venues) {
     try {
-      const a = await scrapeCDNMonth(v, m1, y1, errors);
-      const b = await scrapeCDNMonth(v, m2, y2, errors);
+      const a = await scrapeCDNMonth(v, m1, y1);
+      const b = await scrapeCDNMonth(v, m2, y2);
       out.push(...a, ...b);
     } catch (e) {
       errors.push({
@@ -490,7 +724,27 @@ async function scrapeCDN(errors) {
     const k = `${it.source}__${it.title}`;
     if (!byWork.has(k)) byWork.set(k, it);
   }
-  return [...byWork.values()];
+
+  // ✅ Enriquecimiento: entramos en la ficha del evento
+  const base = [...byWork.values()];
+
+  const enriched = [];
+  // cache por link para evitar peticiones repetidas
+  const cache = new Map();
+
+  for (const it of base) {
+    const key = it.link;
+    if (cache.has(key)) {
+      enriched.push(cache.get(key));
+      continue;
+    }
+    const got = await enrichDramaticoEventPage(it, errors);
+    cache.set(key, got);
+    enriched.push(got);
+    await sleep(240);
+  }
+
+  return enriched;
 }
 
 /**
@@ -565,11 +819,20 @@ async function scrapeCanalSection(section, errors) {
     source: "canal",
     kind: section === "danza" ? "dance" : "theatre",
     title: c.title,
+
     credits: "",
     deck: "",
+
+    author: "",
+    director: "",
+    company: "",
+    choreographer: "",
+    cast: [],
+
     startDate: "",
     endDate: parseSpanishEndDate(c.dateText || ""),
     dateText: c.dateText || "",
+
     venue: "Teatros del Canal",
     address: "C. de Cea Bermúdez, 1, Madrid",
     mapsQuery: "Teatros del Canal, Madrid",
@@ -582,33 +845,11 @@ async function scrapeCanalSection(section, errors) {
 /**
  * C) Nave 10 (JSON-LD por evento)
  */
-function extractJsonLdObjects(html) {
-  const $ = cheerio.load(html);
-  const scripts = $('script[type="application/ld+json"]')
-    .map((_, el) => $(el).html())
-    .get()
-    .filter(Boolean);
-
-  const out = [];
-  for (const raw of scripts) {
-    const txt = String(raw).trim();
-    if (!txt) continue;
-    try {
-      const parsed = JSON.parse(txt);
-      if (Array.isArray(parsed)) parsed.forEach((o) => out.push(o));
-      else if (parsed && typeof parsed === "object") {
-        if (Array.isArray(parsed["@graph"])) parsed["@graph"].forEach((o) => out.push(o));
-        else out.push(parsed);
-      }
-    } catch (_) {}
-  }
-  return out;
+function extractJsonLdObjectsGeneric(html) {
+  return extractJsonLdObjects(html);
 }
-
-function pickEventFromJsonLd(arr) {
-  const events = arr.filter((o) => o && typeof o === "object" && /Event$/i.test(String(o["@type"] || "")));
-  if (events.length) return events[0];
-  return arr.find((o) => o && typeof o === "object" && o.name && o.url) || null;
+function pickEventFromJsonLdGeneric(arr) {
+  return pickEventFromJsonLd(arr);
 }
 
 async function scrapeNave10Theatre(errors) {
@@ -629,8 +870,8 @@ async function scrapeNave10Theatre(errors) {
   for (const url of uniqueLinks) {
     try {
       const page = await fetchText(url);
-      const jsonLd = extractJsonLdObjects(page);
-      const ev = pickEventFromJsonLd(jsonLd);
+      const jsonLd = extractJsonLdObjectsGeneric(page);
+      const ev = pickEventFromJsonLdGeneric(jsonLd);
       if (!ev?.name) continue;
 
       const desc = stripHtml(ev.description || "");
@@ -638,11 +879,20 @@ async function scrapeNave10Theatre(errors) {
         source: "nave10",
         kind: "theatre",
         title: normSpace(ev.name),
+
         credits: "",
         deck: pickFirstSentence(desc, 210),
+
+        author: "",
+        director: "",
+        company: "",
+        choreographer: "",
+        cast: [],
+
         startDate: ev.startDate || "",
         endDate: ev.endDate || "",
         dateText: "",
+
         venue: "Nave 10 Matadero",
         address: "Plaza de Legazpi, 8, Madrid",
         mapsQuery: "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
@@ -650,6 +900,8 @@ async function scrapeNave10Theatre(errors) {
         link: ev.url || url,
         image: (typeof ev.image === "string" ? ev.image : ev.image?.url) || ""
       });
+
+      await sleep(140);
     } catch (e) {
       errors.push({ source: "nave10", venue: "activity", message: String(e?.message || e) });
     }
@@ -689,11 +941,20 @@ async function scrapePradillo(errors) {
         source: "pradillo",
         kind: "theatre",
         title,
+
         credits: "",
         deck: "",
+
+        author: "",
+        director: "",
+        company: "",
+        choreographer: "",
+        cast: [],
+
         startDate: "",
         endDate,
         dateText,
+
         venue: "Teatro Pradillo",
         address: "C. de Pradillo, 12, Madrid",
         mapsQuery: "Teatro Pradillo, Madrid",
@@ -734,11 +995,20 @@ async function scrapeTeatroDelBarrio(errors) {
         source: "teatrodelbarrio",
         kind: "theatre",
         title,
+
         credits: "",
         deck: "",
+
+        author: "",
+        director: "",
+        company: "",
+        choreographer: "",
+        cast: [],
+
         startDate: "",
         endDate,
         dateText,
+
         venue: "Teatro del Barrio",
         address: "C. de Zurita, 20, Madrid",
         mapsQuery: "Teatro del Barrio, Madrid",
@@ -789,11 +1059,20 @@ async function scrapeTeatroEspanol(errors) {
         source: "teatroespanol",
         kind: "theatre",
         title,
+
         credits: subtitle ? subtitle : "",
         deck: where ? where : "",
+
+        author: "",
+        director: "",
+        company: "",
+        choreographer: "",
+        cast: [],
+
         startDate: "",
         endDate,
         dateText,
+
         venue,
         address,
         mapsQuery: `${venue}, ${address}`,
@@ -818,7 +1097,7 @@ async function main() {
   const theatre = [];
   const dance = [];
 
-  // 1) CDN (Valle + María)
+  // 1) CDN (Valle + María) + enrich por ficha
   theatre.push(...(await scrapeCDN(errors)));
 
   // 2) Canal (teatro + danza) (best-effort; si 403, queda 0)
@@ -895,4 +1174,3 @@ main().catch((err) => {
   console.error("FAILED:", err);
   process.exit(1);
 });
-
