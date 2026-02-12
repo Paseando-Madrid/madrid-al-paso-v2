@@ -1,1 +1,12 @@
+{
+  "updatedAt": null,
+  "theatre": [],
+  "dance": [],
+  "meta": {
+    "limits": {
+      "theatreMax": 10,
+      "danceMax": 3
+    }
+  }
+}
 
