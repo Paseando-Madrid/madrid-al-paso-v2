@@ -1,27 +1,26 @@
 /**
  * Update Cartelera (Weekly) — COOLtura ✅ BLINDADO (CDN + CANAL REST + ESPAÑOL AJAX)
  * - Genera /data/cartelera-weekly.json
- * - Agenda plural y curada (cupo por fuente)
+ * - Agenda plural y curada (cupo por fuente) ✅ CAPS EXACTOS (sin +1)
  * - Teatro: 10 items (mix garantizado)
- * - Danza: 2 items (Canal)
+ * - Danza: 2 items (Canal) ✅
  * - Sin venta de entradas en salida
  * - Pin Google Maps siempre (search api=1)
  * - Rotación por fecha de finalización (endDate) + filtro vencidos
  *
  * CDN (dramatico.inaem.gob.es)
  * - POST admin-ajax get-cdn-events (mes/year) + fallback get_cdn_events
+ * - ✅ FIX WAF/Incapsula: cookie-jar + warmup GET + retries si HTML
  * - Clasificación por localizacion + fallback por ficha (HTML) si localizacion no da
  * - Enrich por ficha /evento/*: author/director/cast/company + fechas JSON-LD
  *
  * CANAL (teatroscanal.com)
  * - REST estable: /wp-json/tribe/events/v1/events
- * - Clasificación tolerante: danza si categorías contienen “danza” (slug o name),
- *   teatro si NO danza y categorías sugieren “teatro/en cartel” (slug o name),
- *   fallback: si no es danza y no hay señal clara => teatro SOLO si title/url parecen espectáculo (no “taller/curso”)
+ * - ✅ 404 en page>1 = "no hay más páginas" (NO error)
  *
  * TEATRO ESPAÑOL (teatroespanol.es)
  * - Blindado por Drupal Views AJAX: /views/ajax?_wrapper_format=drupal_ajax
- * - Extrae ajax_page_state (theme + libraries) desde /programacion y pagina por page
+ * - ✅ Cachea ajax_page_state (theme + libraries) con un solo GET /programacion
  *
  * Requiere: npm i cheerio@1
  */
@@ -35,9 +34,10 @@ import * as cheerio from "cheerio";
 
 const OUT_PATH = path.join(process.cwd(), "data", "cartelera-weekly.json");
 
-const LIMITS = { theatreMax: 10, danceMax: 3 };
+// ✅ LIMITS alineados a tu regla editorial
+const LIMITS = { theatreMax: 10, danceMax: 2 };
 
-// Cupos editoriales EXACTOS (tu regla)
+// ✅ Cupos editoriales EXACTOS
 const CAPS_THEATRE = {
   nave10: 2,
   "cdn-maria-guerrero": 1,
@@ -52,14 +52,51 @@ const CAPS_THEATRE = {
 const CAPS_DANCE = { canal: 2 };
 
 const UA =
-  "Mozilla/5.0 (compatible; PaseandoMadridBot/1.0; +https://paseando-madrid.github.io/)";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121 Safari/537.36 PaseandoMadridBot/1.0 (+https://paseando-madrid.github.io/)";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/* =========================================================
+   Cookie Jar (WAF / Incapsula)
+   ========================================================= */
+
+class CookieJar {
+  constructor() {
+    /** @type {Map<string, Map<string,string>>} */
+    this.byHost = new Map();
+  }
+  addFromSetCookie(host, setCookie) {
+    if (!setCookie) return;
+    const parts = String(setCookie).split(";");
+    const kv = parts[0];
+    const eq = kv.indexOf("=");
+    if (eq <= 0) return;
+    const name = kv.slice(0, eq).trim();
+    const value = kv.slice(eq + 1).trim();
+    if (!name) return;
+    if (!this.byHost.has(host)) this.byHost.set(host, new Map());
+    this.byHost.get(host).set(name, value);
+  }
+  absorbResponse(host, headers) {
+    const sc = headers?.["set-cookie"];
+    if (!sc) return;
+    if (Array.isArray(sc)) sc.forEach((x) => this.addFromSetCookie(host, x));
+    else this.addFromSetCookie(host, sc);
+  }
+  header(host) {
+    const m = this.byHost.get(host);
+    if (!m || !m.size) return "";
+    return [...m.entries()].map(([k, v]) => `${k}=${v}`).join("; ");
+  }
+}
+
+const cookieJar = new CookieJar();
 
 /* =========================================================
    HTTP (sin fetch / sin undici)
    - Redirects
    - gzip/deflate/br
+   - Cookie jar
    ========================================================= */
 
 function decompressBuffer(buf, encoding) {
@@ -78,6 +115,9 @@ function httpsRequest(
 ) {
   return new Promise((resolve, reject) => {
     const u = new URL(urlStr);
+    const host = u.hostname;
+
+    const cookieHeader = cookieJar.header(host);
 
     const req = https.request(
       {
@@ -91,11 +131,17 @@ function httpsRequest(
           accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
           "accept-language": "es-ES,es;q=0.9,en;q=0.7",
           "accept-encoding": "gzip, deflate, br",
+          "cache-control": "no-cache",
+          pragma: "no-cache",
+          ...(cookieHeader ? { cookie: cookieHeader } : {}),
           ...headers
         }
       },
       (res) => {
         const status = res.statusCode || 0;
+
+        // ✅ Cookies
+        cookieJar.absorbResponse(host, res.headers);
 
         // Redirects
         const loc = res.headers.location;
@@ -229,9 +275,19 @@ function truncateForUI(text, max = 160) {
 /* --------- Fechas --------- */
 
 const MONTHS = {
-  enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
-  julio: 6, agosto: 7, septiembre: 8, setiembre: 8,
-  octubre: 9, noviembre: 10, diciembre: 11
+  enero: 0,
+  febrero: 1,
+  marzo: 2,
+  abril: 3,
+  mayo: 4,
+  junio: 5,
+  julio: 6,
+  agosto: 7,
+  septiembre: 8,
+  setiembre: 8,
+  octubre: 9,
+  noviembre: 10,
+  diciembre: 11
 };
 
 function normMonthKey(s) {
@@ -245,6 +301,7 @@ function parseSpanishEndDate(dateText) {
   const s = normSpace(dateText).toLowerCase();
   if (!s) return "";
 
+  // del 1 al 10 de marzo de 2026
   let m = s.match(
     /\bdel\s+(\d{1,2})\s+al\s+(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i
   );
@@ -255,6 +312,16 @@ function parseSpanishEndDate(dateText) {
     if (Number.isFinite(mon)) return new Date(y, mon, d2, 23, 59, 59).toISOString();
   }
 
+  // hasta el 10 de marzo de 2026
+  m = s.match(/\bhasta\s+el\s+(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i);
+  if (m) {
+    const d = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[2])];
+    const y = Number(m[3]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d, 23, 59, 59).toISOString();
+  }
+
+  // 10 de marzo de 2026
   m = s.match(/\b(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i);
   if (m) {
     const d = Number(m[1]);
@@ -329,38 +396,41 @@ function sanitizeForOutput(it) {
 }
 
 /* =========================================================
-   Selector plural por cupos
+   Selector plural por cupos ✅ CAPS EXACTOS
+   - Pasada 1: respeta caps
+   - Pasada 2: SOLO rellena con fuentes que AÚN tengan cap disponible
    ========================================================= */
 
-function pickWithCaps(items, totalMax, capsBySource) {
+function pickWithCapsExact(items, totalMax, capsBySource) {
   const sorted = sortByEndThenStart(items);
   const picked = [];
   const counts = new Map();
 
-  // Pasada 1: cupos estrictos
+  const canTake = (src) => {
+    if (!(src in capsBySource)) return false;
+    const cap = capsBySource[src] ?? 0;
+    if (cap <= 0) return false;
+    const n = counts.get(src) || 0;
+    return n < cap;
+  };
+
+  // Pasada 1: cupos estrictos (orden editorial por fechas)
   for (const it of sorted) {
     if (picked.length >= totalMax) break;
     const src = it.source || "other";
-
-    if (!(src in capsBySource)) continue;
-    const cap = capsBySource[src];
-    if (cap === 0) continue;
-
-    const n = counts.get(src) || 0;
-    if (n >= cap) continue;
-
+    if (!canTake(src)) continue;
     if (picked.some((p) => p.link && it.link && p.link === it.link)) continue;
 
     picked.push(it);
-    counts.set(src, n + 1);
+    counts.set(src, (counts.get(src) || 0) + 1);
   }
 
-  // Pasada 2: relleno controlado (sin dar extra a Nave10)
+  // Pasada 2: relleno (sin romper caps). Solo por prioridad editorial.
   if (picked.length < totalMax) {
     const fillOrder = [
-      "teatroespanol",
       "cdn-valle-inclan",
       "cdn-maria-guerrero",
+      "teatroespanol",
       "teatrodelbarrio",
       "pradillo",
       "canal",
@@ -371,21 +441,14 @@ function pickWithCaps(items, totalMax, capsBySource) {
       if (picked.length >= totalMax) break;
       if (!(src in capsBySource)) continue;
 
-      const baseCap = capsBySource[src] ?? 0;
-      const hard = src === "nave10" ? baseCap : baseCap + 1;
-
       for (const it of sorted) {
         if (picked.length >= totalMax) break;
         if (it.source !== src) continue;
-        if (hard === 0) continue;
-
+        if (!canTake(src)) break;
         if (picked.some((p) => p.link && it.link && p.link === it.link)) continue;
 
-        const n = counts.get(src) || 0;
-        if (n >= hard) continue;
-
         picked.push(it);
-        counts.set(src, n + 1);
+        counts.set(src, (counts.get(src) || 0) + 1);
       }
     }
   }
@@ -396,6 +459,14 @@ function pickWithCaps(items, totalMax, capsBySource) {
 function tallyBySource(items) {
   return items.reduce((acc, x) => {
     acc[x.source] = (acc[x.source] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function tallyCollectedBySource(items) {
+  return items.reduce((acc, x) => {
+    const src = x.source || "other";
+    acc[src] = (acc[src] || 0) + 1;
     return acc;
   }, {});
 }
@@ -494,51 +565,92 @@ function extractOgImage($) {
 }
 
 /* =========================================================
-   CDN (Dramático) — fetch mensual + enrich + clasificación robusta
+   CDN (Dramático) — WAF warmup + cookie-jar + retries si HTML
    ========================================================= */
 
-async function fetchCDNJson(month, year) {
+async function cdnWarmup(errors) {
+  const url = "https://dramatico.inaem.gob.es/";
+  try {
+    const res = await requestWithRetry(
+      url,
+      {
+        method: "GET",
+        headers: {
+          accept: "text/html,*/*;q=0.9"
+        }
+      },
+      { tries: 2, allowStatuses: [403, 503] }
+    );
+    // si devuelve HTML challenge, igual sirve para set-cookie
+    void res.text();
+    await sleep(250);
+  } catch (e) {
+    errors.push({ source: "cdn", venue: "warmup", message: `Warmup failed: ${String(e?.message || e)}` });
+  }
+}
+
+async function fetchCDNJson(month, year, errors) {
   const url = "https://dramatico.inaem.gob.es/wp-admin/admin-ajax.php";
   const tryActions = ["get-cdn-events", "get_cdn_events"];
-  let lastErr = null;
 
-  for (const action of tryActions) {
-    const body = new URLSearchParams({
-      action,
-      mes: String(month),
-      year: String(year)
-    }).toString();
+  // Intentos con warmup si vemos HTML
+  for (let attempt = 0; attempt < 3; attempt++) {
+    for (const action of tryActions) {
+      const body = new URLSearchParams({
+        action,
+        mes: String(month),
+        year: String(year)
+      }).toString();
 
-    try {
-      const res = await requestWithRetry(
-        url,
-        {
-          method: "POST",
-          headers: {
-            accept: "application/json, text/plain, */*",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "x-requested-with": "XMLHttpRequest",
-            origin: "https://dramatico.inaem.gob.es",
-            referer: "https://dramatico.inaem.gob.es/"
+      try {
+        const res = await requestWithRetry(
+          url,
+          {
+            method: "POST",
+            headers: {
+              accept: "application/json, text/plain, */*",
+              "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "x-requested-with": "XMLHttpRequest",
+              origin: "https://dramatico.inaem.gob.es",
+              referer: "https://dramatico.inaem.gob.es/"
+            },
+            body
           },
-          body
-        },
-        { tries: 3, allowStatuses: [400] }
-      );
+          { tries: 2, allowStatuses: [400, 403, 503] }
+        );
 
-      if (res.ok) {
         const txt = res.text();
-        if (looksLikeHtml(txt)) throw new Error("Expected JSON but got HTML");
-        return JSON.parse(txt);
-      }
+        if (looksLikeHtml(txt)) {
+          const snip = txt.slice(0, 160).replace(/\s+/g, " ");
+          // warmup y retry
+          errors.push({
+            source: "cdn",
+            venue: `month:${month}/${year}`,
+            message: `WAF HTML (attempt ${attempt + 1}, action=${action}). Snip: ${snip}`
+          });
+          await cdnWarmup(errors);
+          await sleep(350 * (attempt + 1));
+          continue;
+        }
 
-      lastErr = new Error(`HTTP ${res.status} for CDN action=${action}`);
-    } catch (e) {
-      lastErr = e;
+        // si llegó JSON
+        try {
+          return JSON.parse(txt);
+        } catch (e) {
+          const snip = txt.slice(0, 180).replace(/\s+/g, " ");
+          throw new Error(`JSON.parse failed. Snip: ${snip}`);
+        }
+      } catch (e) {
+        errors.push({
+          source: "cdn",
+          venue: `month:${month}/${year}`,
+          message: `Fetch failed (attempt ${attempt + 1}, action=${action}): ${String(e?.message || e)}`
+        });
+      }
     }
   }
 
-  throw lastErr || new Error("CDN JSON fetch failed");
+  throw new Error(`CDN JSON fetch failed for month:${month}/${year} after retries`);
 }
 
 function cdnSourceFromText(txt) {
@@ -573,12 +685,9 @@ function cdnVenueMeta(source) {
 }
 
 function classifyCDNFromEventPageHtml(html) {
-  // Fallback REAL: si localizacion no trae, la ficha suele mencionar el teatro.
-  // Buscamos en texto global.
   const $ = cheerio.load(html);
   const full = normSpace($.text());
-  const src = cdnSourceFromText(full);
-  return src;
+  return cdnSourceFromText(full);
 }
 
 async function enrichDramaticoEventPage(item, errors) {
@@ -600,32 +709,31 @@ async function enrichDramaticoEventPage(item, errors) {
 
     const enriched = { ...item };
 
-    // Fechas JSON-LD
     if (ev?.startDate && !enriched.startDate) enriched.startDate = String(ev.startDate);
     if (ev?.endDate && !enriched.endDate) enriched.endDate = String(ev.endDate);
 
-    // Imagen
     if (!enriched.image) {
       const og = extractOgImage($);
       if (og) enriched.image = og;
     }
 
-    // Equipo
     if (equipo.author && !enriched.author) enriched.author = equipo.author;
     if (equipo.director && !enriched.director) enriched.director = equipo.director;
     if (equipo.company && !enriched.company) enriched.company = equipo.company;
     if (equipo.choreographer && !enriched.choreographer) enriched.choreographer = equipo.choreographer;
-    if (Array.isArray(equipo.cast) && equipo.cast.length && (!Array.isArray(enriched.cast) || !enriched.cast.length)) {
+    if (
+      Array.isArray(equipo.cast) &&
+      equipo.cast.length &&
+      (!Array.isArray(enriched.cast) || !enriched.cast.length)
+    ) {
       enriched.cast = equipo.cast;
     }
 
-    // ✅ CLASIFICACIÓN CDN fallback por ficha (si source quedó "cdn-unknown")
     if (!enriched.source || enriched.source === "cdn-unknown") {
       const src2 = classifyCDNFromEventPageHtml(html);
       if (src2) enriched.source = src2;
     }
 
-    // ✅ Ajusta venue/address si source ya se pudo clasificar
     if (enriched.source === "cdn-maria-guerrero" || enriched.source === "cdn-valle-inclan") {
       const meta = cdnVenueMeta(enriched.source);
       enriched.venue = meta.venue;
@@ -634,7 +742,6 @@ async function enrichDramaticoEventPage(item, errors) {
       enriched.mapsUrl = toMapsUrl(meta.mapsQuery);
     }
 
-    // credits corto
     if (!enriched.credits) {
       const bits = [];
       if (enriched.author) bits.push(enriched.author);
@@ -656,6 +763,8 @@ async function enrichDramaticoEventPage(item, errors) {
 }
 
 async function scrapeCDNMonths(errors) {
+  await cdnWarmup(errors);
+
   const now = new Date();
   const y1 = now.getFullYear();
   const m1 = now.getMonth() + 1;
@@ -672,7 +781,7 @@ async function scrapeCDNMonths(errors) {
 
   for (const { m, y } of months) {
     try {
-      const json = await fetchCDNJson(m, y);
+      const json = await fetchCDNJson(m, y, errors);
       const days = Array.isArray(json?.response) ? json.response : [];
 
       for (const day of days) {
@@ -684,8 +793,6 @@ async function scrapeCDNMonths(errors) {
 
           const locTxt = stripHtml(ev?.localizacion || "");
           let src = cdnSourceFromText(locTxt);
-
-          // Si no se puede clasificar por localizacion, dejamos unknown y lo resolverá la ficha
           if (!src) src = "cdn-unknown";
 
           const meta = cdnVenueMeta(src);
@@ -722,13 +829,10 @@ async function scrapeCDNMonths(errors) {
     }
   }
 
-  // dedupe por link
   const base = dedupeBy(out, (x) => x.link);
 
-  // enrich por ficha (cache)
   const enriched = [];
   const cache = new Map();
-
   for (const it of base) {
     if (cache.has(it.link)) {
       enriched.push(cache.get(it.link));
@@ -740,12 +844,13 @@ async function scrapeCDNMonths(errors) {
     await sleep(220);
   }
 
-  // ✅ Filtra: solo los CDN ya clasificados en MG/VI (unknown fuera)
-  return enriched.filter((x) => x.source === "cdn-maria-guerrero" || x.source === "cdn-valle-inclan");
+  return enriched.filter(
+    (x) => x.source === "cdn-maria-guerrero" || x.source === "cdn-valle-inclan"
+  );
 }
 
 /* =========================================================
-   CANAL — REST tribe events v1 (estable)
+   CANAL — REST tribe events v1 ✅ 404 page>1 = fin
    ========================================================= */
 
 function ymd(date) {
@@ -769,21 +874,18 @@ function canalCatSignals(ev) {
 
 function isCanalDance(ev) {
   const { slugs, names } = canalCatSignals(ev);
-  const hitSlug = slugs.some((s) => s.includes("danza"));
-  const hitName = names.some((n) => n.includes("danza"));
-  return hitSlug || hitName;
+  return slugs.some((s) => s.includes("danza")) || names.some((n) => n.includes("danza"));
 }
 
 function isCanalTheatre(ev) {
   const { slugs, names } = canalCatSignals(ev);
 
-  // señales fuertes
-  const theatreSlug = slugs.some((s) => s.includes("teatro") || s.includes("en-cartel") || s.includes("en-cartelera"));
+  const theatreSlug = slugs.some(
+    (s) => s.includes("teatro") || s.includes("en-cartel") || s.includes("en-cartelera")
+  );
   const theatreName = names.some((n) => n.includes("teatro") || n.includes("en cartel"));
-
   if (theatreSlug || theatreName) return true;
 
-  // fallback suave: si no es danza y parece espectáculo (evita cursos/talleres)
   const title = safeLower(ev?.title);
   const bad = ["taller", "curso", "masterclass", "seminario", "visita guiada", "formacion", "formación"];
   if (bad.some((k) => title.includes(k))) return false;
@@ -800,8 +902,8 @@ function pickBestImageFromCanal(ev) {
 }
 
 function canalDates(ev) {
-  const start = ev?.start_date_utc || ev?.start_date || "";
-  const end = ev?.end_date_utc || ev?.end_date || "";
+  const start = ev?.start_date || ev?.start_date_utc || ev?.start_date_details?.datetime || "";
+  const end = ev?.end_date || ev?.end_date_utc || ev?.end_date_details?.datetime || "";
   return { startDate: String(start || ""), endDate: String(end || "") };
 }
 
@@ -813,7 +915,13 @@ async function fetchCanalEventsPage({ perPage, page, startDate, endDate }, error
   url.searchParams.set("end_date", endDate);
 
   try {
-    return await fetchJsonSafe(url.toString(), {}, { tries: 3 });
+    // ✅ 404 = no hay más páginas (NO error)
+    const res = await requestWithRetry(url.toString(), {}, { tries: 3, allowStatuses: [404] });
+    if (res.status === 404) return { events: [] };
+
+    const txt = res.text();
+    if (looksLikeHtml(txt)) throw new Error("Expected JSON but got HTML");
+    return JSON.parse(txt);
   } catch (e) {
     errors.push({ source: "canal", venue: `rest:page:${page}`, message: String(e?.message || e) });
     return null;
@@ -836,8 +944,9 @@ async function scrapeCanalREST(errors) {
 
   for (let page = 1; page <= maxPages; page++) {
     const data = await fetchCanalEventsPage({ perPage, page, startDate, endDate }, errors);
-    const events = Array.isArray(data?.events) ? data.events : [];
+    if (!data) break;
 
+    const events = Array.isArray(data?.events) ? data.events : [];
     if (!events.length) break;
 
     for (const ev of events) {
@@ -869,11 +978,8 @@ async function scrapeCanalREST(errors) {
         image
       };
 
-      if (isCanalDance(ev)) {
-        dance.push({ ...baseItem, kind: "dance" });
-      } else if (isCanalTheatre(ev)) {
-        theatre.push({ ...baseItem, kind: "theatre" });
-      }
+      if (isCanalDance(ev)) dance.push({ ...baseItem, kind: "dance" });
+      else if (isCanalTheatre(ev)) theatre.push({ ...baseItem, kind: "theatre" });
     }
 
     if (theatre.length >= 50 && dance.length >= 16) break;
@@ -1063,19 +1169,25 @@ async function scrapeTeatroDelBarrio(errors) {
 }
 
 /* =========================================================
-   Teatro Español — Drupal Views AJAX (blindado)
+   Teatro Español — Drupal Views AJAX ✅ cache ajax_page_state
    ========================================================= */
 
+let TE_STATE_CACHE = null;
+
 function extractDrupalSettingsJson(html) {
-  // Drupal suele incluir: <script type="application/json" data-drupal-selector="drupal-settings-json">...</script>
   const $ = cheerio.load(html);
-  const raw = $('script[type="application/json"][data-drupal-selector="drupal-settings-json"]').first().html();
+  const raw = $('script[type="application/json"][data-drupal-selector="drupal-settings-json"]')
+    .first()
+    .html();
   if (!raw) return null;
-  try { return JSON.parse(raw); } catch { return null; }
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 }
 
 function extractAjaxPageState(html) {
-  // Fallback si no hay drupal-settings-json accesible: regex
   const mTheme = html.match(/"theme"\s*:\s*"([^"]+)"/);
   const mLibs = html.match(/"libraries"\s*:\s*"([^"]+)"/);
   const theme = mTheme ? mTheme[1] : "";
@@ -1083,29 +1195,54 @@ function extractAjaxPageState(html) {
   return { theme, libraries };
 }
 
-async function fetchTeatroEspanolViewsPage(page, errors) {
+async function getTeatroEspanolAjaxState(errors) {
+  if (TE_STATE_CACHE) return TE_STATE_CACHE;
+
   const base = "https://www.teatroespanol.es";
   const programUrl = `${base}/programacion`;
-  const html = await fetchText(programUrl, { headers: { accept: "text/html,*/*;q=0.9" } });
 
-  const settings = extractDrupalSettingsJson(html);
-  let theme = "";
-  let libraries = "";
+  try {
+    const html = await fetchText(programUrl, { headers: { accept: "text/html,*/*;q=0.9" } });
+    const settings = extractDrupalSettingsJson(html);
 
-  if (settings?.ajaxPageState) {
-    theme = settings.ajaxPageState.theme || "";
-    libraries = settings.ajaxPageState.libraries || "";
-  } else {
-    const ap = extractAjaxPageState(html);
-    theme = ap.theme;
-    libraries = ap.libraries;
-  }
+    let theme = "";
+    let libraries = "";
 
-  if (!theme || !libraries) {
-    errors.push({ source: "teatroespanol", venue: "ajax", message: "No pude extraer ajax_page_state (theme/libraries)." });
+    if (settings?.ajaxPageState) {
+      theme = settings.ajaxPageState.theme || "";
+      libraries = settings.ajaxPageState.libraries || "";
+    } else {
+      const ap = extractAjaxPageState(html);
+      theme = ap.theme;
+      libraries = ap.libraries;
+    }
+
+    if (!theme || !libraries) {
+      errors.push({
+        source: "teatroespanol",
+        venue: "ajax",
+        message: "No pude extraer ajax_page_state (theme/libraries)."
+      });
+      return null;
+    }
+
+    TE_STATE_CACHE = { base, programUrl, theme, libraries };
+    return TE_STATE_CACHE;
+  } catch (e) {
+    errors.push({
+      source: "teatroespanol",
+      venue: "ajax",
+      message: `GET /programacion failed: ${String(e?.message || e)}`
+    });
     return null;
   }
+}
 
+async function fetchTeatroEspanolViewsPage(page, errors) {
+  const state = await getTeatroEspanolAjaxState(errors);
+  if (!state) return null;
+
+  const { base, programUrl, theme, libraries } = state;
   const endpoint = `${base}/views/ajax?_wrapper_format=drupal_ajax`;
 
   const form = new URLSearchParams();
@@ -1138,32 +1275,29 @@ async function fetchTeatroEspanolViewsPage(page, errors) {
 
     const txt = res.text();
     if (looksLikeHtml(txt)) throw new Error("Expected JSON but got HTML");
-
     return JSON.parse(txt);
   } catch (e) {
-    errors.push({ source: "teatroespanol", venue: `ajax:page:${page}`, message: String(e?.message || e) });
+    errors.push({
+      source: "teatroespanol",
+      venue: `ajax:page:${page}`,
+      message: String(e?.message || e)
+    });
     return null;
   }
 }
 
 function extractInsertedHtmlFromDrupalAjax(payload) {
-  // Drupal AJAX devuelve array de comandos; buscamos cmd=insert con "data" HTML
   if (!Array.isArray(payload)) return "";
   for (const cmd of payload) {
     if (cmd && typeof cmd === "object" && cmd.command === "insert" && typeof cmd.data === "string") {
       if (cmd.data.includes("views-row")) return cmd.data;
     }
   }
-  // fallback: concatena data
-  const all = payload
-    .map((x) => (x && typeof x.data === "string" ? x.data : ""))
-    .join("\n");
-  return all;
+  return payload.map((x) => (x && typeof x.data === "string" ? x.data : "")).join("\n");
 }
 
 async function scrapeTeatroEspanolAJAX(errors) {
   const base = "https://www.teatroespanol.es";
-
   const out = [];
   const maxPages = 4;
 
@@ -1175,7 +1309,6 @@ async function scrapeTeatroEspanolAJAX(errors) {
     if (!html || !html.includes("views-row")) break;
 
     const $ = cheerio.load(html);
-
     const rows = $("div.views-row");
     if (!rows.length) break;
 
@@ -1244,10 +1377,10 @@ async function main() {
   const theatre = [];
   const dance = [];
 
-  // 1) CDN (Valle + María) blindado + enrich + fallback clasificación
+  // 1) CDN (Valle + María) + WAF fix
   theatre.push(...(await scrapeCDNMonths(errors)));
 
-  // 2) CANAL REST (teatro + danza) blindado
+  // 2) CANAL REST (teatro + danza) + 404 fin de páginas
   const canal = await scrapeCanalREST(errors);
   theatre.push(...canal.theatre);
   dance.push(...canal.dance);
@@ -1256,23 +1389,21 @@ async function main() {
   theatre.push(...(await scrapeNave10Theatre(errors)));
   theatre.push(...(await scrapeMataderoTheatreDisabled()));
 
-  // 4) Español AJAX (blindado), Pradillo, Barrio
+  // 4) Español AJAX (cache state), Pradillo, Barrio
   theatre.push(...(await scrapeTeatroEspanolAJAX(errors)));
   theatre.push(...(await scrapePradillo(errors)));
   theatre.push(...(await scrapeTeatroDelBarrio(errors)));
 
-  // Dedupe fuerte
   const theatreUnique = dedupeBy(theatre, (x) => x.link || `${x.source}:${x.title}`);
   const danceUnique = dedupeBy(dance, (x) => x.link || `${x.source}:${x.title}`);
 
-  // Rotación (vencidos fuera)
   const nowMs = Date.now();
   const theatreActive = theatreUnique.filter((it) => !isExpired(it, nowMs));
   const danceActive = danceUnique.filter((it) => !isExpired(it, nowMs));
 
-  // Selección plural por cupos + orden por endDate
-  const theatrePicked = pickWithCaps(theatreActive, LIMITS.theatreMax, CAPS_THEATRE);
-  const dancePicked = pickWithCaps(danceActive, LIMITS.danceMax, CAPS_DANCE);
+  // ✅ Selección por CAPS EXACTOS
+  const theatrePicked = pickWithCapsExact(theatreActive, LIMITS.theatreMax, CAPS_THEATRE);
+  const dancePicked = pickWithCapsExact(danceActive, LIMITS.danceMax, CAPS_DANCE);
 
   const theatreFinal = theatrePicked.map(sanitizeForOutput);
   const danceFinal = dancePicked.map(sanitizeForOutput);
@@ -1298,6 +1429,10 @@ async function main() {
         theatreFinal: theatreFinal.length,
         danceFinal: danceFinal.length
       },
+      collectedBySource: {
+        theatre: tallyCollectedBySource(theatreUnique),
+        dance: tallyCollectedBySource(danceUnique)
+      },
       mix: {
         theatre: tallyBySource(theatreFinal),
         dance: tallyBySource(danceFinal)
@@ -1310,6 +1445,8 @@ async function main() {
   fs.writeFileSync(OUT_PATH, JSON.stringify(out, null, 2) + "\n", "utf-8");
 
   console.log(`OK: wrote ${OUT_PATH}`);
+  console.log(`Collected theatre by source:`, out.meta.collectedBySource.theatre);
+  console.log(`Collected dance by source:`, out.meta.collectedBySource.dance);
   console.log(`Mix theatre:`, out.meta.mix.theatre);
   console.log(`Mix dance:`, out.meta.mix.dance);
   if (errors.length) console.warn(`WARN: ${errors.length} source errors (see meta.errors).`);
