@@ -950,6 +950,7 @@ img, video{ max-width: 100%; display: block; }
   font-size: 14px;
 }
 
+/* ⚠️ Regla genérica heredada: la dejamos, pero blindamos Cartelera abajo */
 .k-item a{
   display: inline-block;
   margin-top: 8px;
@@ -1095,6 +1096,52 @@ img, video{ max-width: 100%; display: block; }
   color: rgba(17,17,17,.72);
   font-size: 13.75px;
   line-height: 1.35;
+}
+
+/* ======================================================================
+   ✅ CARTELERA (overlay editorial premium)
+   - Pensado para el renderer nuevo: k-item--cartelera + k-item-title + k-item-sub
+   - Mantiene: todo en columna (vertical), sin bullets, sin “UI link feel”
+   ====================================================================== */
+.k-item--cartelera{
+  padding: 14px 0;
+}
+
+.k-item--cartelera .k-item-title{
+  margin: 0;
+  line-height: 1.14;
+  letter-spacing: -0.014em;
+  color: rgba(17,17,17,.96);
+  font-size: 16px;
+}
+
+/* Sub-líneas (autor / compañía / dirección / coreografía / elenco / fechas / sede) */
+.k-item--cartelera .k-item-sub{
+  margin-top: 4px;
+  color: rgba(17,17,17,.70);
+  font-size: 13.75px;
+  line-height: 1.35;
+}
+
+/* última línea (sede + pin) un pelín más aireada */
+.k-item--cartelera .k-item-sub:last-child{
+  margin-top: 8px;
+  color: rgba(17,17,17,.74);
+}
+
+/* Blindaje: dentro de Cartelera NO queremos subrayado “por defecto”
+   (los links invisibles del JS ya traen inline-style, pero aquí evitamos “rayas” accidentales) */
+.k-item--cartelera a{
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  margin-top: 0 !important;
+  font: inherit;
+  color: inherit;
+}
+
+/* pin dentro de Cartelera: ya está blindado, pero lo reafirmamos */
+.k-item--cartelera .pm-pin{
+  margin-left: 6px;
 }
 
 /* ======================================================================
