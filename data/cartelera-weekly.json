@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-12T23:19:10.003Z",
+  "updatedAt": "2026-02-12T23:32:01.668Z",
   "theatre": [
     {
       "source": "canal",
@@ -107,29 +107,6 @@
       "image": ""
     },
     {
-      "source": "cdn-valle-inclan",
-      "kind": "theatre",
-      "title": "Gula / Gola",
-      "credits": "Creación y dirección Pau Matas Nogué y Oriol Pla Solina",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "Temporada Alta y Teatre Nacional de Catalunya, con la colaboración del Teatre Sagarra de Santa Coloma de Gramenet",
-      "choreographer": "",
-      "cast": [
-        "Oriol Pla Solina"
-      ],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro Valle-Inclán",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro Valle-Inclán, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/gula-gola/",
-      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/12/G.WEB2_-scaled.jpg?_t=1768832949"
-    },
-    {
       "source": "cdn-maria-guerrero",
       "kind": "theatre",
       "title": "Grito, boda y sangre",
@@ -180,6 +157,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
       "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
       "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/C_WEB4-scaled.jpg?_t=1770886396"
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Casi ninguna verdad",
+      "credits": "Texto y dirección Cris Blanco Dramaturgia Cris Blanco, Óscar Bueno Rodríguez y Anto Rodríguez",
+      "deck": "",
+      "author": "Cris Blanco, Óscar Bueno Rodríguez y Anto Rodríguez",
+      "director": "",
+      "company": "Centro Dramático Nacional",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/casi-ninguna-verdad/",
+      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/CASI-NINGUNA-VERDAD_DRAMATICO_INTERVENCION_OBRAS_15-26-1-scaled.jpg?_t=1770302554"
     },
     {
       "source": "teatroespanol",
@@ -293,8 +291,8 @@
         "canal",
         "nave10",
         "pradillo",
-        "cdn-valle-inclan",
         "cdn-maria-guerrero",
+        "cdn-valle-inclan",
         "teatroespanol",
         "teatrodelbarrio"
       ],
@@ -303,19 +301,19 @@
       ]
     },
     "counts": {
-      "theatreCollected": 81,
+      "theatreCollected": 75,
       "danceCollected": 10,
-      "theatreUnique": 81,
+      "theatreUnique": 75,
       "danceUnique": 10,
-      "theatreActive": 80,
+      "theatreActive": 74,
       "danceActive": 10,
       "theatreFinal": 10,
       "danceFinal": 2
     },
     "collectedBySource": {
       "theatre": {
-        "cdn-valle-inclan": 6,
-        "cdn-maria-guerrero": 8,
+        "cdn-maria-guerrero": 5,
+        "cdn-valle-inclan": 3,
         "canal": 34,
         "nave10": 5,
         "teatroespanol": 4,
@@ -331,8 +329,8 @@
         "canal": 2,
         "nave10": 2,
         "pradillo": 1,
-        "cdn-valle-inclan": 2,
         "cdn-maria-guerrero": 1,
+        "cdn-valle-inclan": 2,
         "teatroespanol": 1,
         "teatrodelbarrio": 1
       },
@@ -340,17 +338,6 @@
         "canal": 2
       }
     },
-    "errors": [
-      {
-        "source": "cdn",
-        "venue": "month:2/2026",
-        "message": "WAF HTML (attempt 1, action=get-cdn-events). Snip: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" conte"
-      },
-      {
-        "source": "cdn",
-        "venue": "month:2/2026",
-        "message": "WAF HTML (attempt 1, action=get_cdn_events). Snip: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" conte"
-      }
-    ]
+    "errors": []
   }
 }
