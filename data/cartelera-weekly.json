@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-12T20:49:49.310Z",
+  "updatedAt": "2026-02-12T21:20:13.945Z",
   "theatre": [
     {
       "source": "canal",
@@ -107,6 +107,79 @@
       "image": ""
     },
     {
+      "source": "cdn-maria-guerrero",
+      "kind": "theatre",
+      "title": "Grito, boda y sangre",
+      "credits": "Basada en Bodas de sangre de Federico García Lorca, así como en fragmentos de otras de sus obras y poemas. Dramaturgia Iker Azkoitia Dirección Ángela Ibáñez Ca…",
+      "deck": "",
+      "author": "Iker Azkoitia",
+      "director": "Ángela Ibáñez Castaño",
+      "company": "Centro Dramático Nacional",
+      "choreographer": "Lucile Préat",
+      "cast": [
+        "Mari López",
+        "Emma Vallejo"
+      ],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro María Guerrero",
+      "address": "C. de Tamayo y Baus, 4, Madrid",
+      "mapsQuery": "Teatro María Guerrero, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/",
+      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/GBS__WEB2-scaled.jpg?_t=1770212719"
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Constelaciones",
+      "credits": "Texto Nick Payne Versión y dirección Sergio Peris-Mencheta",
+      "deck": "",
+      "author": "Nick Payne",
+      "director": "Sergio Peris-Mencheta",
+      "company": "Centro Dramático Nacional y Barco Pirata",
+      "choreographer": "Amaya Galeote",
+      "cast": [
+        "Jordi Coll",
+        "Diego Monzón",
+        "Paula Muñoz",
+        "María Pascual",
+        "David Pérez-Bayona",
+        "Clara Serrano"
+      ],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
+      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/C_WEB4-scaled.jpg?_t=1770886396"
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Casi ninguna verdad",
+      "credits": "Texto y dirección Cris Blanco Dramaturgia Cris Blanco, Óscar Bueno Rodríguez y Anto Rodríguez",
+      "deck": "",
+      "author": "Cris Blanco, Óscar Bueno Rodríguez y Anto Rodríguez",
+      "director": "",
+      "company": "Centro Dramático Nacional",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/casi-ninguna-verdad/",
+      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/CASI-NINGUNA-VERDAD_DRAMATICO_INTERVENCION_OBRAS_15-26-1-scaled.jpg?_t=1770302554"
+    },
+    {
       "source": "teatroespanol",
       "kind": "theatre",
       "title": "Luces de bohemia",
@@ -147,69 +220,6 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
       "link": "https://teatrodelbarrio.com/un-verano-por-metro-cuadrado/",
       "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1320.jpg"
-    },
-    {
-      "source": "teatroespanol",
-      "kind": "theatre",
-      "title": "El nudo gordiano",
-      "credits": "Johnna Adams",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "10 Febrero22 Marzo 2026",
-      "venue": "Teatro Español",
-      "address": "Pl. de Santa Ana, 4, Madrid",
-      "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
-      "link": "https://www.teatroespanol.es/el-nudo-gordiano",
-      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2025/05/nudo_gordiano_cartel.jpg.webp?itok=j6QEt9GJ"
-    },
-    {
-      "source": "teatrodelbarrio",
-      "kind": "theatre",
-      "title": "Federico. No hay olvido, ni sueño: Carne viva",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "7 septiembre 2025 - 1 marzo 2026",
-      "venue": "Teatro del Barrio",
-      "address": "C. de Zurita, 20, Madrid",
-      "mapsQuery": "Teatro del Barrio, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
-      "link": "https://teatrodelbarrio.com/federico-no-hay-olvido-ni-sueno-carne-viva/",
-      "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1267.jpg"
-    },
-    {
-      "source": "pradillo",
-      "kind": "theatre",
-      "title": "Apertura de procesos creativos 2026",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "Del M20 de enero al J19 de febrero 21:00 H.",
-      "venue": "Teatro Pradillo",
-      "address": "C. de Pradillo, 12, Madrid",
-      "mapsQuery": "Teatro Pradillo, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Pradillo%2C%20Madrid",
-      "link": "https://www.teatropradillo.com/apertura-de-procesos-creativos-2026/",
-      "image": ""
     }
   ],
   "dance": [
@@ -254,33 +264,12 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/compania-daniel-abreu-capitulo-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_151225_ABREU.jpg"
-    },
-    {
-      "source": "canal",
-      "kind": "dance",
-      "title": "Compañía Nacional de Danza",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-03-12 00:00:00",
-      "endDate": "2026-03-15 23:59:59",
-      "dateText": "",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/compania-nacional-de-danza-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MURIEL.jpg"
     }
   ],
   "meta": {
     "limits": {
       "theatreMax": 10,
-      "danceMax": 3
+      "danceMax": 2
     },
     "caps": {
       "theatre": {
@@ -302,6 +291,8 @@
         "canal",
         "nave10",
         "pradillo",
+        "cdn-maria-guerrero",
+        "cdn-valle-inclan",
         "teatroespanol",
         "teatrodelbarrio"
       ],
@@ -310,42 +301,58 @@
       ]
     },
     "counts": {
-      "theatreCollected": 67,
+      "theatreCollected": 75,
       "danceCollected": 10,
-      "theatreUnique": 67,
+      "theatreUnique": 75,
       "danceUnique": 10,
-      "theatreActive": 66,
+      "theatreActive": 74,
       "danceActive": 10,
       "theatreFinal": 10,
-      "danceFinal": 3
+      "danceFinal": 2
+    },
+    "collectedBySource": {
+      "theatre": {
+        "cdn-maria-guerrero": 5,
+        "cdn-valle-inclan": 3,
+        "canal": 34,
+        "nave10": 5,
+        "teatroespanol": 4,
+        "pradillo": 5,
+        "teatrodelbarrio": 19
+      },
+      "dance": {
+        "canal": 10
+      }
     },
     "mix": {
       "theatre": {
         "canal": 2,
         "nave10": 2,
-        "pradillo": 2,
-        "teatroespanol": 2,
-        "teatrodelbarrio": 2
+        "pradillo": 1,
+        "cdn-maria-guerrero": 1,
+        "cdn-valle-inclan": 2,
+        "teatroespanol": 1,
+        "teatrodelbarrio": 1
       },
       "dance": {
-        "canal": 3
+        "canal": 2
       }
     },
     "errors": [
       {
         "source": "cdn",
         "venue": "month:2/2026",
-        "message": "Expected JSON but got HTML"
+        "message": "WAF HTML (attempt 1, action=get-cdn-events). Snip: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" conte"
       },
       {
         "source": "cdn",
-        "venue": "month:3/2026",
-        "message": "Expected JSON but got HTML"
+        "venue": "month:2/2026",
+        "message": "WAF HTML (attempt 1, action=get_cdn_events). Snip: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" conte"
       },
       {
-        "source": "canal",
-        "venue": "rest:page:2",
-        "message": "HTTP 404 for https://www.teatroscanal.com/wp-json/tribe/events/v1/events?per_page=50&page=2&start_date=2026-02-10&end_date=2026-06-12"
+        "source": "cdn",
+        "venue": "month:2/2026",
+        "message": "WAF HTML (attempt 2, action=get-cdn-events). Snip: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" conte"
       }
     ]
   }
