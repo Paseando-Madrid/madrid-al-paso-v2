@@ -49,7 +49,7 @@ if (!modal || !mosaic) {
   const tplPin   = document.getElementById('tpl-pin');
 
   const CFG = {
-    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",               json:"data/directo-weekly.json",  mode:"directo" },
+    directo:   { title:"Conciertos esta semana",     deck:"Una selección breve para escuchar Madrid en directo.",               json:"data/directo-weekly.json",   mode:"directo" },
 
     // ✅ NIÑOS (definitivo): semanal, un solo origen (sin fallback)
     ninos:     {
@@ -59,10 +59,13 @@ if (!modal || !mosaic) {
       mode:"kids"
     },
 
-    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                    json:"data/agenda-monthly.json",  mode:"group",  group:"exhibitions" },
-    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",           json:"data/theatre-monthly.json", mode:"items" },
-    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",               json:"data/museums.json",         mode:"museos" },
-    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",      json:"data/leisure.json",         mode:"items" }
+    expo:      { title:"Exposiciones de este mes",   deck:"Salas, museos y montajes que merecen la visita.",                    json:"data/agenda-monthly.json",   mode:"group",  group:"exhibitions" },
+
+    // ✅ CARTELERA: usa el JSON real publicado (schema theatre/dance)
+    cartelera: { title:"Obras destacadas",           deck:"Teatro en cartel: propuestas con criterio para este mes.",           json:"data/cartelera-weekly.json", mode:"cartelera" },
+
+    museos:    { title:"Horarios de museos",         deck:"Horarios, días clave y notas útiles para planificar.",               json:"data/museums.json",          mode:"museos" },
+    alargar:   { title:"Para alargar el paseo",      deck:"Mercados, mesas y barras para seguir con Madrid a otro ritmo.",      json:"data/leisure.json",          mode:"items" }
   };
 
   // Directo: salas recomendadas (editorial) + URL programación directa
@@ -784,11 +787,74 @@ if (!modal || !mosaic) {
     `);
   }
 
+  // ---------- RENDER (CARTELERA: weekly theatre/dance schema) ----------
+  function renderCarteleraFromWeekly(data){
+    const theatre = Array.isArray(data?.theatre) ? data.theatre : [];
+    const dance   = Array.isArray(data?.dance) ? data.dance : [];
+
+    const tMax = Math.min(theatre.length, 10);
+    const dMax = Math.min(dance.length, 3);
+
+    if(!tMax && !dMax){
+      kList.innerHTML = '<p class="k-empty">Ahora mismo no hay cartelera publicada. Vuelve pronto.</p>';
+      return;
+    }
+
+    const renderOne = (it) => {
+      const titleText = safeText(it.title) || "—";
+      const title = titleText; // Cartelera: sin link (premium, no look de link por defecto)
+
+      const credits = safeText(it.credits).trim();
+      const deck    = safeText(it.deck).trim();
+
+      const venue = safeText(it.venue).trim();
+      const addr  = safeText(it.address).trim();
+
+      const when =
+        safeText(it.dateText).trim() ||
+        (it.startDate ? fmtWhen(it.startDate) : "");
+
+      const q = safeText(it.mapsQuery) || [venue, addr, "Madrid"].filter(Boolean).join(", ");
+      const maps = safeText(it.mapsUrl) || mapsUrlFromQuery(q);
+      const pin  = maps ? pinLinkHTML(maps, `Ver ubicación de ${venue || 'este teatro'} en Google Maps`) : "";
+
+      const metaParts = [when, venue].filter(Boolean);
+      const meta = metaParts.join(" · ");
+
+      return `
+        <article class="k-item k-item--cartelera">
+          <div class="k-item-title"><strong>${title}</strong></div>
+          ${credits ? `<div class="k-item-sub">${credits}</div>` : ``}
+          ${deck ? `<p class="k-item-deck">${deck}</p>` : ``}
+          ${meta ? `<p class="k-item-meta">${meta}${pin ? ` · ${pin}` : ""}</p>` : (pin ? `<p class="k-item-meta">${pin}</p>` : ``)}
+        </article>
+      `;
+    };
+
+    let html = "";
+
+    if(tMax){
+      html += theatre.slice(0, tMax).map(renderOne).join("");
+    }
+
+    if(dMax){
+      html += `
+        <div class="k-divider" aria-hidden="true" style="height:18px;"></div>
+        <div class="k-subhead" style="margin-top:10px;">
+          <p class="k-kicker" style="margin:0 0 10px 0;">Danza</p>
+        </div>
+      `;
+      html += dance.slice(0, dMax).map(renderOne).join("");
+    }
+
+    kList.innerHTML = html;
+  }
+
   // ---------- LOAD + RENDER ----------
   async function fetchJsonWithFallback(primary, fallback){
     const tryFetch = async (url) => {
       const res = await fetch(url, { cache: 'no-store' });
-      if(!res.ok) throw new Error(`fetch failed: ${url}`);
+      if(!res.ok) throw new Error(`fetch failed ${res.status}: ${url}`);
       return res.json();
     };
 
@@ -840,6 +906,14 @@ if (!modal || !mosaic) {
         return;
       }
 
+      // ✅ CARTELERA (schema theatre/dance)
+      if(cfg.mode === "cartelera"){
+        renderCarteleraFromWeekly(data);
+        if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
+        endSwap();
+        return;
+      }
+
       if(cfg.mode === "items"){
         renderItems(Array.isArray(data.items) ? data.items : []);
         if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
@@ -867,7 +941,9 @@ if (!modal || !mosaic) {
       kList.innerHTML = '<p class="k-empty">No hay datos disponibles.</p>';
       if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
       endSwap();
-    } catch {
+    } catch (err) {
+      // ✅ Debug sin romper UI
+      console.error('[Cooltura overlay] load failed:', err, 'family=', key, 'json=', CFG?.[key]?.json);
       kMeta.textContent = 'No se pudo cargar la información.';
       kList.innerHTML = '<p class="k-empty">Cuando subas los JSON en /data, este overlay se llenará automáticamente.</p>';
       if(anchorCard) requestAnimationFrame(() => positionSheetToCard(anchorCard));
