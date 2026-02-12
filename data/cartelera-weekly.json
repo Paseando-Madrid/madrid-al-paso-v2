@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-12T10:46:38.094Z",
+  "updatedAt": "2026-02-12T11:13:03.671Z",
   "theatre": [
     {
       "source": "nave10",
@@ -34,132 +34,132 @@
       "image": "https://www.nave10matadero.es/sites/default/files/2025-10/7 - Niebla.jpg"
     },
     {
-      "source": "nave10",
+      "source": "pradillo",
       "kind": "theatre",
-      "title": "Guayominí",
+      "title": "Las que tienen que servir",
       "credits": "",
-      "deck": "Según la ley de la gravedad de Newton un cuerpo tarda más en subir que en bajar.Roi, que está cantando en la final de un importante concurso europeo de canciones, porque ganó otro concurso nacional tres meses …",
-      "startDate": "2026-04-24T17:30:55",
-      "endDate": "2026-05-17T21:55:55",
-      "dateText": "",
-      "venue": "Nave 10 Matadero",
-      "address": "Plaza de Legazpi, 8, Madrid",
-      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
-      "link": "https://www.nave10matadero.es/actividades/guayomini",
-      "image": "https://www.nave10matadero.es/sites/default/files/2025-12/9 - Guayomini - Fotografia Geraldine Leloutre.jpg"
+      "deck": "",
+      "startDate": "",
+      "endDate": "2026-06-23T23:59:59.000Z",
+      "dateText": "Citas a confirmar trimestralmente desde el 13 de enero hasta el 23 de junio de 2026 los MARTES de 10:00 a 11:30 H.",
+      "venue": "Teatro Pradillo",
+      "address": "C. de Pradillo, 12, Madrid",
+      "mapsQuery": "Teatro Pradillo, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Pradillo%2C%20Madrid",
+      "link": "https://www.teatropradillo.com/las-que-tienen-que-servir/",
+      "image": ""
     },
     {
-      "source": "nave10",
-      "kind": "theatre",
-      "title": "Ubú",
-      "credits": "",
-      "deck": "Monsieur Ubú es un ser innoble, y por eso mismo se parece bastante (de ombligo para abajo) a nosotros mismos.Alfred Jarry, autor de la cita, cambió el teatro de su tiempo creando el personaje de Ubú, caricatur…",
-      "startDate": "2026-05-28T17:30:55",
-      "endDate": "2026-06-21T21:55:55",
-      "dateText": "",
-      "venue": "Nave 10 Matadero",
-      "address": "Plaza de Legazpi, 8, Madrid",
-      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
-      "link": "https://www.nave10matadero.es/actividades/ubu",
-      "image": "https://www.nave10matadero.es/sites/default/files/2025-10/9 - Ubú.jpg"
-    },
-    {
-      "source": "nave10",
-      "kind": "theatre",
-      "title": "Niño de Elche y Paul B. Preciado",
-      "credits": "",
-      "deck": "Dos referentes imprescindibles de la cultura contemporánea cierran la temporada. Música, literatura y pensamiento en forma de conferencia escénica, de la mano de dos artistas que apuestan por la visibilidad y …",
-      "startDate": "2026-06-26T06:00:00",
-      "endDate": "2026-06-28T21:55:55",
-      "dateText": "",
-      "venue": "Nave 10 Matadero",
-      "address": "Plaza de Legazpi, 8, Madrid",
-      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
-      "link": "https://www.nave10matadero.es/actividades/nino-de-elche-y-paul-b-preciado",
-      "image": "https://www.nave10matadero.es/sites/default/files/2025-11/Niño de Elche _©Juan Trujillo.png"
-    },
-    {
-      "source": "cdn-maria-guerrero",
+      "source": "cdn-valle-inclan",
       "kind": "theatre",
       "title": "Gula / Gola",
-      "credits": "",
+      "credits": "Creación y dirección Pau Matas Nogué y Oriol Pla Solina",
       "deck": "",
       "startDate": "",
       "endDate": "",
       "dateText": "",
-      "venue": "Teatro María Guerrero",
+      "venue": "Teatro Valle-Inclán",
       "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro María Guerrero, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
       "link": "https://dramatico.inaem.gob.es/evento/gula-gola/",
       "image": ""
     },
     {
-      "source": "cdn-maria-guerrero",
+      "source": "cdn-valle-inclan",
       "kind": "theatre",
       "title": "Grito, boda y sangre",
-      "credits": "",
+      "credits": "Basada en Bodas de sangre de Federico García Lorca, así como en fragmentos de otras de sus obras y poemas. Dramaturgia Iker Azkoitia Dirección Ángela Ibáñez Castaño Dirección asociada Julián Fuentes Reta",
       "deck": "",
       "startDate": "",
       "endDate": "",
       "dateText": "",
-      "venue": "Teatro María Guerrero",
+      "venue": "Teatro Valle-Inclán",
       "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro María Guerrero, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
       "link": "https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/",
       "image": ""
     },
     {
-      "source": "cdn-maria-guerrero",
+      "source": "teatroespanol",
       "kind": "theatre",
-      "title": "Constelaciones",
+      "title": "Luces de bohemia",
+      "credits": "Ramón del Valle-Inclán",
+      "deck": "Sala principal",
+      "startDate": "",
+      "endDate": "",
+      "dateText": "23 Enero7 Marzo 2026",
+      "venue": "Teatro Español",
+      "address": "Pl. de Santa Ana, 4, Madrid",
+      "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
+      "link": "https://www.teatroespanol.es/luces-de-bohemia",
+      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2024/10/luces_bohemia_prensa_02_0.jpg.webp?itok=CSC8eDsO"
+    },
+    {
+      "source": "teatrodelbarrio",
+      "kind": "theatre",
+      "title": "Un verano por metro cuadrado",
       "credits": "",
       "deck": "",
       "startDate": "",
       "endDate": "",
+      "dateText": "12 febrero - 17 mayo",
+      "venue": "Teatro del Barrio",
+      "address": "C. de Zurita, 20, Madrid",
+      "mapsQuery": "Teatro del Barrio, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
+      "link": "https://teatrodelbarrio.com/un-verano-por-metro-cuadrado/",
+      "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1320.jpg"
+    },
+    {
+      "source": "teatroespanol",
+      "kind": "theatre",
+      "title": "El nudo gordiano",
+      "credits": "Johnna Adams",
+      "deck": "Sala pequeña - Margarita Xirgu",
+      "startDate": "",
+      "endDate": "",
+      "dateText": "10 Febrero22 Marzo 2026",
+      "venue": "Teatro Español",
+      "address": "Pl. de Santa Ana, 4, Madrid",
+      "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
+      "link": "https://www.teatroespanol.es/el-nudo-gordiano",
+      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2025/05/nudo_gordiano_cartel.jpg.webp?itok=j6QEt9GJ"
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Constelaciones",
+      "credits": "Texto Nick Payne Versión y dirección Sergio Peris-Mencheta",
+      "deck": "",
+      "startDate": "",
+      "endDate": "",
       "dateText": "",
-      "venue": "Teatro María Guerrero",
+      "venue": "Teatro Valle-Inclán",
       "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro María Guerrero, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
       "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
       "image": ""
     },
     {
-      "source": "cdn-maria-guerrero",
+      "source": "teatrodelbarrio",
       "kind": "theatre",
-      "title": "Taller de conciliación «Color en escena»",
+      "title": "Federico. No hay olvido, ni sueño: Carne viva",
       "credits": "",
       "deck": "",
       "startDate": "",
       "endDate": "",
-      "dateText": "",
-      "venue": "Teatro María Guerrero",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro María Guerrero, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-color-en-escena/",
-      "image": ""
-    },
-    {
-      "source": "cdn-maria-guerrero",
-      "kind": "theatre",
-      "title": "Clase Magistral con Sergio Peris-Mencheta y el equipo de Constelaciones",
-      "credits": "",
-      "deck": "",
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro María Guerrero",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro María Guerrero, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/clase-magistral-con-sergio-peris-mencheta-y-el-equipo-de-constelaciones/",
-      "image": ""
+      "dateText": "7 septiembre 2025 - 1 marzo 2026",
+      "venue": "Teatro del Barrio",
+      "address": "C. de Zurita, 20, Madrid",
+      "mapsQuery": "Teatro del Barrio, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
+      "link": "https://teatrodelbarrio.com/federico-no-hay-olvido-ni-sueno-carne-viva/",
+      "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1267.jpg"
     }
   ],
   "dance": [],
@@ -167,6 +167,68 @@
     "limits": {
       "theatreMax": 10,
       "danceMax": 3
-    }
+    },
+    "caps": {
+      "theatre": {
+        "nave10": 2,
+        "cdn-maria-guerrero": 1,
+        "cdn-valle-inclan": 2,
+        "teatrodelbarrio": 1,
+        "pradillo": 1,
+        "teatroespanol": 1,
+        "canal": 2,
+        "matadero": 0
+      },
+      "dance": {
+        "canal": 2
+      }
+    },
+    "sources": {
+      "theatre": [
+        "nave10",
+        "pradillo",
+        "cdn-valle-inclan",
+        "teatroespanol",
+        "teatrodelbarrio"
+      ],
+      "dance": []
+    },
+    "counts": {
+      "theatreCollected": 47,
+      "danceCollected": 0,
+      "theatreUnique": 47,
+      "danceUnique": 0,
+      "theatreActive": 47,
+      "danceActive": 0,
+      "theatreFinal": 10,
+      "danceFinal": 0
+    },
+    "mix": {
+      "theatre": {
+        "nave10": 2,
+        "pradillo": 1,
+        "cdn-valle-inclan": 3,
+        "teatroespanol": 2,
+        "teatrodelbarrio": 2
+      },
+      "dance": {}
+    },
+    "errors": [
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "HTTP 400 for https://dramatico.inaem.gob.es/wp-admin/admin-ajax.php"
+      },
+      {
+        "source": "canal",
+        "venue": "admin-ajax:teatro",
+        "message": "403 (bloqueo a GitHub Actions). Canal omitido esta vez."
+      },
+      {
+        "source": "canal",
+        "venue": "admin-ajax:danza",
+        "message": "403 (bloqueo a GitHub Actions). Canal omitido esta vez."
+      }
+    ]
   }
 }
