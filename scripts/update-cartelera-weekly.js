@@ -1,5 +1,5 @@
 /**
- * Update Cartelera (Weekly) — COOLtura ✅ BLINDADO
+ * Update Cartelera (Weekly) — COOLtura ✅ BLINDADO (CDN PROGRAMACIÓN + FICHA HORARIOS + CANAL REST + ESPAÑOL AJAX)
  * - Genera /data/cartelera-weekly.json
  * - Agenda plural y curada (cupo por fuente)
  * - Teatro: 10 items (mix garantizado)
@@ -9,13 +9,15 @@
  * - Rotación por fecha de finalización (endDate) + filtro vencidos
  *
  * CDN (dramatico.inaem.gob.es)
- * - NO usa admin-ajax (WAF).
+ * - NO usa admin-ajax.
  * - Scrapea PROGRAMACIÓN estable:
- *   - https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/
- *   - https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/
- * - Extrae desde tarjeta: title + autor/director (si aparecen) + rango (dateText básico) + link /evento/*
+ *   - /programacion/teatro-maria-guerrero/
+ *   - /programacion/teatro-valle-inclan/
+ * - Estrategia ROBUSTA:
+ *   - Ancla por links a /evento/ en h2 a[href*="/evento/"] (patrón estable)
+ *   - Extrae autores/dirección y rango desde <p> cercanos
  * - Enrich por ficha /evento/*:
- *   - Horarios/días (panel izquierdo) ✅ selector estable:
+ *   - Horarios/días (panel izquierdo) selector estable:
  *     div.col-lg-5.col-left .box-title .detail > p
  *   - JSON-LD (startDate/endDate si existen)
  *   - equipo box (author/director/cast/company/choreographer)
@@ -24,7 +26,7 @@
  * CANAL (teatroscanal.com)
  * - REST estable: /wp-json/tribe/events/v1/events
  * - 404 en page>n => fin de paginación (NO error)
- * - dateText editorial (día/rango + hora) ✅
+ * - dateText editorial (día/rango + hora)
  *
  * TEATRO ESPAÑOL (teatroespanol.es)
  * - Drupal Views AJAX: /views/ajax?_wrapper_format=drupal_ajax
@@ -54,7 +56,6 @@ const CAPS_THEATRE = {
   canal: 2,
   matadero: 0
 };
-
 const CAPS_DANCE = { canal: 2 };
 
 const UA =
@@ -67,7 +68,6 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
    - Redirects
    - gzip/deflate/br
    ========================================================= */
-
 function decompressBuffer(buf, encoding) {
   const enc = String(encoding || "").toLowerCase().trim();
   try {
@@ -176,21 +176,17 @@ function looksLikeHtml(txt) {
 /* =========================================================
    Helpers
    ========================================================= */
-
 function normSpace(s) {
   return String(s || "").replace(/\s+/g, " ").trim();
 }
-
 function stripHtml(html) {
   const $ = cheerio.load(String(html || ""));
   return normSpace($.text());
 }
-
 function toMapsUrl(query) {
   const q = encodeURIComponent(normSpace(query));
   return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }
-
 function dedupeBy(items, keyFn) {
   const seen = new Set();
   const out = [];
@@ -203,14 +199,12 @@ function dedupeBy(items, keyFn) {
   }
   return out;
 }
-
 function pickFirstSentence(text, max = 210) {
   const t = normSpace(text);
   if (!t) return "";
   const cut = t.split(". ").slice(0, 2).join(". ");
   return cut.length > max ? cut.slice(0, max - 1) + "…" : cut;
 }
-
 function truncateForUI(text, max = 160) {
   const t = normSpace(text);
   if (!t) return "";
@@ -218,15 +212,12 @@ function truncateForUI(text, max = 160) {
 }
 
 /* --------- Fechas --------- */
-
 const MONTHS = {
   enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
   julio: 6, agosto: 7, septiembre: 8, setiembre: 8,
   octubre: 9, noviembre: 10, diciembre: 11,
-  ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5,
-  jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11
+  ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5, jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11
 };
-
 function normMonthKey(s) {
   return String(s || "")
     .toLowerCase()
@@ -248,7 +239,7 @@ function parseSpanishEndDate(dateText) {
     if (Number.isFinite(mon)) return new Date(y, mon, d2, 23, 59, 59).toISOString();
   }
 
-  // "23 Enero7 Marzo 2026" (Teatro Español a veces sin separadores)
+  // "23 Enero7 Marzo 2026"
   m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{4})\b/i);
   if (m) {
     const d2 = Number(m[3]);
@@ -282,7 +273,6 @@ function isoToMs(iso) {
   const t = Date.parse(iso || "");
   return Number.isFinite(t) ? t : Infinity;
 }
-
 function isExpired(it, nowMs) {
   const end = isoToMs(it.endDate);
   if (end !== Infinity) return end < nowMs - 24 * 60 * 60 * 1000;
@@ -292,7 +282,6 @@ function isExpired(it, nowMs) {
 
   return false;
 }
-
 function sortByEndThenStart(items) {
   return [...items].sort((a, b) => {
     const ae = isoToMs(a.endDate);
@@ -337,7 +326,6 @@ function sanitizeForOutput(it) {
 /* =========================================================
    Selector plural por cupos
    ========================================================= */
-
 function pickWithCaps(items, totalMax, capsBySource) {
   const sorted = sortByEndThenStart(items);
   const picked = [];
@@ -409,7 +397,6 @@ function tallyBySource(items) {
 /* =========================================================
    JSON-LD helpers (CDN fichas + Nave10)
    ========================================================= */
-
 function extractJsonLdObjects(html) {
   const $ = cheerio.load(html);
   const scripts = $('script[type="application/ld+json"]')
@@ -432,7 +419,6 @@ function extractJsonLdObjects(html) {
   }
   return out;
 }
-
 function pickEventFromJsonLd(arr) {
   const events = arr.filter(
     (o) => o && typeof o === "object" && /Event$/i.test(String(o["@type"] || ""))
@@ -502,21 +488,6 @@ function extractOgImage($) {
 /* =========================================================
    CDN — PROGRAMACIÓN estable + ENRICH HORARIOS (ficha)
    ========================================================= */
-
-function looksLikeCdnWafOrChallenge(html) {
-  const t = String(html || "").toLowerCase();
-  return (
-    t.includes("incapsula") ||
-    t.includes("_incapsula_") ||
-    t.includes("request unsuccessful") ||
-    t.includes("enable javascript") ||
-    t.includes("captcha") ||
-    t.includes("cloudflare") ||
-    t.includes("attention required") ||
-    t.includes("blocked")
-  );
-}
-
 function cdnVenueMeta(source) {
   if (source === "cdn-maria-guerrero") {
     return {
@@ -532,43 +503,13 @@ function cdnVenueMeta(source) {
       mapsQuery: "Teatro Valle-Inclán, Madrid"
     };
   }
-  return {
-    venue: "Centro Dramático Nacional",
-    address: "Madrid",
-    mapsQuery: "Centro Dramático Nacional, Madrid"
-  };
+  return { venue: "Centro Dramático Nacional", address: "Madrid", mapsQuery: "Centro Dramático Nacional, Madrid" };
 }
 
-function extractDateTextFromCDNCard($detail) {
-  // En tu HTML: <p>13 FEB - 05 ABR | <strong>Teatro María Guerrero</strong> | Sala</p>
-  // Nos quedamos con el rango "13 FEB - 05 ABR" (y, si hay, año).
-  const ps = $detail.find("p").toArray();
-  for (const el of ps) {
-    const html = cheerio.load(el).root().html() || "";
-    const txt = normSpace(stripHtml(html));
-    const m = txt.match(/\b(\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3})(?:\s*(\d{4}))?/);
-    if (m) return `${m[1]}${m[2] ? " " + m[2] : ""}`;
-  }
-  return "";
-}
-
-function parseCdnAuthorDirectorFromDetail($detail) {
-  // Casos:
-  // 1) <p>Texto y dirección <strong>Alfredo Sanzol</strong></p>
-  // 2) <p>Dramaturgia <strong>X</strong><br>Dirección <strong>Y</strong>...</p>
+function parseCdnAuthorDirectorFromPs(psText) {
+  // psText: string con varios <p> ya “textificados”
   const out = { author: "", director: "", credits: "" };
-
-  const ps = $detail.find("p").toArray().map((el) => {
-    const html = cheerio.load(el).root().html() || "";
-    const text = normSpace(stripHtml(html));
-    return { html, text };
-  });
-
-  const ficha = ps.filter(
-    (p) => p.text && !/\b\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}/.test(p.text)
-  );
-
-  const blob = ficha.map((x) => x.text).join(" · ");
+  const blob = normSpace(psText);
 
   // Texto y dirección X => author=director=X
   let m = blob.match(/\bTexto\s+y\s+dirección\s+(.+)$/i);
@@ -584,7 +525,7 @@ function parseCdnAuthorDirectorFromDetail($detail) {
   m = blob.match(/\b(Dramaturgia|Texto|Autor(?:ía)?)\s+(.+?)(?=(Dirección|Dirección asociada|$))/i);
   if (m) out.author = normSpace(m[2]);
 
-  // Dirección
+  // Dirección (primera)
   m = blob.match(/\bDirección(?:\s+asociada)?\s+(.+?)(?=($|Dirección asociada|Producción|Compañ[ií]a))/i);
   if (m) out.director = normSpace(m[1]);
 
@@ -596,30 +537,44 @@ function parseCdnAuthorDirectorFromDetail($detail) {
   return out;
 }
 
+function extractDateTextFromCdnContextText(txt) {
+  // Ejemplos:
+  // "13 FEB - 05 ABR | Teatro María Guerrero | Sala Grande"
+  // "23 ENE - 01 MAR | Teatro María Guerrero | Sala ..."
+  const t = normSpace(txt);
+  const m = t.match(/\b(\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3})(?:\s+(\d{4}))?/);
+  if (!m) return "";
+  return `${m[1]}${m[2] ? " " + m[2] : ""}`;
+}
+
 function extractCdnScheduleFromEventLeftPanel($) {
   // Selector estable:
   // div.col-lg-5.col-left .box-title .detail > p
-  // <strong>13 FEB - 05 ABR 2026</strong><br>De martes a domingo a las 20:00 | Duración: ...
   const p = $("div.col-lg-5.col-left .box-title .detail > p").first();
   if (!p.length) return { scheduleText: "", rangeText: "" };
 
   const rangeText = normSpace(p.find("strong").first().text() || "");
-
   const html = (p.html() || "")
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/p>/gi, "\n");
 
   const lines = stripHtml(html).split("\n").map(normSpace).filter(Boolean);
-
-  // Buscamos la línea de horario/días
   const scheduleLine =
-    lines.find((x) => /a\s+las\s+\d{1,2}:\d{2}/i.test(x)) ||
-    lines.find((x) => /\b(lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo)\b/i.test(x)) ||
-    "";
-
+    lines.find((x) => /a\s+las\s+\d{1,2}:\d{2}/i.test(x) || /martes|miércoles|jueves|viernes|sábado|domingo|lunes/i.test(x)) || "";
   const scheduleText = scheduleLine ? scheduleLine.split("|")[0].trim() : "";
 
   return { scheduleText, rangeText };
+}
+
+function looksLikeCdnChallenge(html) {
+  const s = String(html || "").toLowerCase();
+  // señales típicas (no perfectas, pero evita falsos positivos)
+  const signals = [
+    "cf-chl", "cloudflare", "just a moment",
+    "incap_ses", "incapsula",
+    "access denied", "request unsuccessful"
+  ];
+  return signals.some((k) => s.includes(k));
 }
 
 async function enrichDramaticoEventPage(item, errors) {
@@ -634,15 +589,6 @@ async function enrichDramaticoEventPage(item, errors) {
       }
     });
 
-    if (looksLikeCdnWafOrChallenge(html)) {
-      errors.push({
-        source: "cdn",
-        venue: item.source,
-        message: `WAF/Challenge en ficha ${item.link} (HTML no es evento real)`
-      });
-      return item;
-    }
-
     const $ = cheerio.load(html);
     const equipo = parseEquipoBoxFromDramatico($);
     const jsonLd = extractJsonLdObjects(html);
@@ -650,7 +596,7 @@ async function enrichDramaticoEventPage(item, errors) {
 
     const enriched = { ...item };
 
-    // JSON-LD dates (si existen)
+    // JSON-LD dates
     if (ev?.startDate && !enriched.startDate) enriched.startDate = String(ev.startDate);
     if (ev?.endDate && !enriched.endDate) enriched.endDate = String(ev.endDate);
 
@@ -660,7 +606,7 @@ async function enrichDramaticoEventPage(item, errors) {
       if (og) enriched.image = og;
     }
 
-    // equipo (si viene)
+    // equipo
     if (equipo.author && !enriched.author) enriched.author = equipo.author;
     if (equipo.director && !enriched.director) enriched.director = equipo.director;
     if (equipo.company && !enriched.company) enriched.company = equipo.company;
@@ -669,22 +615,21 @@ async function enrichDramaticoEventPage(item, errors) {
       enriched.cast = equipo.cast;
     }
 
-    // HORARIO/DÍAS desde panel izquierdo
+    // horario/días (panel izquierdo)
     const { scheduleText, rangeText } = extractCdnScheduleFromEventLeftPanel($);
-
-    // dateText editorial: rango + horario
     const baseRange = rangeText || enriched.dateText || "";
     const schedule = normSpace(scheduleText);
+
     if (baseRange && schedule) enriched.dateText = `${baseRange} · ${schedule}`;
     else if (schedule && !enriched.dateText) enriched.dateText = schedule;
 
-    // endDate: si no vino JSON-LD, intentar parseo del rango/dateText
+    // endDate por parseo si falta
     if (!enriched.endDate) {
       const tryEnd = parseSpanishEndDate(enriched.dateText || baseRange);
       if (tryEnd) enriched.endDate = tryEnd;
     }
 
-    // credits corto: si vacío, generarlo con autor/director
+    // credits
     if (!enriched.credits) {
       const bits = [];
       if (enriched.author) bits.push(enriched.author);
@@ -705,46 +650,35 @@ async function enrichDramaticoEventPage(item, errors) {
   }
 }
 
-async function scrapeCDNProgramacionPage(url, source, errors) {
+function collectCdnItemsByEventoLinks($, source, errors) {
   const meta = cdnVenueMeta(source);
-  const html = await fetchText(url, { headers: { accept: "text/html,*/*;q=0.9" } });
-
-  if (looksLikeCdnWafOrChallenge(html)) {
-    errors.push({ source: "cdn", venue: source, message: `WAF/Challenge en ${url} (HTML no es programación real)` });
-    return [];
-  }
-
-  const $ = cheerio.load(html);
   const out = [];
 
-  // ✅ FIX: selector robusto (antes era demasiado estricto)
-  const cards = $("div.item-event-resume");
-  if (!cards.length) {
-    errors.push({ source: "cdn", venue: source, message: `No encontré cards .item-event-resume en ${url}` });
-    return out;
-  }
+  const links = $('h2 a[href*="/evento/"]').toArray();
+  if (!links.length) return out;
 
-  cards.each((_, card) => {
-    const $card = $(card);
-
-    // ✅ FIX: anchor robusto (según HTML real guardado)
-    const $a = $card.find(".wrapper-detail .detail h2 a[href*='/evento/']").first();
-
+  for (const a of links) {
+    const $a = $(a);
     const title = normSpace($a.text());
     const href = $a.attr("href") || "";
     const link = href ? (href.startsWith("http") ? href : `https://dramatico.inaem.gob.es${href}`) : "";
-    if (!title || !link) return;
+    if (!title || !link) continue;
 
-    const $detail = $card.find(".wrapper-detail .detail").first();
+    // contexto: subimos a un contenedor razonable y buscamos <p> cercanos
+    const $ctx =
+      $a.closest("article, div.item-event-resume, div.item, section, div").first();
 
-    const dateTextBasic = extractDateTextFromCDNCard($detail);
+    const pTexts = $ctx.find("p").toArray().map((p) => normSpace($(p).text())).filter(Boolean);
+    const joinedPs = pTexts.join(" · ");
+
+    // rango básico desde cualquier <p> del contexto
+    const dateTextBasic = extractDateTextFromCdnContextText(joinedPs);
     const endDate = parseSpanishEndDate(dateTextBasic);
 
-    const parsed = parseCdnAuthorDirectorFromDetail($detail);
+    const parsed = parseCdnAuthorDirectorFromPs(joinedPs);
 
     const img =
-      $card.find(".carousel-inner img").first().attr("src") ||
-      $card.find("img").first().attr("src") ||
+      $ctx.find("img").first().attr("src") ||
       "";
 
     out.push({
@@ -772,9 +706,38 @@ async function scrapeCDNProgramacionPage(url, source, errors) {
       link,
       image: img
     });
-  });
+  }
 
   return dedupeBy(out, (x) => x.link);
+}
+
+async function scrapeCDNProgramacionPage(url, source, errors) {
+  const html = await fetchText(url, { headers: { accept: "text/html,*/*;q=0.9" } });
+
+  // Challenge REAL: señales + ausencia de /evento/
+  const hasEvento = html.includes("/evento/");
+  if (!hasEvento && looksLikeCdnChallenge(html)) {
+    errors.push({
+      source: "cdn",
+      venue: source,
+      message: `WAF/Challenge en ${url} (HTML no contiene /evento/ y hay señales de challenge)`
+    });
+    return [];
+  }
+
+  const $ = cheerio.load(html);
+
+  // 1) Robusto: por links /evento/ (esto es lo estable)
+  const items = collectCdnItemsByEventoLinks($, source, errors);
+  if (items.length) return items;
+
+  // 2) Si no encontramos nada, ahí sí: error informativo (no “WAF”)
+  errors.push({
+    source: "cdn",
+    venue: source,
+    message: `No encontré items por h2 a[href*="/evento/"] en ${url}`
+  });
+  return [];
 }
 
 async function scrapeCDNProgramacion(errors) {
@@ -784,6 +747,7 @@ async function scrapeCDNProgramacion(errors) {
   const mg = await scrapeCDNProgramacionPage(mgUrl, "cdn-maria-guerrero", errors);
   const vi = await scrapeCDNProgramacionPage(viUrl, "cdn-valle-inclan", errors);
 
+  // Enrich por ficha: horarios + fechas finas + reparto si existe
   const base = [...mg, ...vi];
   const enriched = [];
   const cache = new Map();
@@ -805,7 +769,6 @@ async function scrapeCDNProgramacion(errors) {
 /* =========================================================
    CANAL — REST tribe events v1 (estable)
    ========================================================= */
-
 function ymd(date) {
   const d = new Date(date);
   const yyyy = d.getFullYear();
@@ -813,23 +776,19 @@ function ymd(date) {
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
-
 function safeLower(s) {
   return normSpace(s).toLowerCase();
 }
-
 function canalCatSignals(ev) {
   const cats = Array.isArray(ev?.categories) ? ev.categories : [];
   const slugs = cats.map((c) => safeLower(c?.slug)).filter(Boolean);
   const names = cats.map((c) => safeLower(c?.name)).filter(Boolean);
   return { slugs, names };
 }
-
 function isCanalDance(ev) {
   const { slugs, names } = canalCatSignals(ev);
   return slugs.some((s) => s.includes("danza")) || names.some((n) => n.includes("danza"));
 }
-
 function isCanalTheatre(ev) {
   const { slugs, names } = canalCatSignals(ev);
 
@@ -843,7 +802,6 @@ function isCanalTheatre(ev) {
 
   return true;
 }
-
 function pickBestImageFromCanal(ev) {
   const img = ev?.image;
   if (!img) return "";
@@ -851,44 +809,43 @@ function pickBestImageFromCanal(ev) {
   if (img?.url) return String(img.url);
   return "";
 }
-
 function canalDates(ev) {
   const start = ev?.start_date_utc || ev?.start_date || "";
   const end = ev?.end_date_utc || ev?.end_date || "";
   return { startDate: String(start || ""), endDate: String(end || "") };
 }
 
-// ✅ dateText editorial para Canal (día/rango + hora)
-function weekdayEsShort(d) {
+// dateText editorial Canal
+function weekdayEsShort(d){
   const w = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
   return w[d.getDay()];
 }
-function monthEsShort(d) {
-  const m = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+function monthEsShort(d){
+  const m = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
   return m[d.getMonth()];
 }
-function pad2(n) {
-  return String(n).padStart(2, "0");
-}
-function fmtTimeFromIso(iso) {
-  if (!iso) return "";
+function pad2(n){ return String(n).padStart(2, "0"); }
+
+function fmtTimeFromIso(iso){
+  if(!iso) return "";
   const d = new Date(iso);
   const hh = pad2(d.getHours());
   const mm = pad2(d.getMinutes());
   if (hh === "00" && mm === "00") return "";
   return `${hh}:${mm}`;
 }
-function canalDateText(ev) {
+
+function canalDateText(ev){
   const start = ev?.start_date_utc || ev?.start_date || "";
-  const end = ev?.end_date_utc || ev?.end_date || "";
-  if (!start) return "";
+  const end   = ev?.end_date_utc   || ev?.end_date   || "";
+  if(!start) return "";
 
   const ds = new Date(start);
   const de = end ? new Date(end) : null;
 
   const time = fmtTimeFromIso(start);
 
-  if (!de || ds.toDateString() === de.toDateString()) {
+  if(!de || ds.toDateString() === de.toDateString()){
     const day = `${weekdayEsShort(ds)} ${pad2(ds.getDate())} ${monthEsShort(ds)}`;
     return time ? `${day} · ${time}` : day;
   }
@@ -897,11 +854,11 @@ function canalDateText(ev) {
   const b = `${pad2(de.getDate())} ${monthEsShort(de)}`;
   const w1 = weekdayEsShort(ds);
   const w2 = weekdayEsShort(de);
-  const wRange = w1 && w2 ? `${w1}–${w2}` : "";
+  const wRange = (w1 && w2) ? `${w1}–${w2}` : "";
 
   const left = `Del ${a} al ${b}`;
-  const mid = wRange ? ` · ${wRange}` : "";
-  const right = time ? ` · ${time}` : "";
+  const mid  = wRange ? ` · ${wRange}` : "";
+  const right= time ? ` · ${time}` : "";
 
   return `${left}${mid}${right}`;
 }
@@ -976,11 +933,8 @@ async function scrapeCanalREST(errors) {
         image
       };
 
-      if (isCanalDance(ev)) {
-        dance.push({ ...baseItem, kind: "dance" });
-      } else if (isCanalTheatre(ev)) {
-        theatre.push({ ...baseItem, kind: "theatre" });
-      }
+      if (isCanalDance(ev)) dance.push({ ...baseItem, kind: "dance" });
+      else if (isCanalTheatre(ev)) theatre.push({ ...baseItem, kind: "theatre" });
     }
 
     if (theatre.length >= 60 && dance.length >= 20) break;
@@ -996,7 +950,6 @@ async function scrapeCanalREST(errors) {
 /* =========================================================
    Nave 10 (JSON-LD por evento)
    ========================================================= */
-
 async function scrapeNave10Theatre(errors) {
   const listUrl = "https://www.nave10matadero.es/programacion?field_category%5B14%5D=14";
   const html = await fetchText(listUrl);
@@ -1061,7 +1014,6 @@ async function scrapeMataderoTheatreDisabled() {
 /* =========================================================
    Teatro Pradillo (Divi)
    ========================================================= */
-
 async function scrapePradillo(errors) {
   const url = "https://www.teatropradillo.com/";
   const html = await fetchText(url);
@@ -1114,7 +1066,6 @@ async function scrapePradillo(errors) {
 /* =========================================================
    Teatro del Barrio (Elementor)
    ========================================================= */
-
 async function scrapeTeatroDelBarrio(errors) {
   const url = "https://teatrodelbarrio.com/";
   const html = await fetchText(url);
@@ -1122,7 +1073,6 @@ async function scrapeTeatroDelBarrio(errors) {
 
   const items = $("div.article[id^='post-']")
     .map((_, el) => {
-      // ✅ FIX: en su HTML real, h2.title suele contener el <a>
       const $a = $(el).find("h2.title a").first();
       const title = normSpace($a.text() || $(el).find("h2.title").first().text());
       const link = $a.attr("href") ? String($a.attr("href")) : "";
@@ -1173,14 +1123,12 @@ async function scrapeTeatroDelBarrio(errors) {
 /* =========================================================
    Teatro Español — Drupal Views AJAX (blindado)
    ========================================================= */
-
 function extractDrupalSettingsJson(html) {
   const $ = cheerio.load(html);
   const raw = $('script[type="application/json"][data-drupal-selector="drupal-settings-json"]').first().html();
   if (!raw) return null;
   try { return JSON.parse(raw); } catch { return null; }
 }
-
 function extractAjaxPageState(html) {
   const mTheme = html.match(/"theme"\s*:\s*"([^"]+)"/);
   const mLibs = html.match(/"libraries"\s*:\s*"([^"]+)"/);
@@ -1242,6 +1190,7 @@ async function fetchTeatroEspanolViewsPage(page, errors) {
 
     const txt = res.text();
     if (looksLikeHtml(txt)) throw new Error("Expected JSON but got HTML");
+
     return JSON.parse(txt);
   } catch (e) {
     errors.push({ source: "teatroespanol", venue: `ajax:page:${page}`, message: String(e?.message || e) });
@@ -1333,14 +1282,13 @@ async function scrapeTeatroEspanolAJAX(errors) {
 /* =========================================================
    MAIN
    ========================================================= */
-
 async function main() {
   const errors = [];
 
   const theatre = [];
   const dance = [];
 
-  // 1) CDN (Valle + María) desde PROGRAMACIÓN (estable) + enrich (horarios)
+  // 1) CDN (Valle + María) desde PROGRAMACIÓN + enrich (horarios)
   theatre.push(...(await scrapeCDNProgramacion(errors)));
 
   // 2) CANAL REST (teatro + danza) + dateText editorial
@@ -1352,7 +1300,7 @@ async function main() {
   theatre.push(...(await scrapeNave10Theatre(errors)));
   theatre.push(...(await scrapeMataderoTheatreDisabled()));
 
-  // 4) Español AJAX (blindado), Pradillo, Barrio
+  // 4) Español AJAX, Pradillo, Barrio
   theatre.push(...(await scrapeTeatroEspanolAJAX(errors)));
   theatre.push(...(await scrapePradillo(errors)));
   theatre.push(...(await scrapeTeatroDelBarrio(errors)));
@@ -1412,4 +1360,3 @@ main().catch((err) => {
   console.error("FAILED:", err);
   process.exit(1);
 });
-
