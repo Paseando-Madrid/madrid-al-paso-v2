@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-13T04:25:14.631Z",
+  "updatedAt": "2026-02-13T04:41:02.145Z",
   "theatre": [
     {
       "source": "canal",
@@ -291,12 +291,12 @@
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ (HTML no es programación real)"
+        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ (HTML no contiene /evento/ y hay señales de challenge)"
       },
       {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ (HTML no es programación real)"
+        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ (HTML no contiene /evento/ y hay señales de challenge)"
       }
     ]
   }
