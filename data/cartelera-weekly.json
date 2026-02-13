@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-13T04:41:02.145Z",
+  "updatedAt": "2026-02-13T05:12:11.857Z",
   "theatre": [
     {
       "source": "canal",
@@ -297,6 +297,16 @@
         "source": "cdn",
         "venue": "cdn-valle-inclan",
         "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ (HTML no contiene /evento/ y hay señales de challenge)"
+      },
+      {
+        "source": "cdn",
+        "venue": "ajax:month:2/2026",
+        "message": "Expected JSON but got HTML (WAF?). Snippet: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1."
+      },
+      {
+        "source": "cdn",
+        "venue": "ajax:month:3/2026",
+        "message": "Expected JSON but got HTML (WAF?). Snippet: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1."
       }
     ]
   }
