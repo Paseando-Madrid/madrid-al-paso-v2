@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-13T05:12:11.857Z",
+  "updatedAt": "2026-02-13T05:44:26.265Z",
   "theatre": [
     {
       "source": "canal",
@@ -128,6 +128,69 @@
       "image": ""
     },
     {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Gula / Gola",
+      "credits": "Creación y dirección Pau Matas Nogué y Oriol Pla Solina",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/gula-gola/",
+      "image": ""
+    },
+    {
+      "source": "cdn-maria-guerrero",
+      "kind": "theatre",
+      "title": "Grito, boda y sangre",
+      "credits": "Basada en Bodas de sangre de Federico García Lorca, así como en fragmentos de otras de sus obras y poemas. Dramaturgia Iker Azkoitia Dirección Ángela Ibáñez Ca…",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro María Guerrero",
+      "address": "C. de Tamayo y Baus, 4, Madrid",
+      "mapsQuery": "Teatro María Guerrero, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/",
+      "image": ""
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Constelaciones",
+      "credits": "Texto Nick Payne Versión y dirección Sergio Peris-Mencheta",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
+      "image": ""
+    },
+    {
       "source": "teatroespanol",
       "kind": "theatre",
       "title": "Confidencias de artistas",
@@ -147,48 +210,6 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
       "link": "https://www.teatroespanol.es/confidencias-de-artistas",
       "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2025/06/carmen_de_burgos_2.jpg.webp?itok=f0L1R8Ym"
-    },
-    {
-      "source": "pradillo",
-      "kind": "theatre",
-      "title": "Apertura de procesos creativos 2026",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "Del M20 de enero al J19 de febrero 21:00 H.",
-      "venue": "Teatro Pradillo",
-      "address": "C. de Pradillo, 12, Madrid",
-      "mapsQuery": "Teatro Pradillo, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Pradillo%2C%20Madrid",
-      "link": "https://www.teatropradillo.com/apertura-de-procesos-creativos-2026/",
-      "image": ""
-    },
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Les Vélocimanes Associés",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-14 00:00:00",
-      "endDate": "2026-02-15 23:59:59",
-      "dateText": "Del 14 feb al 15 feb · sáb–dom",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/les-velocimanes-associes-der-lauf/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_LAUF.jpg"
     }
   ],
   "dance": [
@@ -260,28 +281,32 @@
         "canal",
         "teatroespanol",
         "nave10",
-        "pradillo"
+        "pradillo",
+        "cdn-valle-inclan",
+        "cdn-maria-guerrero"
       ],
       "dance": [
         "canal"
       ]
     },
     "counts": {
-      "theatreCollected": 47,
+      "theatreCollected": 54,
       "danceCollected": 10,
-      "theatreUnique": 47,
+      "theatreUnique": 54,
       "danceUnique": 10,
-      "theatreActive": 47,
+      "theatreActive": 54,
       "danceActive": 10,
-      "theatreFinal": 9,
+      "theatreFinal": 10,
       "danceFinal": 2
     },
     "mix": {
       "theatre": {
-        "canal": 3,
+        "canal": 2,
         "teatroespanol": 2,
         "nave10": 2,
-        "pradillo": 2
+        "pradillo": 1,
+        "cdn-valle-inclan": 2,
+        "cdn-maria-guerrero": 1
       },
       "dance": {
         "canal": 2
@@ -300,13 +325,43 @@
       },
       {
         "source": "cdn",
-        "venue": "ajax:month:2/2026",
-        "message": "Expected JSON but got HTML (WAF?). Snippet: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1."
+        "venue": "ajax:month:3/2026",
+        "message": "HTTP 400 for CDN action=get_cdn_events"
       },
       {
         "source": "cdn",
-        "venue": "ajax:month:3/2026",
-        "message": "Expected JSON but got HTML (WAF?). Snippet: <html style=\"height:100%\"><head><META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\"><meta name=\"format-detection\" content=\"telephone=no\"><meta name=\"viewport\" content=\"initial-scale=1."
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/gula-gola/ (no se pudo enrich horarios/equipo)."
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/ (no se pudo enrich horarios/equipo)."
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/constelaciones/ (no se pudo enrich horarios/equipo)."
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-color-en-escena/ (no se pudo enrich horarios/equipo)."
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/la-ultima-noche-con-mi-hermano/ (no se pudo enrich horarios/equipo)."
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/tormenta/ (no se pudo enrich horarios/equipo)."
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-vestuario-en-construccion/ (no se pudo enrich horarios/equipo)."
       }
     ]
   }
