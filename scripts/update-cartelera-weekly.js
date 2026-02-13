@@ -1,24 +1,30 @@
 /**
- * Update Cartelera (Weekly) — COOLtura ✅ BLINDADO (CDN PROGRAMACIÓN + CANAL REST + ESPAÑOL AJAX)
+ * Update Cartelera (Weekly) — COOLtura ✅ BLINDADO (CDN PROGRAMACIÓN + FICHA HORARIOS + CANAL REST + ESPAÑOL AJAX)
  * - Genera /data/cartelera-weekly.json
  * - Agenda plural y curada (cupo por fuente)
  * - Teatro: 10 items (mix garantizado)
  * - Danza: 2 items (Canal)
- * - Sin venta de entradas en salida
+ * - Sin venta de entradas en salida (UI decide links; aquí solo guardamos link)
  * - Pin Google Maps siempre (search api=1)
  * - Rotación por fecha de finalización (endDate) + filtro vencidos
  *
  * CDN (dramatico.inaem.gob.es)
- * - NO usa admin-ajax (WAF => HTML).
+ * - NO usa admin-ajax (WAF).
  * - Scrapea PROGRAMACIÓN estable:
- *   - /programacion/teatro-maria-guerrero/
- *   - /programacion/teatro-valle-inclan/
- * - Extrae: title + dramaturgia/texto + dirección + rango fechas + link /evento/*
- * - (Opcional) Enrich por ficha /evento/*: author/director/cast/company + fechas JSON-LD si existen.
+ *   - https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/
+ *   - https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/
+ * - Extrae desde la tarjeta: title + autor/director si aparecen + rango (dateText básico) + link /evento/*
+ * - Enrich por ficha /evento/*:
+ *   - Horarios/días (panel izquierdo) ✅ selector estable:
+ *     div.col-lg-5.col-left .box-title .detail > p
+ *   - JSON-LD (startDate/endDate si existen)
+ *   - equipo box (author/director/cast/company/choreographer)
+ *   - og:image
  *
  * CANAL (teatroscanal.com)
  * - REST estable: /wp-json/tribe/events/v1/events
  * - 404 en page>n => fin de paginación (NO error)
+ * - dateText editorial (día/rango + hora) ✅
  *
  * TEATRO ESPAÑOL (teatroespanol.es)
  * - Drupal Views AJAX: /views/ajax?_wrapper_format=drupal_ajax
@@ -35,7 +41,6 @@ import * as cheerio from "cheerio";
 
 const OUT_PATH = path.join(process.cwd(), "data", "cartelera-weekly.json");
 
-// ✅ límites editoriales (sin sorpresas)
 const LIMITS = { theatreMax: 10, danceMax: 2 };
 
 // Cupos editoriales EXACTOS (tu regla)
@@ -247,7 +252,7 @@ function parseSpanishEndDate(dateText) {
   const s = s0.toLowerCase();
   if (!s) return "";
 
-  // "23 ENE - 01 MAR" (CDN programacion)
+  // "23 ENE - 01 MAR" / "13 FEB - 05 ABR 2026"
   let m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]{3,})\s*[-–]\s*(\d{1,2})\s*([a-záéíóúñ]{3,})(?:\s*(\d{4}))?/i);
   if (m) {
     const d2 = Number(m[3]);
@@ -286,23 +291,9 @@ function parseSpanishEndDate(dateText) {
   return "";
 }
 
-// ✅ normalización a ISO consistente (salida + orden + expiración)
-function toISOorEmpty(s) {
-  const t = normSpace(s);
-  if (!t) return "";
-  // "YYYY-MM-DD HH:mm:ss" => ISO (UTC)
-  if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/.test(t)) {
-    const iso = t.replace(" ", "T") + "Z";
-    const ms = Date.parse(iso);
-    return Number.isFinite(ms) ? new Date(ms).toISOString() : "";
-  }
-  const ms = Date.parse(t);
-  return Number.isFinite(ms) ? new Date(ms).toISOString() : "";
-}
-
 function isoToMs(iso) {
-  const ms = Date.parse(normSpace(iso || ""));
-  return Number.isFinite(ms) ? ms : Infinity;
+  const t = Date.parse(iso || "");
+  return Number.isFinite(t) ? t : Infinity;
 }
 
 function isExpired(it, nowMs) {
@@ -327,15 +318,6 @@ function sortByEndThenStart(items) {
   });
 }
 
-function dedupeKey(it) {
-  const link = normSpace(it?.link);
-  if (link) return link;
-  const src = normSpace(it?.source);
-  const title = normSpace(it?.title).toLowerCase();
-  const venue = normSpace(it?.venue).toLowerCase();
-  return `${src}|${title}|${venue}`;
-}
-
 function sanitizeForOutput(it) {
   const creditsShort = truncateForUI(it.credits || "", 160);
   return {
@@ -352,9 +334,8 @@ function sanitizeForOutput(it) {
     choreographer: it.choreographer || "",
     cast: Array.isArray(it.cast) ? it.cast.slice(0, 6) : [],
 
-    // ✅ ISO o vacío (consistente)
-    startDate: toISOorEmpty(it.startDate),
-    endDate: toISOorEmpty(it.endDate),
+    startDate: it.startDate || "",
+    endDate: it.endDate || "",
     dateText: it.dateText || "",
 
     venue: it.venue || "",
@@ -532,7 +513,7 @@ function extractOgImage($) {
 }
 
 /* =========================================================
-   CDN — PROGRAMACIÓN estable (NO admin-ajax)
+   CDN — PROGRAMACIÓN estable + ENRICH HORARIOS (ficha)
    ========================================================= */
 
 function cdnVenueMeta(source) {
@@ -553,33 +534,85 @@ function cdnVenueMeta(source) {
   return { venue: "Centro Dramático Nacional", address: "Madrid", mapsQuery: "Centro Dramático Nacional, Madrid" };
 }
 
-function extractCreditsFromProgramacionBlock(txt) {
-  // Busca líneas tipo:
-  // "Dramaturgia X" / "Texto y dirección Y" / "Dirección Z"
-  const blob = normSpace(txt);
+function extractDateTextFromCDNCard($detail) {
+  // En tu HTML: <p>13 FEB - 05 ABR | <strong>Teatro María Guerrero</strong> | Sala</p>
+  const p = $detail.find("p").filter((_, el) => {
+    const t = normSpace(cheerio.load($(el).html() || "").text());
+    return /\b\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}/.test(t);
+  }).first();
 
-  const dram = blob.match(/\b(Dramaturgia|Texto|Texto y dramaturgia)\s+([^|]+?)(?=(Dirección|AGOTADAS|ENTRADAS|$))/i);
-  const dir  = blob.match(/\bDirección(?:\s+asociada)?\s+([^|]+?)(?=(AGOTADAS|ENTRADAS|$))/i);
-
-  const a = dram ? normSpace(dram[2]) : "";
-  const d = dir ? normSpace(dir[1]) : "";
-
-  const bits = [];
-  if (a) bits.push(a);
-  if (d) bits.push(d);
-  return truncateForUI(bits.join(" · "), 160);
+  const txt = normSpace(stripHtml(p.html() || ""));
+  const m = txt.match(/\b(\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3})(?:\s+(\d{4}))?/);
+  if (!m) return "";
+  return `${m[1]}${m[2] ? " " + m[2] : ""}`;
 }
 
-function extractDateTextFromProgramacionBlock(txt) {
-  // Normaliza formato que suele venir como: "23 ENE - 01 MAR | Teatro María Guerrero | Sala..."
-  const t = normSpace(txt).replace(/\s*\|\s*/g, " | ");
-  const m = t.match(/\b(\d{1,2})\s*([A-ZÁÉÍÓÚÑ]{3,})\s*[-–]\s*(\d{1,2})\s*([A-ZÁÉÍÓÚÑ]{3,})(?:\s*(\d{4}))?\b/);
-  if (!m) return "";
-  return `${m[1]} ${m[2]} - ${m[3]} ${m[4]}${m[5] ? " " + m[5] : ""}`;
+function parseCdnAuthorDirectorFromDetail($detail) {
+  // Casos:
+  // 1) <p>Texto y dirección <strong>Alfredo Sanzol</strong></p>
+  // 2) <p>Dramaturgia <strong>X</strong><br>Dirección <strong>Y</strong>...</p>
+  const out = { author: "", director: "", credits: "" };
+
+  // elegimos los <p> de ficha que NO sean el de fechas-rango
+  const ps = $detail.find("p").toArray().map((el) => {
+    const html = cheerio.load(el).root().html() || "";
+    const text = normSpace(stripHtml(html));
+    return { el, html, text };
+  });
+
+  const ficha = ps.filter(p => p.text && !/\b\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}/.test(p.text));
+
+  const blob = ficha.map(x => x.text).join(" · ");
+
+  // Texto y dirección X => author=director=X
+  let m = blob.match(/\bTexto\s+y\s+dirección\s+(.+)$/i);
+  if (m) {
+    const person = normSpace(m[1]);
+    out.author = person;
+    out.director = person;
+    out.credits = truncateForUI(person, 160);
+    return out;
+  }
+
+  // Dramaturgia / Texto / Autor
+  m = blob.match(/\b(Dramaturgia|Texto|Autor(?:ía)?)\s+(.+?)(?=(Dirección|Dirección asociada|$))/i);
+  if (m) out.author = normSpace(m[2]);
+
+  // Dirección
+  m = blob.match(/\bDirección(?:\s+asociada)?\s+(.+?)(?=($|Dirección asociada|Producción|Compañ[ií]a))/i);
+  if (m) out.director = normSpace(m[1]);
+
+  const bits = [];
+  if (out.author) bits.push(out.author);
+  if (out.director) bits.push(out.director);
+  out.credits = truncateForUI(bits.join(" · "), 160);
+
+  return out;
+}
+
+function extractCdnScheduleFromEventLeftPanel($) {
+  // ✅ Selector estable guardado:
+  // div.col-lg-5.col-left .box-title .detail > p
+  // <strong>13 FEB - 5 ABR 2026</strong><br>De martes a domingo a las 20:00 | Duración: ...
+  const p = $("div.col-lg-5.col-left .box-title .detail > p").first();
+  if (!p.length) return { scheduleText: "", rangeText: "" };
+
+  const rangeText = normSpace(p.find("strong").first().text() || "");
+  // obtener texto completo preservando el contenido tras <br>
+  const html = p.html() || "";
+  const normalized = html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n");
+
+  const lines = stripHtml(normalized).split("\n").map(normSpace).filter(Boolean);
+  // normalmente: ["13 FEB - 5 ABR 2026", "De martes a domingo a las 20:00 | Duración: ..."]
+  const scheduleLine = lines.find((x) => /a\s+las\s+\d{1,2}:\d{2}/i.test(x) || /martes|miércoles|jueves|viernes|sábado|domingo|lunes/i.test(x)) || "";
+  const scheduleText = scheduleLine ? scheduleLine.split("|")[0].trim() : "";
+
+  return { scheduleText, rangeText };
 }
 
 async function enrichDramaticoEventPage(item, errors) {
-  // Opcional PRO: si la ficha está accesible, completa fechas/imágenes/cast
   if (!item?.link || !/dramatico\.inaem\.gob\.es\/evento\//.test(item.link)) return item;
 
   try {
@@ -598,27 +631,43 @@ async function enrichDramaticoEventPage(item, errors) {
 
     const enriched = { ...item };
 
+    // JSON-LD dates (si existen)
     if (ev?.startDate && !enriched.startDate) enriched.startDate = String(ev.startDate);
     if (ev?.endDate && !enriched.endDate) enriched.endDate = String(ev.endDate);
 
+    // OG image
     if (!enriched.image) {
       const og = extractOgImage($);
       if (og) enriched.image = og;
     }
 
+    // equipo (si viene)
     if (equipo.author && !enriched.author) enriched.author = equipo.author;
     if (equipo.director && !enriched.director) enriched.director = equipo.director;
     if (equipo.company && !enriched.company) enriched.company = equipo.company;
     if (equipo.choreographer && !enriched.choreographer) enriched.choreographer = equipo.choreographer;
-    if (
-      Array.isArray(equipo.cast) &&
-      equipo.cast.length &&
-      (!Array.isArray(enriched.cast) || !enriched.cast.length)
-    ) {
+    if (Array.isArray(equipo.cast) && equipo.cast.length && (!Array.isArray(enriched.cast) || !enriched.cast.length)) {
       enriched.cast = equipo.cast;
     }
 
-    // credits corto: si ya venía de programación, lo mantenemos; si no, lo generamos
+    // ✅ HORARIO/DÍAS desde panel izquierdo
+    const { scheduleText, rangeText } = extractCdnScheduleFromEventLeftPanel($);
+
+    // dateText editorial: preferimos rango + horario (lo que tú quieres)
+    // - Si ya teníamos "13 FEB - 05 ABR", lo mantenemos como base
+    // - Si la ficha da "13 FEB - 5 ABR 2026", lo usamos como rango mejor
+    const baseRange = rangeText || enriched.dateText || "";
+    const schedule = normSpace(scheduleText);
+    if (baseRange && schedule) enriched.dateText = `${baseRange} · ${schedule}`;
+    else if (schedule && !enriched.dateText) enriched.dateText = schedule;
+
+    // endDate: si no vino JSON-LD, lo intentamos por parseo del rango (enriched.dateText o baseRange)
+    if (!enriched.endDate) {
+      const tryEnd = parseSpanishEndDate(enriched.dateText || baseRange);
+      if (tryEnd) enriched.endDate = tryEnd;
+    }
+
+    // credits corto: si vacío, generarlo con autor/director
     if (!enriched.credits) {
       const bits = [];
       if (enriched.author) bits.push(enriched.author);
@@ -646,52 +695,58 @@ async function scrapeCDNProgramacionPage(url, source, errors) {
 
   const out = [];
 
-  // En estas páginas, los títulos de obras están en h2 con link a /evento/
-  const nodes = $("h2 a[href*='/evento/']");
-  if (!nodes.length) {
-    errors.push({ source: "cdn", venue: source, message: `No encontré h2 a[href*="/evento/"] en ${url}` });
+  // ✅ Tu HTML real: tarjetas con class .item-event-resume + dentro .wrapper-detail .detail h2 a[href*="/evento/"]
+  const cards = $("div.item.item-event-resume.evento-programacion");
+  if (!cards.length) {
+    errors.push({ source: "cdn", venue: source, message: `No encontré cards .item-event-resume en ${url}` });
     return out;
   }
 
-  nodes.each((_, a) => {
-    const $a = $(a);
+  cards.each((_, card) => {
+    const $card = $(card);
+    const $detail = $card.find(".wrapper-detail .detail").first();
+    const $a = $detail.find("h2 a[href*='/evento/']").first();
+
     const title = normSpace($a.text());
     const href = $a.attr("href") || "";
     const link = href ? (href.startsWith("http") ? href : `https://dramatico.inaem.gob.es${href}`) : "";
     if (!title || !link) return;
 
-    // bloque contenedor (lo bastante amplio para capturar dramaturgia/dirección/fechas)
-    const $block = $a.closest("section, article, div");
-    const blockText = normSpace($block.text());
+    const dateTextBasic = extractDateTextFromCDNCard($detail);
+    const endDate = parseSpanishEndDate(dateTextBasic);
 
-    const dateText = extractDateTextFromProgramacionBlock(blockText);
-    const endDate = parseSpanishEndDate(dateText);
-    const credits = extractCreditsFromProgramacionBlock(blockText);
+    const parsed = parseCdnAuthorDirectorFromDetail($detail);
+
+    // imagen: preferimos el src del primer carousel item
+    const img =
+      $card.find(".carousel-inner img").first().attr("src") ||
+      $card.find("img").first().attr("src") ||
+      "";
 
     out.push({
       source,
       kind: "theatre",
       title,
 
-      credits,
+      credits: parsed.credits || "",
       deck: "",
 
-      author: "",
-      director: "",
-      company: "",
+      author: parsed.author || "",
+      director: parsed.director || "",
+      company: "Centro Dramático Nacional",
       choreographer: "",
       cast: [],
 
       startDate: "",
       endDate,
-      dateText,
+      dateText: dateTextBasic,
 
       venue: meta.venue,
       address: meta.address,
       mapsQuery: meta.mapsQuery,
       mapsUrl: toMapsUrl(meta.mapsQuery),
       link,
-      image: ""
+      image: img
     });
   });
 
@@ -705,7 +760,7 @@ async function scrapeCDNProgramacion(errors) {
   const mg = await scrapeCDNProgramacionPage(mgUrl, "cdn-maria-guerrero", errors);
   const vi = await scrapeCDNProgramacionPage(viUrl, "cdn-valle-inclan", errors);
 
-  // Enrich opcional por ficha: útil si quieres cast/imagen/fechas más finas
+  // Enrich por ficha: horarios + fechas finas + reparto si existe
   const base = [...mg, ...vi];
   const enriched = [];
   const cache = new Map();
@@ -780,6 +835,54 @@ function canalDates(ev) {
   return { startDate: String(start || ""), endDate: String(end || "") };
 }
 
+// ✅ dateText editorial para Canal (día/rango + hora)
+function weekdayEsShort(d){
+  const w = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+  return w[d.getDay()];
+}
+function monthEsShort(d){
+  const m = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  return m[d.getMonth()];
+}
+function pad2(n){ return String(n).padStart(2, "0"); }
+
+function fmtTimeFromIso(iso){
+  if(!iso) return "";
+  const d = new Date(iso);
+  const hh = pad2(d.getHours());
+  const mm = pad2(d.getMinutes());
+  if (hh === "00" && mm === "00") return "";
+  return `${hh}:${mm}`;
+}
+
+function canalDateText(ev){
+  const start = ev?.start_date_utc || ev?.start_date || "";
+  const end   = ev?.end_date_utc   || ev?.end_date   || "";
+  if(!start) return "";
+
+  const ds = new Date(start);
+  const de = end ? new Date(end) : null;
+
+  const time = fmtTimeFromIso(start);
+
+  if(!de || ds.toDateString() === de.toDateString()){
+    const day = `${weekdayEsShort(ds)} ${pad2(ds.getDate())} ${monthEsShort(ds)}`;
+    return time ? `${day} · ${time}` : day;
+  }
+
+  const a = `${pad2(ds.getDate())} ${monthEsShort(ds)}`;
+  const b = `${pad2(de.getDate())} ${monthEsShort(de)}`;
+  const w1 = weekdayEsShort(ds);
+  const w2 = weekdayEsShort(de);
+  const wRange = (w1 && w2) ? `${w1}–${w2}` : "";
+
+  const left = `Del ${a} al ${b}`;
+  const mid  = wRange ? ` · ${wRange}` : "";
+  const right= time ? ` · ${time}` : "";
+
+  return `${left}${mid}${right}`;
+}
+
 async function fetchCanalEventsPage({ perPage, page, startDate, endDate }, errors) {
   const url = new URL("https://www.teatroscanal.com/wp-json/tribe/events/v1/events");
   url.searchParams.set("per_page", String(perPage));
@@ -841,7 +944,7 @@ async function scrapeCanalREST(errors) {
         cast: [],
         startDate: s,
         endDate: e,
-        dateText: "",
+        dateText: canalDateText(ev),
         venue: "Teatros del Canal",
         address: "C. de Cea Bermúdez, 1, Madrid",
         mapsQuery: "Teatros del Canal, Madrid",
@@ -857,7 +960,7 @@ async function scrapeCanalREST(errors) {
       }
     }
 
-    if (theatre.length >= 50 && dance.length >= 16) break;
+    if (theatre.length >= 60 && dance.length >= 20) break;
     await sleep(140);
   }
 
@@ -1211,10 +1314,10 @@ async function main() {
   const theatre = [];
   const dance = [];
 
-  // 1) CDN (Valle + María) desde PROGRAMACIÓN (estable)
+  // 1) CDN (Valle + María) desde PROGRAMACIÓN (estable) + enrich (horarios)
   theatre.push(...(await scrapeCDNProgramacion(errors)));
 
-  // 2) CANAL REST (teatro + danza)
+  // 2) CANAL REST (teatro + danza) + dateText editorial
   const canal = await scrapeCanalREST(errors);
   theatre.push(...canal.theatre);
   dance.push(...canal.dance);
@@ -1228,8 +1331,8 @@ async function main() {
   theatre.push(...(await scrapePradillo(errors)));
   theatre.push(...(await scrapeTeatroDelBarrio(errors)));
 
-  const theatreUnique = dedupeBy(theatre, dedupeKey);
-  const danceUnique = dedupeBy(dance, dedupeKey);
+  const theatreUnique = dedupeBy(theatre, (x) => x.link || `${x.source}:${x.title}`);
+  const danceUnique = dedupeBy(dance, (x) => x.link || `${x.source}:${x.title}`);
 
   const nowMs = Date.now();
   const theatreActive = theatreUnique.filter((it) => !isExpired(it, nowMs));
@@ -1283,4 +1386,3 @@ main().catch((err) => {
   console.error("FAILED:", err);
   process.exit(1);
 });
-
