@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-12T23:32:01.668Z",
+  "updatedAt": "2026-02-13T00:00:53.878Z",
   "theatre": [
     {
       "source": "canal",
@@ -12,8 +12,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-12 00:00:00",
-      "endDate": "2026-02-15 23:59:59",
+      "startDate": "2026-02-12T00:00:00.000Z",
+      "endDate": "2026-02-15T23:59:59.000Z",
       "dateText": "",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
@@ -33,8 +33,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-14 00:00:00",
-      "endDate": "2026-02-15 23:59:59",
+      "startDate": "2026-02-14T00:00:00.000Z",
+      "endDate": "2026-02-15T23:59:59.000Z",
       "dateText": "",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
@@ -42,6 +42,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/caja-juguetes-bambalina-teatre-canal-teatralia-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/bambalinawebTC-543x314-1.jpg"
+    },
+    {
+      "source": "teatroespanol",
+      "kind": "theatre",
+      "title": "Luces de bohemia",
+      "credits": "Ramón del Valle-Inclán",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "2026-03-07T23:59:59.000Z",
+      "dateText": "23 Enero7 Marzo 2026",
+      "venue": "Teatro Español",
+      "address": "Pl. de Santa Ana, 4, Madrid",
+      "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
+      "link": "https://www.teatroespanol.es/luces-de-bohemia",
+      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2024/10/luces_bohemia_prensa_02_0.jpg.webp?itok=CSC8eDsO"
     },
     {
       "source": "nave10",
@@ -54,8 +75,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-06T18:30:55",
-      "endDate": "2026-03-08T22:55:55",
+      "startDate": "2026-02-06T18:30:55.000Z",
+      "endDate": "2026-03-08T22:55:55.000Z",
       "dateText": "",
       "venue": "Nave 10 Matadero",
       "address": "Plaza de Legazpi, 8, Madrid",
@@ -63,6 +84,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
       "link": "https://www.nave10matadero.es/actividades/tres-noches-en-itaca",
       "image": "https://www.nave10matadero.es/sites/default/files/2026-01/ITACA_@geraldineleloutre_0290 copia.jpg"
+    },
+    {
+      "source": "teatrodelbarrio",
+      "kind": "theatre",
+      "title": "Solo quería bailar",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "2026-03-28T23:59:59.000Z",
+      "dateText": "28 enero - 28 marzo",
+      "venue": "Teatro del Barrio",
+      "address": "C. de Zurita, 20, Madrid",
+      "mapsQuery": "Teatro del Barrio, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
+      "link": "https://teatrodelbarrio.com/solo-queria-bailar/",
+      "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1252.jpg"
     },
     {
       "source": "nave10",
@@ -75,8 +117,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-20T18:30:55",
-      "endDate": "2026-04-12T21:55:55",
+      "startDate": "2026-03-20T18:30:55.000Z",
+      "endDate": "2026-04-12T21:55:55.000Z",
       "dateText": "",
       "venue": "Nave 10 Matadero",
       "address": "Plaza de Legazpi, 8, Madrid",
@@ -107,83 +149,10 @@
       "image": ""
     },
     {
-      "source": "cdn-maria-guerrero",
-      "kind": "theatre",
-      "title": "Grito, boda y sangre",
-      "credits": "Basada en Bodas de sangre de Federico García Lorca, así como en fragmentos de otras de sus obras y poemas. Dramaturgia Iker Azkoitia Dirección Ángela Ibáñez Ca…",
-      "deck": "",
-      "author": "Iker Azkoitia",
-      "director": "Ángela Ibáñez Castaño",
-      "company": "Centro Dramático Nacional",
-      "choreographer": "Lucile Préat",
-      "cast": [
-        "Mari López",
-        "Emma Vallejo"
-      ],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro María Guerrero",
-      "address": "C. de Tamayo y Baus, 4, Madrid",
-      "mapsQuery": "Teatro María Guerrero, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/",
-      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/GBS__WEB2-scaled.jpg?_t=1770212719"
-    },
-    {
-      "source": "cdn-valle-inclan",
-      "kind": "theatre",
-      "title": "Constelaciones",
-      "credits": "Texto Nick Payne Versión y dirección Sergio Peris-Mencheta",
-      "deck": "",
-      "author": "Nick Payne",
-      "director": "Sergio Peris-Mencheta",
-      "company": "Centro Dramático Nacional y Barco Pirata",
-      "choreographer": "Amaya Galeote",
-      "cast": [
-        "Jordi Coll",
-        "Diego Monzón",
-        "Paula Muñoz",
-        "María Pascual",
-        "David Pérez-Bayona",
-        "Clara Serrano"
-      ],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro Valle-Inclán",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro Valle-Inclán, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
-      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/C_WEB4-scaled.jpg?_t=1770886396"
-    },
-    {
-      "source": "cdn-valle-inclan",
-      "kind": "theatre",
-      "title": "Casi ninguna verdad",
-      "credits": "Texto y dirección Cris Blanco Dramaturgia Cris Blanco, Óscar Bueno Rodríguez y Anto Rodríguez",
-      "deck": "",
-      "author": "Cris Blanco, Óscar Bueno Rodríguez y Anto Rodríguez",
-      "director": "",
-      "company": "Centro Dramático Nacional",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro Valle-Inclán",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro Valle-Inclán, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/casi-ninguna-verdad/",
-      "image": "https://dramatico.inaem.gob.es/wp-content/uploads/2025/06/CASI-NINGUNA-VERDAD_DRAMATICO_INTERVENCION_OBRAS_15-26-1-scaled.jpg?_t=1770302554"
-    },
-    {
       "source": "teatroespanol",
       "kind": "theatre",
-      "title": "Luces de bohemia",
-      "credits": "Ramón del Valle-Inclán",
+      "title": "Confidencias de artistas",
+      "credits": "Carmen de Burgos (Colombine)",
       "deck": "",
       "author": "",
       "director": "",
@@ -191,14 +160,14 @@
       "choreographer": "",
       "cast": [],
       "startDate": "",
-      "endDate": "",
-      "dateText": "23 Enero7 Marzo 2026",
+      "endDate": "2026-03-08T23:59:59.000Z",
+      "dateText": "19 Febrero8 Marzo 2026",
       "venue": "Teatro Español",
       "address": "Pl. de Santa Ana, 4, Madrid",
       "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
-      "link": "https://www.teatroespanol.es/luces-de-bohemia",
-      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2024/10/luces_bohemia_prensa_02_0.jpg.webp?itok=CSC8eDsO"
+      "link": "https://www.teatroespanol.es/confidencias-de-artistas",
+      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2025/06/carmen_de_burgos_2.jpg.webp?itok=f0L1R8Ym"
     },
     {
       "source": "teatrodelbarrio",
@@ -220,6 +189,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
       "link": "https://teatrodelbarrio.com/federico-no-hay-olvido-ni-sueno-carne-viva/",
       "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1267.jpg"
+    },
+    {
+      "source": "pradillo",
+      "kind": "theatre",
+      "title": "Apertura de procesos creativos 2026",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "Del M20 de enero al J19 de febrero 21:00 H.",
+      "venue": "Teatro Pradillo",
+      "address": "C. de Pradillo, 12, Madrid",
+      "mapsQuery": "Teatro Pradillo, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Pradillo%2C%20Madrid",
+      "link": "https://www.teatropradillo.com/apertura-de-procesos-creativos-2026/",
+      "image": ""
     }
   ],
   "dance": [
@@ -234,8 +224,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-12 00:00:00",
-      "endDate": "2026-02-13 23:59:59",
+      "startDate": "2026-02-12T00:00:00.000Z",
+      "endDate": "2026-02-13T23:59:59.000Z",
       "dateText": "",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
@@ -255,8 +245,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-26 00:00:00",
-      "endDate": "2026-02-28 23:59:59",
+      "startDate": "2026-02-26T00:00:00.000Z",
+      "endDate": "2026-02-28T23:59:59.000Z",
       "dateText": "",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
@@ -289,55 +279,48 @@
     "sources": {
       "theatre": [
         "canal",
-        "nave10",
-        "pradillo",
-        "cdn-maria-guerrero",
-        "cdn-valle-inclan",
         "teatroespanol",
-        "teatrodelbarrio"
+        "nave10",
+        "teatrodelbarrio",
+        "pradillo"
       ],
       "dance": [
         "canal"
       ]
     },
     "counts": {
-      "theatreCollected": 75,
+      "theatreCollected": 66,
       "danceCollected": 10,
-      "theatreUnique": 75,
+      "theatreUnique": 66,
       "danceUnique": 10,
-      "theatreActive": 74,
+      "theatreActive": 66,
       "danceActive": 10,
       "theatreFinal": 10,
       "danceFinal": 2
     },
-    "collectedBySource": {
-      "theatre": {
-        "cdn-maria-guerrero": 5,
-        "cdn-valle-inclan": 3,
-        "canal": 34,
-        "nave10": 5,
-        "teatroespanol": 4,
-        "pradillo": 5,
-        "teatrodelbarrio": 19
-      },
-      "dance": {
-        "canal": 10
-      }
-    },
     "mix": {
       "theatre": {
         "canal": 2,
+        "teatroespanol": 2,
         "nave10": 2,
-        "pradillo": 1,
-        "cdn-maria-guerrero": 1,
-        "cdn-valle-inclan": 2,
-        "teatroespanol": 1,
-        "teatrodelbarrio": 1
+        "teatrodelbarrio": 2,
+        "pradillo": 2
       },
       "dance": {
         "canal": 2
       }
     },
-    "errors": []
+    "errors": [
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "No encontré h2 a[href*=\"/evento/\"] en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "No encontré h2 a[href*=\"/evento/\"] en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
+      }
+    ]
   }
 }
