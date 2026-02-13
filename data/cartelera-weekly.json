@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-13T00:00:53.878Z",
+  "updatedAt": "2026-02-13T02:18:59.589Z",
   "theatre": [
     {
       "source": "canal",
@@ -12,9 +12,9 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-12T00:00:00.000Z",
-      "endDate": "2026-02-15T23:59:59.000Z",
-      "dateText": "",
+      "startDate": "2026-02-12 00:00:00",
+      "endDate": "2026-02-15 23:59:59",
+      "dateText": "Del 12 feb al 15 feb · jue–dom",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
@@ -33,9 +33,9 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-14T00:00:00.000Z",
-      "endDate": "2026-02-15T23:59:59.000Z",
-      "dateText": "",
+      "startDate": "2026-02-14 00:00:00",
+      "endDate": "2026-02-15 23:59:59",
+      "dateText": "Del 14 feb al 15 feb · sáb–dom",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
@@ -75,8 +75,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-06T18:30:55.000Z",
-      "endDate": "2026-03-08T22:55:55.000Z",
+      "startDate": "2026-02-06T18:30:55",
+      "endDate": "2026-03-08T22:55:55",
       "dateText": "",
       "venue": "Nave 10 Matadero",
       "address": "Plaza de Legazpi, 8, Madrid",
@@ -117,8 +117,8 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-20T18:30:55.000Z",
-      "endDate": "2026-04-12T21:55:55.000Z",
+      "startDate": "2026-03-20T18:30:55",
+      "endDate": "2026-04-12T21:55:55",
       "dateText": "",
       "venue": "Nave 10 Matadero",
       "address": "Plaza de Legazpi, 8, Madrid",
@@ -224,9 +224,9 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-12T00:00:00.000Z",
-      "endDate": "2026-02-13T23:59:59.000Z",
-      "dateText": "",
+      "startDate": "2026-02-12 00:00:00",
+      "endDate": "2026-02-13 23:59:59",
+      "dateText": "Del 12 feb al 13 feb · jue–vie",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
@@ -245,9 +245,9 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-26T00:00:00.000Z",
-      "endDate": "2026-02-28T23:59:59.000Z",
-      "dateText": "",
+      "startDate": "2026-02-26 00:00:00",
+      "endDate": "2026-02-28 23:59:59",
+      "dateText": "Del 26 feb al 28 feb · jue–sáb",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
@@ -314,12 +314,12 @@
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "No encontré h2 a[href*=\"/evento/\"] en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
+        "message": "No encontré cards .item-event-resume en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
       },
       {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
-        "message": "No encontré h2 a[href*=\"/evento/\"] en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
+        "message": "No encontré cards .item-event-resume en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
       }
     ]
   }
