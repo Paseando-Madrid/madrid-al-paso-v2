@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-13T03:36:53.606Z",
+  "updatedAt": "2026-02-13T04:25:14.631Z",
   "theatre": [
     {
       "source": "canal",
@@ -86,27 +86,6 @@
       "image": "https://www.nave10matadero.es/sites/default/files/2026-01/ITACA_@geraldineleloutre_0290 copia.jpg"
     },
     {
-      "source": "teatrodelbarrio",
-      "kind": "theatre",
-      "title": "Solo quería bailar",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "2026-03-28T23:59:59.000Z",
-      "dateText": "28 enero - 28 marzo",
-      "venue": "Teatro del Barrio",
-      "address": "C. de Zurita, 20, Madrid",
-      "mapsQuery": "Teatro del Barrio, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
-      "link": "https://teatrodelbarrio.com/solo-queria-bailar/",
-      "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1252.jpg"
-    },
-    {
       "source": "nave10",
       "kind": "theatre",
       "title": "Niebla",
@@ -170,27 +149,6 @@
       "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2025/06/carmen_de_burgos_2.jpg.webp?itok=f0L1R8Ym"
     },
     {
-      "source": "teatrodelbarrio",
-      "kind": "theatre",
-      "title": "Federico. No hay olvido, ni sueño: Carne viva",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "7 septiembre 2025 - 1 marzo 2026",
-      "venue": "Teatro del Barrio",
-      "address": "C. de Zurita, 20, Madrid",
-      "mapsQuery": "Teatro del Barrio, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20del%20Barrio%2C%20Madrid",
-      "link": "https://teatrodelbarrio.com/federico-no-hay-olvido-ni-sueno-carne-viva/",
-      "image": "https://teatrodelbarrio.com/wp-content/uploads/175331-1267.jpg"
-    },
-    {
       "source": "pradillo",
       "kind": "theatre",
       "title": "Apertura de procesos creativos 2026",
@@ -210,6 +168,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Pradillo%2C%20Madrid",
       "link": "https://www.teatropradillo.com/apertura-de-procesos-creativos-2026/",
       "image": ""
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Les Vélocimanes Associés",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-14 00:00:00",
+      "endDate": "2026-02-15 23:59:59",
+      "dateText": "Del 14 feb al 15 feb · sáb–dom",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/les-velocimanes-associes-der-lauf/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_LAUF.jpg"
     }
   ],
   "dance": [
@@ -281,7 +260,6 @@
         "canal",
         "teatroespanol",
         "nave10",
-        "teatrodelbarrio",
         "pradillo"
       ],
       "dance": [
@@ -289,21 +267,20 @@
       ]
     },
     "counts": {
-      "theatreCollected": 66,
+      "theatreCollected": 47,
       "danceCollected": 10,
-      "theatreUnique": 66,
+      "theatreUnique": 47,
       "danceUnique": 10,
-      "theatreActive": 66,
+      "theatreActive": 47,
       "danceActive": 10,
-      "theatreFinal": 10,
+      "theatreFinal": 9,
       "danceFinal": 2
     },
     "mix": {
       "theatre": {
-        "canal": 2,
+        "canal": 3,
         "teatroespanol": 2,
         "nave10": 2,
-        "teatrodelbarrio": 2,
         "pradillo": 2
       },
       "dance": {
@@ -314,12 +291,12 @@
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "No encontré cards .item-event-resume en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
+        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ (HTML no es programación real)"
       },
       {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
-        "message": "No encontré cards .item-event-resume en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
+        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ (HTML no es programación real)"
       }
     ]
   }
