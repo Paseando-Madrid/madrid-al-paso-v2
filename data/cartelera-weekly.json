@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-13T21:29:01.641Z",
+  "updatedAt": "2026-02-14T03:42:44.179Z",
   "theatre": [
     {
       "source": "canal",
@@ -128,6 +128,27 @@
       "image": ""
     },
     {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "Gula / Gola",
+      "credits": "Creación y dirección Pau Matas Nogué y Oriol Pla Solina",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/gula-gola/",
+      "image": ""
+    },
+    {
       "source": "cdn-maria-guerrero",
       "kind": "theatre",
       "title": "Grito, boda y sangre",
@@ -167,27 +188,6 @@
       "mapsQuery": "Teatro Valle-Inclán, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
       "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
-      "image": ""
-    },
-    {
-      "source": "cdn-valle-inclan",
-      "kind": "theatre",
-      "title": "Casi ninguna verdad",
-      "credits": "Texto y dirección Cris Blanco Dramaturgia Cris Blanco, Óscar Bueno Rodríguez y Anto Rodríguez",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro Valle-Inclán",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro Valle-Inclán, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/casi-ninguna-verdad/",
       "image": ""
     },
     {
@@ -282,19 +282,19 @@
         "teatroespanol",
         "nave10",
         "pradillo",
-        "cdn-maria-guerrero",
-        "cdn-valle-inclan"
+        "cdn-valle-inclan",
+        "cdn-maria-guerrero"
       ],
       "dance": [
         "canal"
       ]
     },
     "counts": {
-      "theatreCollected": 53,
+      "theatreCollected": 56,
       "danceCollected": 10,
-      "theatreUnique": 53,
+      "theatreUnique": 56,
       "danceUnique": 10,
-      "theatreActive": 53,
+      "theatreActive": 56,
       "danceActive": 10,
       "theatreFinal": 10,
       "danceFinal": 2
@@ -305,8 +305,8 @@
         "teatroespanol": 2,
         "nave10": 2,
         "pradillo": 1,
-        "cdn-maria-guerrero": 1,
-        "cdn-valle-inclan": 2
+        "cdn-valle-inclan": 2,
+        "cdn-maria-guerrero": 1
       },
       "dance": {
         "canal": 2
@@ -321,12 +321,7 @@
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "Fallback r.jina.ai no devolvió programación usable para https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge persistente en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ (directo + jina). Activaré fallback AJAX."
+        "message": "No encontré cards .item-event-resume en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
       },
       {
         "source": "cdn",
@@ -345,8 +340,13 @@
       },
       {
         "source": "cdn",
-        "venue": "ajax:month:2/2026",
+        "venue": "ajax:month:3/2026",
         "message": "HTTP 400 for CDN action=get_cdn_events"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/gula-gola/ (directo). Intento fallback r.jina.ai…"
       },
       {
         "source": "cdn",
@@ -354,9 +354,29 @@
         "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/ (directo). Intento fallback r.jina.ai…"
       },
       {
+        "source": "inaem",
+        "venue": "cdn-maria-guerrero",
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/: HTTP 403 for https://entradasinaem.es/espectaculo/grito-boda-y-sangre/GritoBodaSan2526)"
+      },
+      {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
         "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/constelaciones/ (directo). Intento fallback r.jina.ai…"
+      },
+      {
+        "source": "inaem",
+        "venue": "cdn-valle-inclan",
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/constelaciones/: HTTP 403 for https://entradasinaem.es/espectaculo/constelaciones/CONSTELACIONES)"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-color-en-escena/ (directo). Intento fallback r.jina.ai…"
+      },
+      {
+        "source": "inaem",
+        "venue": "cdn-valle-inclan",
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-color-en-escena/: HTTP 403 for https://entradasinaem.es/espectaculo/constelaciones/CONSTELACIONES)"
       },
       {
         "source": "cdn",
@@ -364,19 +384,29 @@
         "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/la-ultima-noche-con-mi-hermano/ (directo). Intento fallback r.jina.ai…"
       },
       {
+        "source": "inaem",
+        "venue": "cdn-maria-guerrero",
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/la-ultima-noche-con-mi-hermano/: HTTP 403 for https://entradasinaem.es/espectaculo/la-ultima-noche-con-mi-hermano/NocheHermano2526)"
+      },
+      {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/casi-ninguna-verdad/ (directo). Intento fallback r.jina.ai…"
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/tormenta/ (directo). Intento fallback r.jina.ai…"
+      },
+      {
+        "source": "inaem",
+        "venue": "cdn-valle-inclan",
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/tormenta/: HTTP 403 for https://entradasinaem.es/espectaculo/tormenta-(titerescena)/TORMENTA25)"
       },
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/utopia-en-llamas/ (directo). Intento fallback r.jina.ai…"
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-vestuario-en-construccion/ (directo). Intento fallback r.jina.ai…"
       },
       {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/el-mago-de-oz/ (directo). Intento fallback r.jina.ai…"
+        "source": "inaem",
+        "venue": "cdn-maria-guerrero",
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-vestuario-en-construccion/: HTTP 403 for https://entradasinaem.es/espectaculo/la-ultima-noche-con-mi-hermano/NocheHermano2526)"
       }
     ]
   }
