@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-11T12:16:15.667Z",
+  "updatedAt": "2026-02-16T09:38:33.974Z",
   "autoItems": [
     {
       "uid": "50215456",
@@ -19,44 +19,6 @@
       "mapsQuery": "Centro Cultural Clara del Rey - Museo ABC (Centro) Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Centro%20Cultural%20Clara%20del%20Rey%20-%20Museo%20ABC%20(Centro)%20Madrid",
       "description": "Exposición fotográfica: Esta muestra puede visitarse de forma gratuita hasta el sábado 28 de febrero, de lunes a sábado, de 9 a 21 horas. Si te decides a contemplar esta exposición, intenta imaginarte antes cómo serán…"
-    },
-    {
-      "uid": "50217647",
-      "title": "Espectáculos familiares",
-      "venue": "Matadero Madrid",
-      "dtstart": "2026-02-14 11:00:00.0",
-      "dtend": "2026-02-14 23:59:00.0",
-      "dateText": "2026-02-14",
-      "time": "11:00",
-      "type": "titeres",
-      "sourceType": "CuentacuentosTiteresMarionetas",
-      "ageRange": "",
-      "free": false,
-      "price": "Acceso gratuito hasta completar aforo",
-      "link": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=3982a9fb6bc2c910VgnVCM200000f921e388RCRD",
-      "address": "",
-      "mapsQuery": "Matadero Madrid Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%20Madrid",
-      "description": ""
-    },
-    {
-      "uid": "50205585",
-      "title": "Alice",
-      "venue": "Matadero Madrid",
-      "dtstart": "2026-02-15 12:00:00.0",
-      "dtend": "2026-02-15 23:59:00.0",
-      "dateText": "2026-02-15",
-      "time": "12:00",
-      "type": "visita",
-      "sourceType": "ProgramacionDestacadaAgendaCultura",
-      "ageRange": "",
-      "free": false,
-      "price": "",
-      "link": "http://www.madrid.es/sites/v/index.jsp?vgnextchannel=ca9671ee4a9eb410VgnVCM100000171f5a0aRCRD&vgnextoid=e8181afc2b9fb910VgnVCM100000891ecb1aRCRD",
-      "address": "",
-      "mapsQuery": "Matadero Madrid Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matadero%20Madrid%20Madrid",
-      "description": "Después de haber leído el cuento de Lewis Carroll, Alicia se queda dormida en su cuarto rodeada de sus juguetes, y en sueños es transportada al País de las Maravillas. A medida que persigue al escurridizo Conejo Blanco…"
     },
     {
       "uid": "50212863",
