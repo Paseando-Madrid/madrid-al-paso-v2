@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-17T20:39:06.428Z",
+  "updatedAt": "2026-02-17T23:54:32.357Z",
   "theatre": [
     {
       "source": "canal",
@@ -12,9 +12,9 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-17 00:00:00",
-      "endDate": "2026-02-17 23:59:59",
-      "dateText": "mar 17 feb",
+      "startDate": "2026-02-17T00:00:00.000Z",
+      "endDate": "2026-02-17T23:59:59.000Z",
+      "dateText": "17 feb – 17 feb",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
@@ -33,9 +33,9 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-19 00:00:00",
-      "endDate": "2026-02-20 23:59:59",
-      "dateText": "Del 19 feb al 20 feb · jue–vie",
+      "startDate": "2026-02-19T00:00:00.000Z",
+      "endDate": "2026-02-20T23:59:59.000Z",
+      "dateText": "19 feb – 20 feb",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
@@ -44,179 +44,9 @@
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_BURSTNER.jpg"
     },
     {
-      "source": "teatroespanol",
-      "kind": "theatre",
-      "title": "Luces de bohemia",
-      "credits": "Ramón del Valle-Inclán",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-01-23T00:00:00.000Z",
-      "endDate": "2026-03-07T23:59:59.000Z",
-      "dateText": "23 Enero7 Marzo 2026",
-      "venue": "Teatro Español",
-      "address": "Pl. de Santa Ana, 4, Madrid",
-      "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
-      "link": "https://www.teatroespanol.es/luces-de-bohemia",
-      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2024/10/luces_bohemia_prensa_02_0.jpg.webp?itok=CSC8eDsO"
-    },
-    {
-      "source": "nave10",
-      "kind": "theatre",
-      "title": "Tres noches en Ítaca",
-      "credits": "",
-      "deck": "Cuando la madre muere, el muro cae y la muerte está ahí, enfrente, ya ineludible.Una mujer, cerca de los 50, deja a su familia y su trabajo de profesora de griego en un instituto para irse a vivir a una isla g…",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-06T18:30:55",
-      "endDate": "2026-03-08T22:55:55",
-      "dateText": "",
-      "venue": "Nave 10 Matadero",
-      "address": "Plaza de Legazpi, 8, Madrid",
-      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
-      "link": "https://www.nave10matadero.es/actividades/tres-noches-en-itaca",
-      "image": "https://www.nave10matadero.es/sites/default/files/2026-01/ITACA_@geraldineleloutre_0290 copia.jpg"
-    },
-    {
-      "source": "nave10",
-      "kind": "theatre",
-      "title": "Niebla",
-      "credits": "",
-      "deck": "El personaje se sacrifica para ver lo que nosotros no podemos ver.Fernanda Orazi, directora invitada en este 25|26, decide otorgarle un reconocimiento especial al personaje. Lo hace a partir de la condición qu…",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-03-20T18:30:55",
-      "endDate": "2026-04-12T21:55:55",
-      "dateText": "",
-      "venue": "Nave 10 Matadero",
-      "address": "Plaza de Legazpi, 8, Madrid",
-      "mapsQuery": "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nave%2010%20Matadero%2C%20Plaza%20de%20Legazpi%208%2C%20Madrid",
-      "link": "https://www.nave10matadero.es/actividades/niebla",
-      "image": "https://www.nave10matadero.es/sites/default/files/2025-10/7 - Niebla.jpg"
-    },
-    {
-      "source": "pradillo",
-      "kind": "theatre",
-      "title": "Las que tienen que servir",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-06-23T00:00:00.000Z",
-      "endDate": "2026-06-23T23:59:59.000Z",
-      "dateText": "Citas a confirmar trimestralmente desde el 13 de enero hasta el 23 de junio de 2026 los MARTES de 10:00 a 11:30 H.",
-      "venue": "Teatro Pradillo",
-      "address": "C. de Pradillo, 12, Madrid",
-      "mapsQuery": "Teatro Pradillo, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Pradillo%2C%20Madrid",
-      "link": "https://www.teatropradillo.com/las-que-tienen-que-servir/",
-      "image": ""
-    },
-    {
-      "source": "cdn-valle-inclan",
-      "kind": "theatre",
-      "title": "Carta Blanca de Historia de una maestra",
-      "credits": "Carta Blanca a Raquel Alarcón",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro Valle-Inclán",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro Valle-Inclán, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/carta-blanca-con-raquel-alarcon/",
-      "image": ""
-    },
-    {
-      "source": "cdn-valle-inclan",
-      "kind": "theatre",
-      "title": "ZUM. Crecerá un jardín",
-      "credits": "Una creación de Los Bárbaros y los Nuevos Dramáticos Texto y dirección Rocío Bello, Javier Hernando y Miguel Rojo",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro Valle-Inclán",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro Valle-Inclán, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/zum-crecera-un-jardin/",
-      "image": ""
-    },
-    {
-      "source": "cdn-maria-guerrero",
-      "kind": "theatre",
-      "title": "Violencia",
-      "credits": "Texto Fran Kranz Adaptación y dirección Diego Garrido Sanz",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro María Guerrero",
-      "address": "C. de Tamayo y Baus, 4, Madrid",
-      "mapsQuery": "Teatro María Guerrero, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/violencia/",
-      "image": ""
-    },
-    {
-      "source": "teatroespanol",
-      "kind": "theatre",
-      "title": "Confidencias de artistas",
-      "credits": "Carmen de Burgos (Colombine)",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-19T00:00:00.000Z",
-      "endDate": "2026-03-08T23:59:59.000Z",
-      "dateText": "19 Febrero8 Marzo 2026",
-      "venue": "Teatro Español",
-      "address": "Pl. de Santa Ana, 4, Madrid",
-      "mapsQuery": "Teatro Español, Pl. de Santa Ana, 4, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Espa%C3%B1ol%2C%20Pl.%20de%20Santa%20Ana%2C%204%2C%20Madrid",
-      "link": "https://www.teatroespanol.es/confidencias-de-artistas",
-      "image": "https://www.teatroespanol.es/sites/default/files/styles/buscadores_550_390/public/media/image/2025/06/carmen_de_burgos_2.jpg.webp?itok=f0L1R8Ym"
-    }
-  ],
-  "dance": [
-    {
       "source": "canal",
-      "kind": "dance",
-      "title": "Compañía Daniel Abreu",
+      "kind": "theatre",
+      "title": "Romina Paula",
       "credits": "",
       "deck": "",
       "author": "",
@@ -224,20 +54,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-26 00:00:00",
-      "endDate": "2026-02-28 23:59:59",
-      "dateText": "Del 26 feb al 28 feb · jue–sáb",
+      "startDate": "2026-02-18T00:00:00.000Z",
+      "endDate": "2026-02-22T23:59:59.000Z",
+      "dateText": "18 feb – 22 feb",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/compania-daniel-abreu-capitulo-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_151225_ABREU.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/sombras-por-supuesto-romina-paula-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_ROMINA.jpg"
     },
     {
       "source": "canal",
-      "kind": "dance",
-      "title": "Compañía Nacional de Danza",
+      "kind": "theatre",
+      "title": "Cirque La Compagnie",
       "credits": "",
       "deck": "",
       "author": "",
@@ -245,148 +75,64 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-12 00:00:00",
-      "endDate": "2026-03-15 23:59:59",
-      "dateText": "Del 12 mar al 15 mar · jue–dom",
+      "startDate": "2026-02-21T00:00:00.000Z",
+      "endDate": "2026-02-22T23:59:59.000Z",
+      "dateText": "21 feb – 22 feb",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/compania-nacional-de-danza-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MURIEL.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/cirque-la-compagnie-pandax/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_PANDAX.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Grand River &#038; Abul Mogard",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-24T00:00:00.000Z",
+      "endDate": "2026-02-24T23:59:59.000Z",
+      "dateText": "24 feb – 24 feb",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/abul-mogard-grand-river-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MOGARD.jpg"
     }
   ],
+  "dance": [],
   "meta": {
-    "limits": {
-      "theatreMax": 10,
-      "danceMax": 2
-    },
-    "caps": {
-      "theatre": {
-        "nave10": 2,
-        "cdn-maria-guerrero": 1,
-        "cdn-valle-inclan": 2,
-        "teatrodelbarrio": 1,
-        "pradillo": 1,
-        "teatroespanol": 1,
-        "canal": 2,
-        "matadero": 0
-      },
-      "dance": {
-        "canal": 2
-      }
-    },
-    "sources": {
-      "theatre": [
-        "canal",
-        "teatroespanol",
-        "nave10",
-        "pradillo",
-        "cdn-valle-inclan",
-        "cdn-maria-guerrero"
-      ],
-      "dance": [
-        "canal"
-      ]
-    },
     "counts": {
-      "theatreCollected": 55,
-      "danceCollected": 9,
-      "theatreUnique": 55,
-      "danceUnique": 9,
-      "theatreActive": 54,
-      "danceActive": 9,
-      "theatreFinal": 10,
-      "danceFinal": 2
+      "theatreCollected": 5,
+      "danceCollected": 0,
+      "theatreActive": 5,
+      "danceActive": 0,
+      "theatreFinal": 5,
+      "danceFinal": 0
     },
     "mix": {
       "theatre": {
-        "canal": 2,
-        "teatroespanol": 2,
-        "nave10": 2,
-        "pradillo": 1,
-        "cdn-valle-inclan": 2,
-        "cdn-maria-guerrero": 1
+        "canal": 5
       },
-      "dance": {
-        "canal": 2
-      }
+      "dance": {}
     },
     "errors": [
       {
         "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ (directo). Intento fallback r.jina.ai…"
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
       },
       {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "Fallback r.jina.ai no devolvió programación usable para https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge persistente en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ (directo + jina). Activaré fallback AJAX."
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "Fallback r.jina.ai no devolvió programación usable para https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge persistente en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ (directo + jina). Activaré fallback AJAX."
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/carta-blanca-con-raquel-alarcon/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/zum-crecera-un-jardin/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "inaem",
-        "venue": "cdn-valle-inclan",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/zum-crecera-un-jardin/: HTTP 403 for https://entradasinaem.es/espectaculo/zum-crecera-un-jardin-(nuevos-dramaticos)/Zum2526)"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/violencia/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/el-entusiasmo/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/historia-de-una-maestra/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "inaem",
-        "venue": "cdn-valle-inclan",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/historia-de-una-maestra/: HTTP 403 for https://entradasinaem.es/espectaculo/historia-de-una-maestra/MAESTRA)"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-donde-nacen-las-ciudades/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/biblioteca-de-cuerdas-y-nudos/ (directo). Intento fallback r.jina.ai…"
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "HTTP 404 for https://www.nave10matadero.es/actividades"
       }
     ]
   }
