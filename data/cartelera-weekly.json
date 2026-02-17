@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-02-14T03:42:44.179Z",
+  "updatedAt": "2026-02-17T20:39:06.428Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Lautaro Delgado Tymruk y Sofía Brito",
+      "title": "Roberto Magro",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-12 00:00:00",
-      "endDate": "2026-02-15 23:59:59",
-      "dateText": "Del 12 feb al 15 feb · jue–dom",
+      "startDate": "2026-02-17 00:00:00",
+      "endDate": "2026-02-17 23:59:59",
+      "dateText": "mar 17 feb",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/sere-sofia-brito-lautaro-delgado-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_BRITO.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/roberto-magro-ponencia/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_MAGRO.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Bambalina Teatre Practicable",
+      "title": "DelsAltres",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,15 +33,15 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-02-14 00:00:00",
-      "endDate": "2026-02-15 23:59:59",
-      "dateText": "Del 14 feb al 15 feb · sáb–dom",
+      "startDate": "2026-02-19 00:00:00",
+      "endDate": "2026-02-20 23:59:59",
+      "dateText": "Del 19 feb al 20 feb · jue–vie",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/caja-juguetes-bambalina-teatre-canal-teatralia-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/bambalinawebTC-543x314-1.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/dels-altres-burstners-club/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_BURSTNER.jpg"
     },
     {
       "source": "teatroespanol",
@@ -54,7 +54,7 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "",
+      "startDate": "2026-01-23T00:00:00.000Z",
       "endDate": "2026-03-07T23:59:59.000Z",
       "dateText": "23 Enero7 Marzo 2026",
       "venue": "Teatro Español",
@@ -117,7 +117,7 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "",
+      "startDate": "2026-06-23T00:00:00.000Z",
       "endDate": "2026-06-23T23:59:59.000Z",
       "dateText": "Citas a confirmar trimestralmente desde el 13 de enero hasta el 23 de junio de 2026 los MARTES de 10:00 a 11:30 H.",
       "venue": "Teatro Pradillo",
@@ -130,8 +130,8 @@
     {
       "source": "cdn-valle-inclan",
       "kind": "theatre",
-      "title": "Gula / Gola",
-      "credits": "Creación y dirección Pau Matas Nogué y Oriol Pla Solina",
+      "title": "Carta Blanca de Historia de una maestra",
+      "credits": "Carta Blanca a Raquel Alarcón",
       "deck": "",
       "author": "",
       "director": "",
@@ -145,14 +145,35 @@
       "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
       "mapsQuery": "Teatro Valle-Inclán, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/gula-gola/",
+      "link": "https://dramatico.inaem.gob.es/evento/carta-blanca-con-raquel-alarcon/",
+      "image": ""
+    },
+    {
+      "source": "cdn-valle-inclan",
+      "kind": "theatre",
+      "title": "ZUM. Crecerá un jardín",
+      "credits": "Una creación de Los Bárbaros y los Nuevos Dramáticos Texto y dirección Rocío Bello, Javier Hernando y Miguel Rojo",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "",
+      "endDate": "",
+      "dateText": "",
+      "venue": "Teatro Valle-Inclán",
+      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
+      "mapsQuery": "Teatro Valle-Inclán, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
+      "link": "https://dramatico.inaem.gob.es/evento/zum-crecera-un-jardin/",
       "image": ""
     },
     {
       "source": "cdn-maria-guerrero",
       "kind": "theatre",
-      "title": "Grito, boda y sangre",
-      "credits": "Basada en Bodas de sangre de Federico García Lorca, así como en fragmentos de otras de sus obras y poemas. Dramaturgia Iker Azkoitia Dirección Ángela Ibáñez Ca…",
+      "title": "Violencia",
+      "credits": "Texto Fran Kranz Adaptación y dirección Diego Garrido Sanz",
       "deck": "",
       "author": "",
       "director": "",
@@ -166,28 +187,7 @@
       "address": "C. de Tamayo y Baus, 4, Madrid",
       "mapsQuery": "Teatro María Guerrero, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Mar%C3%ADa%20Guerrero%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/",
-      "image": ""
-    },
-    {
-      "source": "cdn-valle-inclan",
-      "kind": "theatre",
-      "title": "Constelaciones",
-      "credits": "Texto Nick Payne Versión y dirección Sergio Peris-Mencheta",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "",
-      "endDate": "",
-      "dateText": "",
-      "venue": "Teatro Valle-Inclán",
-      "address": "C. de Plazuela de Ana Diosdado, 1, Madrid",
-      "mapsQuery": "Teatro Valle-Inclán, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatro%20Valle-Incl%C3%A1n%2C%20Madrid",
-      "link": "https://dramatico.inaem.gob.es/evento/constelaciones/",
+      "link": "https://dramatico.inaem.gob.es/evento/violencia/",
       "image": ""
     },
     {
@@ -201,7 +201,7 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "",
+      "startDate": "2026-02-19T00:00:00.000Z",
       "endDate": "2026-03-08T23:59:59.000Z",
       "dateText": "19 Febrero8 Marzo 2026",
       "venue": "Teatro Español",
@@ -213,27 +213,6 @@
     }
   ],
   "dance": [
-    {
-      "source": "canal",
-      "kind": "dance",
-      "title": "People Watching",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-12 00:00:00",
-      "endDate": "2026-02-13 23:59:59",
-      "dateText": "Del 12 feb al 13 feb · jue–vie",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/people-watching-play-dead/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_PLAYDEAD.jpg"
-    },
     {
       "source": "canal",
       "kind": "dance",
@@ -254,6 +233,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/compania-daniel-abreu-capitulo-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_151225_ABREU.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Compañía Nacional de Danza",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-03-12 00:00:00",
+      "endDate": "2026-03-15 23:59:59",
+      "dateText": "Del 12 mar al 15 mar · jue–dom",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/compania-nacional-de-danza-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MURIEL.jpg"
     }
   ],
   "meta": {
@@ -290,12 +290,12 @@
       ]
     },
     "counts": {
-      "theatreCollected": 56,
-      "danceCollected": 10,
-      "theatreUnique": 56,
-      "danceUnique": 10,
-      "theatreActive": 56,
-      "danceActive": 10,
+      "theatreCollected": 55,
+      "danceCollected": 9,
+      "theatreUnique": 55,
+      "danceUnique": 9,
+      "theatreActive": 54,
+      "danceActive": 9,
       "theatreFinal": 10,
       "danceFinal": 2
     },
@@ -321,7 +321,12 @@
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "No encontré cards .item-event-resume en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
+        "message": "Fallback r.jina.ai no devolvió programación usable para https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "WAF/Challenge persistente en https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ (directo + jina). Activaré fallback AJAX."
       },
       {
         "source": "cdn",
@@ -331,82 +336,57 @@
       {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
-        "message": "No encontré cards .item-event-resume en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
-      },
-      {
-        "source": "cdn",
-        "venue": "warmup",
-        "message": "HTTP 404 for https://dramatico.inaem.gob.es/compania/"
-      },
-      {
-        "source": "cdn",
-        "venue": "ajax:month:3/2026",
-        "message": "HTTP 400 for CDN action=get_cdn_events"
+        "message": "Fallback r.jina.ai no devolvió programación usable para https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
       },
       {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/gula-gola/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "inaem",
-        "venue": "cdn-maria-guerrero",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/grito-boda-y-sangre/: HTTP 403 for https://entradasinaem.es/espectaculo/grito-boda-y-sangre/GritoBodaSan2526)"
+        "message": "WAF/Challenge persistente en https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ (directo + jina). Activaré fallback AJAX."
       },
       {
         "source": "cdn",
         "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/constelaciones/ (directo). Intento fallback r.jina.ai…"
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/carta-blanca-con-raquel-alarcon/ (directo). Intento fallback r.jina.ai…"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/zum-crecera-un-jardin/ (directo). Intento fallback r.jina.ai…"
       },
       {
         "source": "inaem",
         "venue": "cdn-valle-inclan",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/constelaciones/: HTTP 403 for https://entradasinaem.es/espectaculo/constelaciones/CONSTELACIONES)"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-color-en-escena/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "inaem",
-        "venue": "cdn-valle-inclan",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-color-en-escena/: HTTP 403 for https://entradasinaem.es/espectaculo/constelaciones/CONSTELACIONES)"
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/zum-crecera-un-jardin/: HTTP 403 for https://entradasinaem.es/espectaculo/zum-crecera-un-jardin-(nuevos-dramaticos)/Zum2526)"
       },
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/la-ultima-noche-con-mi-hermano/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "inaem",
-        "venue": "cdn-maria-guerrero",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/la-ultima-noche-con-mi-hermano/: HTTP 403 for https://entradasinaem.es/espectaculo/la-ultima-noche-con-mi-hermano/NocheHermano2526)"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/tormenta/ (directo). Intento fallback r.jina.ai…"
-      },
-      {
-        "source": "inaem",
-        "venue": "cdn-valle-inclan",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/tormenta/: HTTP 403 for https://entradasinaem.es/espectaculo/tormenta-(titerescena)/TORMENTA25)"
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/violencia/ (directo). Intento fallback r.jina.ai…"
       },
       {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-vestuario-en-construccion/ (directo). Intento fallback r.jina.ai…"
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/el-entusiasmo/ (directo). Intento fallback r.jina.ai…"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/historia-de-una-maestra/ (directo). Intento fallback r.jina.ai…"
       },
       {
         "source": "inaem",
+        "venue": "cdn-valle-inclan",
+        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/historia-de-una-maestra/: HTTP 403 for https://entradasinaem.es/espectaculo/historia-de-una-maestra/MAESTRA)"
+      },
+      {
+        "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "INAEM enrich failed for https://dramatico.inaem.gob.es/evento/taller-de-conciliacion-vestuario-en-construccion/: HTTP 403 for https://entradasinaem.es/espectaculo/la-ultima-noche-con-mi-hermano/NocheHermano2526)"
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/taller-donde-nacen-las-ciudades/ (directo). Intento fallback r.jina.ai…"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "WAF/Challenge también en ficha https://dramatico.inaem.gob.es/evento/biblioteca-de-cuerdas-y-nudos/ (directo). Intento fallback r.jina.ai…"
       }
     ]
   }
