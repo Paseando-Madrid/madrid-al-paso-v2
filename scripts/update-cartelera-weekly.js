@@ -219,7 +219,7 @@ function parseSpanishEndDate(dateText) {
   const s = s0.toLowerCase();
   if (!s) return "";
 
-  // ✅ "7 septiembre 2025 - 1 marzo 2026"
+  // "7 septiembre 2025 - 1 marzo 2026"
   let m = s.match(/\b(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\b/i);
   if (m) {
     const d2 = Number(m[4]);
@@ -232,12 +232,15 @@ function parseSpanishEndDate(dateText) {
   m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]{3,})\s*[-–]\s*(\d{1,2})\s*([a-záéíóúñ]{3,})(?:\s*(\d{4}))?/i);
   if (m) {
     const d2 = Number(m[3]);
-    const mon = MONTHS[normMonthKey(m[4])];
-    const y = m[5] ? Number(m[5]) : new Date().getFullYear();
-    if (Number.isFinite(mon)) return new Date(y, mon, d2, 23, 59, 59).toISOString();
+    const mon2 = MONTHS[normMonthKey(m[4])];
+    const mon1 = MONTHS[normMonthKey(m[2])];
+    const yHint = m[5] ? Number(m[5]) : new Date().getFullYear();
+    let y2 = yHint;
+    if (Number.isFinite(mon1) && Number.isFinite(mon2) && mon1 > mon2) y2 = yHint + 1;
+    if (Number.isFinite(mon2)) return new Date(y2, mon2, d2, 23, 59, 59).toISOString();
   }
 
-  // "23 Enero7 Marzo 2026" (Español a veces sin separadores)
+  // "23 Enero7 Marzo 2026" (sin separadores)
   m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{4})\b/i);
   if (m) {
     const d2 = Number(m[3]);
@@ -262,6 +265,62 @@ function parseSpanishEndDate(dateText) {
     const mon = MONTHS[normMonthKey(m[2])];
     const y = Number(m[3]);
     if (Number.isFinite(mon)) return new Date(y, mon, d, 23, 59, 59).toISOString();
+  }
+
+  return "";
+}
+
+function parseSpanishStartDate(dateText) {
+  const s0 = normSpace(dateText);
+  const s = s0.toLowerCase();
+  if (!s) return "";
+
+  // "7 septiembre 2025 - 1 marzo 2026"
+  let m = s.match(/\b(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\b/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[2])];
+    const y = Number(m[3]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d1, 0, 0, 0).toISOString();
+  }
+
+  // "23 ENE - 01 MAR" / "13 FEB - 05 ABR 2026"
+  m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]{3,})\s*[-–]\s*(\d{1,2})\s*([a-záéíóúñ]{3,})(?:\s*(\d{4}))?/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon1 = MONTHS[normMonthKey(m[2])];
+    const mon2 = MONTHS[normMonthKey(m[4])];
+    const y2 = m[5] ? Number(m[5]) : new Date().getFullYear();
+    let y1 = y2;
+    if (Number.isFinite(mon1) && Number.isFinite(mon2) && mon1 > mon2) y1 = y2 - 1;
+    if (Number.isFinite(mon1)) return new Date(y1, mon1, d1, 0, 0, 0).toISOString();
+  }
+
+  // "23 Enero7 Marzo 2026" (sin separadores)
+  m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{4})\b/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[2])];
+    const y = Number(m[5]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d1, 0, 0, 0).toISOString();
+  }
+
+  // "del 10 al 22 de marzo de 2026"
+  m = s.match(/\bdel\s+(\d{1,2})\s+al\s+(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[3])];
+    const y = Number(m[4]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d1, 0, 0, 0).toISOString();
+  }
+
+  // "10 de marzo de 2026"
+  m = s.match(/\b(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i);
+  if (m) {
+    const d = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[2])];
+    const y = Number(m[3]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d, 0, 0, 0).toISOString();
   }
 
   return "";
@@ -592,18 +651,29 @@ async function fetchTextCdnSmart(url, errors, venueTag) {
 }
 
 function extractDateTextFromCDNCard($detail) {
+  const dateLike = /\b\d{1,2}\s*(?:de\s+)?[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}\b/;
+
   const p = $detail
     .find("p")
     .filter((_, el) => {
       const text = normSpace(stripHtml(cheerio.load(el).root().html() || ""));
-      return /\b\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}/.test(text);
+      if (!text) return false;
+      if (/\bdel\s+\d{1,2}\s+al\s+\d{1,2}\s+de\s+/i.test(text)) return true;
+      if (/\d{1,2}\s*[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}\s*[-–]\s*\d{1,2}\s*[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}/i.test(text)) return true;
+      return dateLike.test(text);
     })
     .first();
 
   const txt = normSpace(stripHtml(p.html() || ""));
-  const m = txt.match(/\b(\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3})(?:\s+(\d{4}))?/);
-  if (!m) return "";
-  return `${m[1]}${m[2] ? " " + m[2] : ""}`;
+  if (!txt) return "";
+
+  const mRange = txt.match(/\b(\d{1,2}\s*(?:de\s+)?[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}\s*[-–]\s*\d{1,2}\s*(?:de\s+)?[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}(?:\s+\d{4})?)\b/i);
+  if (mRange) return normSpace(mRange[1]);
+
+  const mDel = txt.match(/\b(del\s+\d{1,2}\s+al\s+\d{1,2}\s+de\s+[A-Za-zÁÉÍÓÚáéíóúÑñ]+\s+de\s+\d{4})\b/i);
+  if (mDel) return normSpace(mDel[1]);
+
+  return txt;
 }
 
 function parseCdnAuthorDirectorFromDetail($detail) {
@@ -656,14 +726,192 @@ function extractCdnScheduleFromEventLeftPanel($) {
   const lines = stripHtml(html)
     .split("\n")
     .map(normSpace)
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((x) => x !== rangeText);
 
   const scheduleLine =
-    lines.find((x) => /a\s+las\s+\d{1,2}:\d{2}/i.test(x) || /martes|miércoles|jueves|viernes|sábado|domingo|lunes/i.test(x)) ||
+    lines.find((x) => /a\s+las\s+\d{1,2}:\d{2}/i.test(x) || /martes|miércoles|jueves|viernes|sábado|domingo|lunes|mar|mie|mié|jue|vie|sab|sáb|dom|lun/i.test(x)) ||
     "";
 
-  const scheduleText = scheduleLine ? scheduleLine.split("|")[0].trim() : "";
+  const scheduleText = scheduleLine ? scheduleLine.split("| Duración")[0].split("|")[0].trim() : "";
   return { scheduleText, rangeText };
+}
+
+
+function buildCdnEditorialDateText(rangeText, scheduleText, fallbackDateText = "") {
+  const range = normSpace(rangeText || "");
+  const schedule = normSpace(scheduleText || "");
+  const fallback = normSpace(fallbackDateText || "");
+
+  if (range && schedule) return `${range} · ${schedule}`;
+  if (range) return `${range} · Consultar taquilla`;
+  if (schedule) return schedule;
+  return fallback;
+}
+
+function extractCdnRangeFromText(text) {
+  const t = normSpace(text || "");
+  if (!t) return "";
+
+  const patterns = [
+    /\b\d{1,2}\s+[a-záéíóúñ]{3,}\s+\d{4}\s*[-–]\s*\d{1,2}\s+[a-záéíóúñ]{3,}\s+\d{4}\b/i,
+    /\b\d{1,2}\s*[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s*[A-ZÁÉÍÓÚÑ]{3}(?:\s+\d{4})?\b/i,
+    /\b\d{1,2}\s+[A-Za-zÁÉÍÓÚáéíóúÑñ]+\s*[-–]\s*\d{1,2}\s+[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s+\d{4})?\b/i,
+    /\bdel\s+\d{1,2}\s+al\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s+de\s+\d{4}\b/i,
+    /\b\d{1,2}\s*[A-Za-zÁÉÍÓÚáéíóúÑñ]+\s*\d{1,2}\s*[A-Za-zÁÉÍÓÚáéíóúÑñ]+\s*\d{4}\b/i
+  ];
+
+  for (const re of patterns) {
+    const m = t.match(re);
+    if (m) return normSpace(m[0]);
+  }
+  return "";
+}
+
+function extractCdnScheduleFromText(text) {
+  const t = String(text || "").replace(/\r/g, "\n");
+  const lines = t.split("\n").map(normSpace).filter(Boolean);
+  const re = /(de\s+lunes|de\s+martes|de\s+mi[eé]rcoles|de\s+jueves|de\s+viernes|de\s+s[áa]bado|de\s+domingo|lunes|martes|mi[eé]rcoles|jueves|viernes|s[áa]bado|domingo|lun|mar|mi[eé]|jue|vie|s[áa]b|dom).*(a\s+las\s+\d{1,2}[:\.]\d{2}|\d{1,2}[:\.]\d{2}\s*h?\.?)/i;
+  for (const l of lines) {
+    if (re.test(l)) return normSpace(l.split("| Duración")[0].split("|")[0]);
+  }
+  const m = normSpace(text || "").match(/\b(a\s+las\s+\d{1,2}[:\.]\d{2}|\d{1,2}[:\.]\d{2}\s*h\.?)\b/i);
+  return m ? normSpace(m[0]) : "";
+}
+
+function extractCdnAuthorDirectorFromText(text) {
+  const t = normSpace(text || "");
+  const out = { author: "", director: "" };
+  if (!t) return out;
+
+  let m = t.match(/\btexto\s+y\s+direcci[oó]n\s*:?\s*([^|·\n]+)/i);
+  if (m) {
+    const person = normSpace(m[1]);
+    out.author = person;
+    out.director = person;
+    return out;
+  }
+
+  m = t.match(/\b(?:dramaturgia|texto|autor(?:[ií]a)?)\s*:?\s*([^|·\n]+?)(?=\b(?:direcci[oó]n|reparto|elenco|producci[oó]n)\b|$)/i);
+  if (m) out.author = normSpace(m[1]);
+  m = t.match(/\bdirecci[oó]n(?:\s+esc[eé]nica|\s+asociada)?\s*:?\s*([^|·\n]+?)(?=\b(?:dramaturgia|texto|autor(?:[ií]a)?|reparto|elenco|producci[oó]n)\b|$)/i);
+  if (m) out.director = normSpace(m[1]);
+
+  return out;
+}
+
+function applyCdnTextEnrichment(item, rawText) {
+  const enriched = { ...item };
+  const range = extractCdnRangeFromText(rawText);
+  const schedule = extractCdnScheduleFromText(rawText);
+
+  if (range) {
+    enriched.dateText = buildCdnEditorialDateText(range, schedule, enriched.dateText);
+    if (!enriched.startDate) {
+      const s = parseSpanishStartDate(range);
+      if (s) enriched.startDate = s;
+    }
+    if (!enriched.endDate) {
+      const e = parseSpanishEndDate(range);
+      if (e) enriched.endDate = e;
+    }
+  }
+
+  const team = extractCdnAuthorDirectorFromText(rawText);
+  if (team.author && !enriched.author) enriched.author = team.author;
+  if (team.director && !enriched.director) enriched.director = team.director;
+
+  if (!enriched.credits) {
+    const bits = [];
+    if (enriched.author) bits.push(enriched.author);
+    if (enriched.director && enriched.director !== enriched.author) bits.push(enriched.director);
+    enriched.credits = truncateForUI(bits.join(" · "), 160);
+  }
+
+  return enriched;
+}
+
+function toPrensaUrlFromEventoLink(link) {
+  const m = String(link || "").match(/\/evento\/([^/?#]+)\/?/i);
+  if (!m) return "";
+  return `https://dramatico.inaem.gob.es/prensa/${m[1]}/`;
+}
+
+const CDN_ENABLE_INAEM = false;
+
+function pushCdnEditorialWarnings(item, errors) {
+  if (!item || !errors) return;
+  if (!String(item.source || "").startsWith("cdn-")) return;
+
+  if (!normSpace(item.dateText || "")) {
+    errors.push({
+      source: "cdn",
+      venue: item.source,
+      message: `CDN editorial warning: missing dateText for ${item.link || item.title || "item"}`
+    });
+  }
+
+  if (!normSpace(item.endDate || "")) {
+    errors.push({
+      source: "cdn",
+      venue: item.source,
+      message: `CDN editorial warning: missing endDate for ${item.link || item.title || "item"}`
+    });
+  }
+}
+
+
+function normalizeAndFilterCDNItems(items, errors) {
+  const nowMs = Date.now();
+  const maxFutureMs = new Date(new Date().getFullYear(), new Date().getMonth() + 9, new Date().getDate()).getTime();
+
+  const collected = items.length;
+  let enrichedDates = 0;
+  let droppedMissingEndDate = 0;
+  let droppedExpired = 0;
+  const kept = [];
+
+  for (const it of items) {
+    const x = { ...it };
+
+    if (!x.startDate && x.dateText) {
+      const sIso = parseSpanishStartDate(x.dateText);
+      if (sIso) x.startDate = sIso;
+    }
+    if (!x.endDate && x.dateText) {
+      const eIso = parseSpanishEndDate(x.dateText);
+      if (eIso) x.endDate = eIso;
+    }
+
+    const endMs = isoToMs(x.endDate);
+    if (endMs === Infinity) {
+      droppedMissingEndDate++;
+      errors.push({ source: "cdn", venue: x.source || "cdn", message: `CDN drop missing endDate for ${x.link || x.title || "item"}` });
+      continue;
+    }
+
+    if (x.startDate && isoToMs(x.startDate) !== Infinity && endMs !== Infinity) enrichedDates++;
+
+    if (endMs < nowMs - 24 * 60 * 60 * 1000) {
+      droppedExpired++;
+      continue;
+    }
+
+    const startMs = isoToMs(x.startDate);
+    if (startMs !== Infinity && startMs > maxFutureMs) {
+      droppedExpired++;
+      continue;
+    }
+
+    kept.push(x);
+  }
+
+  errors.push({
+    source: "cdn",
+    venue: "pipeline",
+    message: `cdn: collected ${collected}, enrichedDates ${enrichedDates}, droppedMissingEndDate ${droppedMissingEndDate}, droppedExpired ${droppedExpired}, kept ${kept.length}`
+  });
+  return kept;
 }
 
 /* =========================================================
@@ -742,6 +990,7 @@ function extractInaemTeamFromText(txt) {
 }
 
 async function enrichInaemFromEntradas(item, errors) {
+  if (!CDN_ENABLE_INAEM) return item;
   // Solo para fichas CDN (de donde sacamos el link a entradas)
   if (!item?.link || !/dramatico\.inaem\.gob\.es\/evento\//.test(item.link)) return item;
 
@@ -821,97 +1070,138 @@ async function enrichInaemFromEntradas(item, errors) {
 async function enrichDramaticoEventPage(item, errors) {
   if (!item?.link || !/dramatico\.inaem\.gob\.es\/evento\//.test(item.link)) return item;
 
-  const tryUrls = [item.link, toJinaUrl(item.link)];
+  const applyDomSignals = (base, html) => {
+    const $ = cheerio.load(html);
+    const equipo = parseEquipoBoxFromDramatico($);
+    const jsonLd = extractJsonLdObjects(html);
+    const ev = pickEventFromJsonLd(jsonLd);
 
-  for (let attempt = 0; attempt < tryUrls.length; attempt++) {
-    const url = tryUrls[attempt];
-    try {
-      const html = await fetchText(url, {
+    const enriched = { ...base };
+
+    if (ev?.startDate && !enriched.startDate) enriched.startDate = String(ev.startDate);
+    if (ev?.endDate && !enriched.endDate) enriched.endDate = String(ev.endDate);
+
+    if (!enriched.image) {
+      const og = extractOgImage($);
+      if (og) enriched.image = og;
+    }
+
+    if (equipo.author && !enriched.author) enriched.author = equipo.author;
+    if (equipo.director && !enriched.director) enriched.director = equipo.director;
+    if (equipo.company && !enriched.company) enriched.company = equipo.company;
+    if (equipo.choreographer && !enriched.choreographer) enriched.choreographer = equipo.choreographer;
+    if (Array.isArray(equipo.cast) && equipo.cast.length && (!Array.isArray(enriched.cast) || !enriched.cast.length)) {
+      enriched.cast = equipo.cast;
+    }
+
+    const { scheduleText, rangeText } = extractCdnScheduleFromEventLeftPanel($);
+    if (rangeText || scheduleText) {
+      enriched.dateText = buildCdnEditorialDateText(rangeText, scheduleText, enriched.dateText);
+    }
+
+    if (!enriched.startDate) {
+      const tryStart = parseSpanishStartDate(rangeText || enriched.dateText || "");
+      if (tryStart) enriched.startDate = tryStart;
+    }
+    if (!enriched.endDate) {
+      const tryEnd = parseSpanishEndDate(rangeText || enriched.dateText || "");
+      if (tryEnd) enriched.endDate = tryEnd;
+    }
+
+    return enriched;
+  };
+
+  let enriched = { ...item };
+
+  // 1) Intento principal por JINA (texto + regex)
+  try {
+    const jinaUrl = toJinaUrl(item.link);
+    const jinaTxt = await fetchText(
+      jinaUrl,
+      {
         headers: {
-          accept: "text/html,*/*;q=0.9",
+          accept: "text/plain,*/*;q=0.9",
           referer: "https://dramatico.inaem.gob.es/",
           origin: "https://dramatico.inaem.gob.es"
         }
-      });
+      },
+      { tries: 2 }
+    );
 
-      if (attempt === 0 && isWafChallengeHtml(html)) {
-        errors.push({
-          source: "cdn",
-          venue: item.source,
-          message: `WAF/Challenge también en ficha ${item.link} (directo). Intento fallback r.jina.ai…`
-        });
-        continue;
+    enriched = applyCdnTextEnrichment(enriched, jinaTxt);
+    enriched = applyDomSignals(enriched, jinaTxt);
+    errors.push({ source: "cdn", venue: item.source, message: `evento:jina:ok ${item.link}` });
+  } catch (e) {
+    errors.push({ source: "cdn", venue: item.source, message: `evento:jina:fail ${item.link}` });
+  }
+
+  // 2) Refuerzo por ficha directa
+  try {
+    const html = await fetchText(item.link, {
+      headers: {
+        accept: "text/html,*/*;q=0.9",
+        referer: "https://dramatico.inaem.gob.es/",
+        origin: "https://dramatico.inaem.gob.es"
       }
+    });
 
-      const $ = cheerio.load(html);
-      const equipo = parseEquipoBoxFromDramatico($);
-      const jsonLd = extractJsonLdObjects(html);
-      const ev = pickEventFromJsonLd(jsonLd);
+    if (!isWafChallengeHtml(html)) {
+      enriched = applyCdnTextEnrichment(enriched, html);
+      enriched = applyDomSignals(enriched, html);
+    }
+  } catch {
+    // sin ruido adicional
+  }
 
-      const enriched = { ...item };
-
-      if (ev?.startDate && !enriched.startDate) enriched.startDate = String(ev.startDate);
-      if (ev?.endDate && !enriched.endDate) enriched.endDate = String(ev.endDate);
-
-      if (!enriched.image) {
-        const og = extractOgImage($);
-        if (og) enriched.image = og;
+  // 3) Fallback nuevo: /prensa/<slug>/ por texto
+  if (!enriched.endDate || !enriched.dateText || (!enriched.author && !enriched.director)) {
+    const prensaUrl = toPrensaUrlFromEventoLink(item.link);
+    if (prensaUrl) {
+      try {
+        const prensaTxt = await fetchText(
+          toJinaUrl(prensaUrl),
+          { headers: { accept: "text/plain,*/*;q=0.9" } },
+          { tries: 2 }
+        );
+        const fromPrensa = applyCdnTextEnrichment(enriched, prensaTxt);
+        enriched = { ...enriched, ...fromPrensa };
+        errors.push({ source: "cdn", venue: item.source, message: `prensa:ok ${prensaUrl}` });
+      } catch (e) {
+        errors.push({ source: "cdn", venue: item.source, message: `prensa:fail ${prensaUrl}` });
       }
-
-      if (equipo.author && !enriched.author) enriched.author = equipo.author;
-      if (equipo.director && !enriched.director) enriched.director = equipo.director;
-      if (equipo.company && !enriched.company) enriched.company = equipo.company;
-      if (equipo.choreographer && !enriched.choreographer) enriched.choreographer = equipo.choreographer;
-      if (Array.isArray(equipo.cast) && equipo.cast.length && (!Array.isArray(enriched.cast) || !enriched.cast.length)) {
-        enriched.cast = equipo.cast;
-      }
-
-      // ✅ HORARIO/DÍAS desde panel izquierdo
-      const { scheduleText, rangeText } = extractCdnScheduleFromEventLeftPanel($);
-      const baseRange = rangeText || enriched.dateText || "";
-      const schedule = normSpace(scheduleText);
-
-      if (baseRange && schedule) enriched.dateText = `${baseRange} · ${schedule}`;
-      else if (schedule && !enriched.dateText) enriched.dateText = schedule;
-
-      if (!enriched.endDate) {
-        const tryEnd = parseSpanishEndDate(enriched.dateText || baseRange);
-        if (tryEnd) enriched.endDate = tryEnd;
-      }
-
-      if (!enriched.credits) {
-        const bits = [];
-        if (enriched.author) bits.push(enriched.author);
-        if (enriched.director) bits.push(enriched.director);
-        enriched.credits = truncateForUI(bits.slice(0, 2).join(" · "), 160);
-      } else {
-        enriched.credits = truncateForUI(enriched.credits, 160);
-      }
-
-      // ✅ BLINDAJE FINAL: si aún faltan datos clave, intenta INAEM Entradas (robusto)
-      const needsInaem =
-        (!enriched.endDate && !enriched.dateText) ||
-        (!enriched.author && !enriched.director);
-
-      if (needsInaem) {
-        const fromInaem = await enrichInaemFromEntradas(enriched, errors);
-        return fromInaem;
-      }
-
-      return enriched;
-    } catch (e) {
-      if (attempt === tryUrls.length - 1) {
-        errors.push({
-          source: "cdn",
-          venue: item.source,
-          message: `CDN enrich failed for ${item.link}: ${String(e?.message || e)}`
-        });
-      }
+    } else {
+      errors.push({ source: "cdn", venue: item.source, message: "prensa:fail missing-slug" });
     }
   }
 
-  // Si no pudimos enrich por CDN/JINA, intenta INAEM igualmente (último recurso)
-  return await enrichInaemFromEntradas(item, errors);
+  // 4) Normalización final CDN
+  const finalRange = extractCdnRangeFromText(enriched.dateText || "");
+  const finalSchedule = extractCdnScheduleFromText(enriched.dateText || "");
+
+  if (finalRange) {
+    enriched.dateText = buildCdnEditorialDateText(finalRange, finalSchedule, enriched.dateText);
+  }
+
+  if (!enriched.startDate) {
+    const tryStart = parseSpanishStartDate(finalRange || enriched.dateText || "");
+    if (tryStart) enriched.startDate = tryStart;
+  }
+  if (!enriched.endDate) {
+    const tryEnd = parseSpanishEndDate(finalRange || enriched.dateText || "");
+    if (tryEnd) enriched.endDate = tryEnd;
+  }
+
+  if (!enriched.credits) {
+    const bits = [];
+    if (enriched.author) bits.push(enriched.author);
+    if (enriched.director && enriched.director !== enriched.author) bits.push(enriched.director);
+    enriched.credits = truncateForUI(bits.join(" · "), 160);
+  } else {
+    enriched.credits = truncateForUI(enriched.credits, 160);
+  }
+
+  pushCdnEditorialWarnings(enriched, errors);
+  return enriched;
 }
 
 async function scrapeCDNProgramacionPage(url, source, errors) {
@@ -949,6 +1239,7 @@ async function scrapeCDNProgramacionPage(url, source, errors) {
     if (!title || !link) return;
 
     const dateTextBasic = extractDateTextFromCDNCard($detail);
+    const startDate = parseSpanishStartDate(dateTextBasic);
     const endDate = parseSpanishEndDate(dateTextBasic);
 
     const parsed = parseCdnAuthorDirectorFromDetail($detail);
@@ -972,7 +1263,7 @@ async function scrapeCDNProgramacionPage(url, source, errors) {
       choreographer: "",
       cast: [],
 
-      startDate: "",
+      startDate,
       endDate,
       dateText: dateTextBasic,
 
@@ -1034,8 +1325,14 @@ async function fetchCDNJson(month, year) {
           method: "POST",
           headers: {
             accept: "application/json, text/plain, */*",
+            "accept-language": "es-ES,es;q=0.9,en;q=0.7",
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
             "x-requested-with": "XMLHttpRequest",
+            "cache-control": "no-cache",
+            pragma: "no-cache",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
             origin: "https://dramatico.inaem.gob.es",
             referer: "https://dramatico.inaem.gob.es/"
           },
@@ -1052,6 +1349,15 @@ async function fetchCDNJson(month, year) {
       }
 
       if (res.ok) return JSON.parse(txt);
+
+      if (res.status === 400) {
+        const snip = String(txt || "").slice(0, 220).replace(/\s+/g, " ").trim();
+        lastErr = new Error(
+          `HTTP 400 for CDN action=${action} body=${body} responseSnippet=${snip || "<empty>"}`
+        );
+        continue;
+      }
+
       lastErr = new Error(`HTTP ${res.status} for CDN action=${action}`);
     } catch (e) {
       lastErr = e;
@@ -1143,7 +1449,8 @@ async function scrapeCDNMonthsFallbackAjax(errors) {
     await sleep(180);
   }
 
-  return enriched.filter((x) => x.source === "cdn-maria-guerrero" || x.source === "cdn-valle-inclan");
+  const onlyCdn = enriched.filter((x) => x.source === "cdn-maria-guerrero" || x.source === "cdn-valle-inclan");
+  return normalizeAndFilterCDNItems(onlyCdn, errors);
 }
 
 async function scrapeCDNProgramacion(errors) {
@@ -1172,7 +1479,7 @@ async function scrapeCDNProgramacion(errors) {
     await sleep(180);
   }
 
-  return enriched;
+  return normalizeAndFilterCDNItems(enriched, errors);
 }
 
 /* =========================================================
