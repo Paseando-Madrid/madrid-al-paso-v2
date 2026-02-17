@@ -1,5 +1,5 @@
 import fs from "node:fs";
-#!/usr/bin/env node
+#!/usr/bin/env/ node
 import fs from "node:fs/promises";
 import path from "node:path";
 import https from "node:https";
