@@ -1,19 +1,5 @@
-/**
- * Update Cartelera (Weekly) — COOLtura ✅ BLINDADO
- * (CDN PROGRAMACIÓN + fallback JINA + fallback AJAX + FICHA HORARIOS + INAEM ENTRADAS (robusto) + CANAL REST + ESPAÑOL AJAX)
- *
- * - Genera /data/cartelera-weekly.json
- * - Agenda plural y curada (cupo por fuente)
- * - Teatro: 10 items (mix garantizado)
- * - Danza: 2 items (Canal)
- * - Sin venta de entradas en salida (UI decide links; aquí solo guardamos link)
- * - Pin Google Maps siempre (search api=1)
- * - Rotación por endDate + filtro vencidos
- *
- * Requiere: npm i cheerio@1
- */
-
-import fs from "node:fs";
+#!/usr/bin/env node
+import fs from "node:fs/promises";
 import path from "node:path";
 import https from "node:https";
 import zlib from "node:zlib";
@@ -24,7 +10,6 @@ const OUT_PATH = path.join(process.cwd(), "data", "cartelera-weekly.json");
 
 const LIMITS = { theatreMax: 10, danceMax: 2 };
 
-// Cupos editoriales EXACTOS (tu regla)
 const CAPS_THEATRE = {
   nave10: 2,
   "cdn-maria-guerrero": 1,
@@ -38,167 +23,7 @@ const CAPS_THEATRE = {
 
 const CAPS_DANCE = { canal: 2 };
 
-const UA =
-  "Mozilla/5.0 (compatible; PaseandoMadridBot/1.0; +https://paseando-madrid.github.io/)";
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-/* =========================================================
-   HTTP (sin fetch / sin undici)
-   - Redirects
-   - gzip/deflate/br
-   ========================================================= */
-
-function decompressBuffer(buf, encoding) {
-  const enc = String(encoding || "").toLowerCase().trim();
-  try {
-    if (enc === "gzip") return zlib.gunzipSync(buf);
-    if (enc === "deflate") return zlib.inflateSync(buf);
-    if (enc === "br") return zlib.brotliDecompressSync(buf);
-  } catch (_) {}
-  return buf;
-}
-
-function httpsRequest(
-  urlStr,
-  { method = "GET", headers = {}, body = null, timeoutMs = 25000, maxRedirects = 6 } = {}
-) {
-  return new Promise((resolve, reject) => {
-    const u = new URL(urlStr);
-
-    const req = https.request(
-      {
-        protocol: u.protocol,
-        hostname: u.hostname,
-        port: u.port || 443,
-        path: u.pathname + u.search,
-        method,
-        headers: {
-          "user-agent": UA,
-          accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          "accept-language": "es-ES,es;q=0.9,en;q=0.7",
-          "accept-encoding": "gzip, deflate, br",
-          ...headers
-        }
-      },
-      (res) => {
-        const status = res.statusCode || 0;
-
-        const loc = res.headers.location;
-        if (loc && [301, 302, 303, 307, 308].includes(status) && maxRedirects > 0) {
-          const next = new URL(loc, urlStr).toString();
-          const nextMethod = status === 303 ? "GET" : method;
-          res.resume();
-          httpsRequest(next, {
-            method: nextMethod,
-            headers,
-            body: nextMethod === "GET" ? null : body,
-            timeoutMs,
-            maxRedirects: maxRedirects - 1
-          })
-            .then(resolve)
-            .catch(reject);
-          return;
-        }
-
-        const chunks = [];
-        res.on("data", (chunk) => chunks.push(chunk));
-        res.on("end", () => {
-          const buf = Buffer.concat(chunks);
-          const outBuf = decompressBuffer(buf, res.headers["content-encoding"]);
-          const text = outBuf.toString("utf8");
-
-          resolve({
-            ok: status >= 200 && status < 300,
-            status,
-            headers: res.headers,
-            text: () => text
-          });
-        });
-      }
-    );
-
-    req.on("error", reject);
-    req.setTimeout(timeoutMs, () =>
-      req.destroy(new Error(`Timeout after ${timeoutMs}ms for ${urlStr}`))
-    );
-
-    if (body) req.write(body);
-    req.end();
-  });
-}
-
-async function requestWithRetry(url, opts = {}, { tries = 3, allowStatuses = [] } = {}) {
-  let lastErr;
-  for (let i = 0; i < tries; i++) {
-    try {
-      const res = await httpsRequest(url, opts);
-      if (res.ok) return res;
-      if (allowStatuses.includes(res.status)) return res;
-      throw new Error(`HTTP ${res.status} for ${url}`);
-    } catch (e) {
-      lastErr = e;
-      await sleep(450 * (i + 1));
-    }
-  }
-  throw lastErr;
-}
-
-async function fetchText(url, opts = {}, meta = {}) {
-  const res = await requestWithRetry(url, opts, meta);
-  return res.text();
-}
-
-function looksLikeHtml(txt) {
-  const t = String(txt || "").trim().toLowerCase();
-  return t.startsWith("<!doctype") || t.startsWith("<html") || t.startsWith("<");
-}
-
-/* =========================================================
-   Helpers
-   ========================================================= */
-
-function normSpace(s) {
-  return String(s || "").replace(/\s+/g, " ").trim();
-}
-
-function stripHtml(html) {
-  const $ = cheerio.load(String(html || ""));
-  return normSpace($.text());
-}
-
-function toMapsUrl(query) {
-  const q = encodeURIComponent(normSpace(query));
-  return `https://www.google.com/maps/search/?api=1&query=${q}`;
-}
-
-function dedupeBy(items, keyFn) {
-  const seen = new Set();
-  const out = [];
-  for (const it of items) {
-    const k = keyFn(it);
-    if (!k) continue;
-    if (seen.has(k)) continue;
-    seen.add(k);
-    out.push(it);
-  }
-  return out;
-}
-
-function pickFirstSentence(text, max = 210) {
-  const t = normSpace(text);
-  if (!t) return "";
-  const cut = t.split(". ").slice(0, 2).join(". ");
-  return cut.length > max ? cut.slice(0, max - 1) + "…" : cut;
-}
-
-function truncateForUI(text, max = 160) {
-  const t = normSpace(text);
-  if (!t) return "";
-  return t.length > max ? t.slice(0, max - 1) + "…" : t;
-}
-
-/* --------- Fechas --------- */
+const UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122 Safari/537.36";
 
 const MONTHS = {
   enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
@@ -207,19 +32,84 @@ const MONTHS = {
   ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5, jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11
 };
 
-function normMonthKey(s) {
-  return String(s || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+function normSpace(v) {
+  return String(v || "").replace(/\s+/g, " ").trim();
+}
+
+function stripHtml(html) {
+  return normSpace(String(html || "").replace(/<[^>]+>/g, " "));
+}
+
+function normMonthKey(v) {
+  return String(v || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function toMapsUrl(query) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query || "")}`;
+}
+
+function toJinaUrl(url) {
+  const u = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+  return `https://r.jina.ai/${u}`;
+}
+
+function truncateForUI(v, max) {
+  const s = normSpace(v);
+  if (s.length <= max) return s;
+  return `${s.slice(0, max - 1)}…`;
+}
+
+function isoToMs(iso) {
+  const t = Date.parse(iso || "");
+  return Number.isFinite(t) ? t : Infinity;
+}
+
+function parseSpanishStartDate(dateText) {
+  const s = normSpace(dateText).toLowerCase();
+  if (!s) return "";
+
+  let m = s.match(/\b(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\b/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[2])];
+    const y = Number(m[3]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d1, 0, 0, 0).toISOString();
+  }
+
+  m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]{3,})\s*[-–]\s*(\d{1,2})\s*([a-záéíóúñ]{3,})(?:\s*(\d{4}))?/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon1 = MONTHS[normMonthKey(m[2])];
+    const mon2 = MONTHS[normMonthKey(m[4])];
+    const y2 = m[5] ? Number(m[5]) : new Date().getFullYear();
+    let y1 = y2;
+    if (Number.isFinite(mon1) && Number.isFinite(mon2) && mon1 > mon2) y1 = y2 - 1;
+    if (Number.isFinite(mon1)) return new Date(y1, mon1, d1, 0, 0, 0).toISOString();
+  }
+
+  m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{4})\b/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[2])];
+    const y = Number(m[5]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d1, 0, 0, 0).toISOString();
+  }
+
+  m = s.match(/\bdel\s+(\d{1,2})\s+al\s+(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i);
+  if (m) {
+    const d1 = Number(m[1]);
+    const mon = MONTHS[normMonthKey(m[3])];
+    const y = Number(m[4]);
+    if (Number.isFinite(mon)) return new Date(y, mon, d1, 0, 0, 0).toISOString();
+  }
+
+  return "";
 }
 
 function parseSpanishEndDate(dateText) {
-  const s0 = normSpace(dateText);
-  const s = s0.toLowerCase();
+  const s = normSpace(dateText).toLowerCase();
   if (!s) return "";
 
-  // ✅ "7 septiembre 2025 - 1 marzo 2026"
   let m = s.match(/\b(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\b/i);
   if (m) {
     const d2 = Number(m[4]);
@@ -228,16 +118,17 @@ function parseSpanishEndDate(dateText) {
     if (Number.isFinite(mon)) return new Date(y, mon, d2, 23, 59, 59).toISOString();
   }
 
-  // "23 ENE - 01 MAR" / "13 FEB - 05 ABR 2026"
   m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]{3,})\s*[-–]\s*(\d{1,2})\s*([a-záéíóúñ]{3,})(?:\s*(\d{4}))?/i);
   if (m) {
     const d2 = Number(m[3]);
-    const mon = MONTHS[normMonthKey(m[4])];
-    const y = m[5] ? Number(m[5]) : new Date().getFullYear();
-    if (Number.isFinite(mon)) return new Date(y, mon, d2, 23, 59, 59).toISOString();
+    const mon1 = MONTHS[normMonthKey(m[2])];
+    const mon2 = MONTHS[normMonthKey(m[4])];
+    const yHint = m[5] ? Number(m[5]) : new Date().getFullYear();
+    let y2 = yHint;
+    if (Number.isFinite(mon1) && Number.isFinite(mon2) && mon1 > mon2) y2 = yHint + 1;
+    if (Number.isFinite(mon2)) return new Date(y2, mon2, d2, 23, 59, 59).toISOString();
   }
 
-  // "23 Enero7 Marzo 2026" (Español a veces sin separadores)
   m = s.match(/\b(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{1,2})\s*([a-záéíóúñ]+)\s*(\d{4})\b/i);
   if (m) {
     const d2 = Number(m[3]);
@@ -246,7 +137,6 @@ function parseSpanishEndDate(dateText) {
     if (Number.isFinite(mon)) return new Date(y, mon, d2, 23, 59, 59).toISOString();
   }
 
-  // "del 10 al 22 de marzo de 2026"
   m = s.match(/\bdel\s+(\d{1,2})\s+al\s+(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i);
   if (m) {
     const d2 = Number(m[2]);
@@ -255,31 +145,25 @@ function parseSpanishEndDate(dateText) {
     if (Number.isFinite(mon)) return new Date(y, mon, d2, 23, 59, 59).toISOString();
   }
 
-  // "10 de marzo de 2026"
-  m = s.match(/\b(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+de\s+(\d{4})\b/i);
-  if (m) {
-    const d = Number(m[1]);
-    const mon = MONTHS[normMonthKey(m[2])];
-    const y = Number(m[3]);
-    if (Number.isFinite(mon)) return new Date(y, mon, d, 23, 59, 59).toISOString();
-  }
-
   return "";
 }
 
-function isoToMs(iso) {
-  const t = Date.parse(iso || "");
-  return Number.isFinite(t) ? t : Infinity;
+function parseJsonSafe(s, fallback = null) {
+  try {
+    return JSON.parse(s);
+  } catch {
+    return fallback;
+  }
 }
 
-function isExpired(it, nowMs) {
-  const end = isoToMs(it.endDate);
-  if (end !== Infinity) return end < nowMs - 24 * 60 * 60 * 1000;
-
-  const start = isoToMs(it.startDate);
-  if (start !== Infinity) return start < nowMs - 7 * 24 * 60 * 60 * 1000;
-
-  return false;
+function dedupeBy(items, keyFn) {
+  const map = new Map();
+  for (const it of items) {
+    const k = keyFn(it);
+    if (!k) continue;
+    if (!map.has(k)) map.set(k, it);
+  }
+  return [...map.values()];
 }
 
 function sortByEndThenStart(items) {
@@ -287,216 +171,169 @@ function sortByEndThenStart(items) {
     const ae = isoToMs(a.endDate);
     const be = isoToMs(b.endDate);
     if (ae !== be) return ae - be;
-
-    const as = isoToMs(a.startDate);
-    const bs = isoToMs(b.startDate);
-    return as - bs;
+    return isoToMs(a.startDate) - isoToMs(b.startDate);
   });
 }
 
+function pickWithCaps(items, max, caps) {
+  const sorted = sortByEndThenStart(items);
+  const picked = [];
+  const count = new Map();
+
+  for (const it of sorted) {
+    if (picked.length >= max) break;
+    const src = it.source || "other";
+    if (!(src in caps)) continue;
+    const cap = caps[src];
+    if (cap === 0) continue;
+    const n = count.get(src) || 0;
+    if (n >= cap) continue;
+    if (picked.some((p) => p.link === it.link)) continue;
+    picked.push(it);
+    count.set(src, n + 1);
+  }
+
+  if (picked.length < max) {
+    for (const it of sorted) {
+      if (picked.length >= max) break;
+      if (picked.some((p) => p.link === it.link)) continue;
+      picked.push(it);
+    }
+  }
+
+  return picked;
+}
+
 function sanitizeForOutput(it) {
-  const creditsShort = truncateForUI(it.credits || "", 160);
   return {
-    source: it.source,
-    kind: it.kind,
-    title: it.title,
-
-    credits: creditsShort,
-    deck: it.deck || "",
-
+    source: it.source || "",
+    kind: it.kind || "theatre",
+    title: it.title || "",
+    credits: truncateForUI(it.credits || "", 160),
+    deck: truncateForUI(it.deck || "", 200),
     author: it.author || "",
     director: it.director || "",
     company: it.company || "",
     choreographer: it.choreographer || "",
     cast: Array.isArray(it.cast) ? it.cast.slice(0, 6) : [],
-
     startDate: it.startDate || "",
     endDate: it.endDate || "",
     dateText: it.dateText || "",
-
     venue: it.venue || "",
     address: it.address || "",
     mapsQuery: it.mapsQuery || "",
-    mapsUrl: it.mapsUrl || "",
+    mapsUrl: toMapsUrl(it.mapsQuery || ""),
     link: it.link || "",
     image: it.image || ""
   };
 }
 
-/* =========================================================
-   Selector plural por cupos
-   ========================================================= */
-
-function pickWithCaps(items, totalMax, capsBySource) {
-  const sorted = sortByEndThenStart(items);
-  const picked = [];
-  const counts = new Map();
-
-  // Pasada 1: cupos estrictos
-  for (const it of sorted) {
-    if (picked.length >= totalMax) break;
-    const src = it.source || "other";
-
-    if (!(src in capsBySource)) continue;
-    const cap = capsBySource[src];
-    if (cap === 0) continue;
-
-    const n = counts.get(src) || 0;
-    if (n >= cap) continue;
-
-    if (picked.some((p) => p.link && it.link && p.link === it.link)) continue;
-
-    picked.push(it);
-    counts.set(src, n + 1);
-  }
-
-  // Pasada 2: relleno controlado
-  if (picked.length < totalMax) {
-    const fillOrder = [
-      "teatroespanol",
-      "cdn-valle-inclan",
-      "cdn-maria-guerrero",
-      "teatrodelbarrio",
-      "pradillo",
-      "nave10",
-      "canal"
-    ];
-
-    for (const src of fillOrder) {
-      if (picked.length >= totalMax) break;
-      if (!(src in capsBySource)) continue;
-
-      const baseCap = capsBySource[src] ?? 0;
-      if (baseCap === 0) continue;
-
-      const hard =
-        src === "nave10" ? baseCap :
-        src === "canal" ? baseCap :
-        baseCap + 1;
-
-      for (const it of sorted) {
-        if (picked.length >= totalMax) break;
-        if (it.source !== src) continue;
-
-        if (picked.some((p) => p.link && it.link && p.link === it.link)) continue;
-
-        const n = counts.get(src) || 0;
-        if (n >= hard) continue;
-
-        picked.push(it);
-        counts.set(src, n + 1);
-      }
-    }
-  }
-
-  return picked.slice(0, totalMax);
+function isExpired(item, nowMs) {
+  const end = isoToMs(item.endDate);
+  if (end !== Infinity) return end < (nowMs - 24 * 60 * 60 * 1000);
+  return true;
 }
 
-function tallyBySource(items) {
-  return items.reduce((acc, x) => {
-    acc[x.source] = (acc[x.source] || 0) + 1;
-    return acc;
-  }, {});
+function makeBaseItem(partial = {}) {
+  return {
+    source: "",
+    kind: "theatre",
+    title: "",
+    credits: "",
+    deck: "",
+    author: "",
+    director: "",
+    company: "",
+    choreographer: "",
+    cast: [],
+    startDate: "",
+    endDate: "",
+    dateText: "",
+    venue: "",
+    address: "",
+    mapsQuery: "",
+    mapsUrl: "",
+    link: "",
+    image: "",
+    ...partial
+  };
 }
 
-/* =========================================================
-   JSON-LD helpers (CDN fichas + Nave10)
-   ========================================================= */
-
-function extractJsonLdObjects(html) {
-  const $ = cheerio.load(html);
-  const scripts = $('script[type="application/ld+json"]')
-    .map((_, el) => $(el).html())
-    .get()
-    .filter(Boolean);
-
-  const out = [];
-  for (const raw of scripts) {
-    const txt = String(raw).trim();
-    if (!txt) continue;
-    try {
-      const parsed = JSON.parse(txt);
-      if (Array.isArray(parsed)) parsed.forEach((o) => out.push(o));
-      else if (parsed && typeof parsed === "object") {
-        if (Array.isArray(parsed["@graph"])) parsed["@graph"].forEach((o) => out.push(o));
-        else out.push(parsed);
-      }
-    } catch (_) {}
-  }
-  return out;
-}
-
-function pickEventFromJsonLd(arr) {
-  const events = arr.filter(
-    (o) => o && typeof o === "object" && /Event$/i.test(String(o["@type"] || ""))
-  );
-  if (events.length) return events[0];
-  return arr.find((o) => o && typeof o === "object" && o.name && o.url) || null;
-}
-
-function normKeyLabel(s) {
-  return normSpace(s)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
-function splitPeopleList(s) {
-  const t = normSpace(s);
-  if (!t) return [];
-  const raw = t
-    .replace(/\s*[•·|]\s*/g, ", ")
-    .replace(/\s*;\s*/g, ", ")
-    .replace(/\s*\/\s*/g, ", ")
-    .replace(/\s+y\s+/gi, ", ");
-  const parts = raw
-    .split(",")
-    .map((x) => normSpace(x))
-    .filter(Boolean);
-  return [...new Set(parts)];
-}
-
-function parseEquipoBoxFromDramatico($) {
-  const out = {};
-  const cast = [];
-
-  $("div.equipo.box-line").each((_, el) => {
-    const $box = $(el);
-    $box.find(".content .item").each((__, it) => {
-      const label = normKeyLabel($(it).find("h4").first().text());
-      const val = normSpace($(it).find("p").first().text());
-      if (!label || !val) return;
-
-      if (label === "texto" || label === "dramaturgia" || label === "autor") out.author = val;
-      else if (label.includes("version") && label.includes("direccion")) out.director = val;
-      else if (label === "direccion" || label === "direccion escenica") out.director = val;
-      else if (label === "reparto" || label === "interpretacion" || label === "intérpretes") {
-        cast.push(...splitPeopleList(val));
-      } else if (label === "compania" || label === "compañia" || label === "produccion") {
-        out.company = val;
-      } else if (label === "coreografia" || label === "coreografía") {
-        out.choreographer = val;
-      }
+async function requestRaw(urlStr, opts = {}) {
+  return await new Promise((resolve, reject) => {
+    const u = new URL(urlStr);
+    const req = https.request({
+      protocol: u.protocol,
+      hostname: u.hostname,
+      port: u.port || 443,
+      path: `${u.pathname}${u.search}`,
+      method: opts.method || "GET",
+      headers: {
+        "user-agent": UA,
+        accept: "*/*",
+        "accept-encoding": "gzip, deflate, br",
+        ...opts.headers
+      },
+      timeout: opts.timeoutMs || 25000
+    }, (res) => {
+      const chunks = [];
+      res.on("data", (c) => chunks.push(c));
+      res.on("end", () => resolve({
+        status: res.statusCode || 0,
+        headers: res.headers,
+        body: Buffer.concat(chunks)
+      }));
     });
+    req.on("error", reject);
+    req.on("timeout", () => req.destroy(new Error(`timeout ${urlStr}`)));
+    if (opts.body) req.write(opts.body);
+    req.end();
   });
-
-  if (cast.length) out.cast = [...new Set(cast)].slice(0, 8);
-  return out;
 }
 
-function extractOgImage($) {
-  return (
-    $('meta[property="og:image"]').attr("content") ||
-    $('meta[name="twitter:image"]').attr("content") ||
-    ""
-  );
+function decodeBody(body, headers) {
+  const enc = String(headers?.["content-encoding"] || "").toLowerCase();
+  try {
+    if (enc.includes("br")) return zlib.brotliDecompressSync(body);
+    if (enc.includes("gzip")) return zlib.gunzipSync(body);
+    if (enc.includes("deflate")) return zlib.inflateSync(body);
+  } catch {
+    return body;
+  }
+  return body;
 }
 
-/* =========================================================
-   CDN — PROGRAMACIÓN + fallback JINA + fallback AJAX + ENRICH (ficha)
-   ========================================================= */
+async function requestWithRetry(url, opts = {}, control = {}) {
+  const tries = control.tries || 3;
+  const allowStatuses = control.allowStatuses || [];
+  let current = url;
+  let lastError;
 
-function cdnVenueMeta(source) {
+  for (let i = 0; i < tries; i++) {
+    try {
+      const res = await requestRaw(current, opts);
+      if ([301, 302, 303, 307, 308].includes(res.status) && res.headers.location) {
+        current = new URL(res.headers.location, current).toString();
+        continue;
+      }
+      if ((res.status >= 200 && res.status < 300) || allowStatuses.includes(res.status)) return res;
+      lastError = new Error(`HTTP ${res.status} for ${current}`);
+    } catch (e) {
+      lastError = e;
+    }
+    await new Promise((r) => setTimeout(r, (i + 1) * 400));
+  }
+
+  throw lastError || new Error(`request failed ${url}`);
+}
+
+async function fetchText(url, opts = {}, control = {}) {
+  const res = await requestWithRetry(url, opts, control);
+  const out = decodeBody(res.body, res.headers);
+  return Buffer.from(out).toString("utf8");
+}
+
+function sourceMeta(source) {
   if (source === "cdn-maria-guerrero") {
     return {
       venue: "Teatro María Guerrero",
@@ -511,850 +348,326 @@ function cdnVenueMeta(source) {
       mapsQuery: "Teatro Valle-Inclán, Madrid"
     };
   }
-  return { venue: "Centro Dramático Nacional", address: "Madrid", mapsQuery: "Centro Dramático Nacional, Madrid" };
+  return { venue: "", address: "", mapsQuery: "" };
 }
 
-function isWafChallengeHtml(html) {
-  const h = String(html || "");
-  const t = h.toLowerCase();
-  const signals = [
-    "cf-challenge",
-    "challenge-platform",
-    "attention required",
-    "captcha",
-    "incapsula",
-    "imperva",
-    "security check",
-    "access denied",
-    "/cdn-cgi/"
-  ];
-  const hasSignals = signals.some((s) => t.includes(s));
-  const hasEvento = t.includes("/evento/");
-  return hasSignals || !hasEvento;
+function looksWaf(html) {
+  const t = String(html || "").toLowerCase();
+  return t.includes("access denied") || t.includes("captcha") || t.includes("challenge") || t.includes("cf-challenge");
 }
 
-/**
- * FIX CRÍTICO:
- * r.jina.ai funciona como: https://r.jina.ai/http(s)://<host>/...
- */
-function toJinaUrl(url) {
-  const u =
-    url.startsWith("http://") || url.startsWith("https://")
-      ? url
-      : `https://${url}`;
-  return `https://r.jina.ai/${u}`;
-}
-
-async function fetchTextCdnSmart(url, errors, venueTag) {
-  // 1) intento directo
-  const html1 = await fetchText(url, { headers: { accept: "text/html,*/*;q=0.9" } });
-  if (!isWafChallengeHtml(html1)) return html1;
-
-  errors.push({
-    source: "cdn",
-    venue: venueTag,
-    message: `WAF/Challenge en ${url} (directo). Intento fallback r.jina.ai…`
-  });
-
-  // 2) fallback r.jina.ai
+async function fetchCdnSmart(url, errors, venueTag) {
   try {
-    const jUrl = toJinaUrl(url);
-    const html2 = await fetchText(
-      jUrl,
-      { headers: { accept: "text/plain,*/*;q=0.9" } },
-      { tries: 2 }
-    );
-
-    const t2 = String(html2).toLowerCase();
-    if (
-      t2.includes("/evento/") ||
-      t2.includes("item-event-resume") ||
-      t2.includes("evento-programacion") ||
-      t2.includes("wrapper-detail")
-    ) {
-      return html2;
-    }
-
-    errors.push({
-      source: "cdn",
-      venue: venueTag,
-      message: `Fallback r.jina.ai no devolvió programación usable para ${url}`
-    });
-    return html1;
+    const html = await fetchText(url, { headers: { accept: "text/html,*/*;q=0.9" } }, { tries: 2 });
+    if (!looksWaf(html)) return html;
+    errors.push({ source: "cdn", venue: venueTag, message: `waf on ${url} -> trying jina` });
   } catch (e) {
-    errors.push({
-      source: "cdn",
-      venue: venueTag,
-      message: `Fallback r.jina.ai falló para ${url}: ${String(e?.message || e)}`
-    });
-    return html1;
+    errors.push({ source: "cdn", venue: venueTag, message: `direct fail ${url}: ${String(e?.message || e)}` });
+  }
+
+  try {
+    const html = await fetchText(toJinaUrl(url), { headers: { accept: "text/plain,*/*;q=0.9" } }, { tries: 2 });
+    return html;
+  } catch (e) {
+    errors.push({ source: "cdn", venue: venueTag, message: `jina fail ${url}: ${String(e?.message || e)}` });
+    return "";
   }
 }
 
-function extractDateTextFromCDNCard($detail) {
-  const p = $detail
-    .find("p")
-    .filter((_, el) => {
-      const text = normSpace(stripHtml(cheerio.load(el).root().html() || ""));
-      return /\b\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}/.test(text);
-    })
-    .first();
-
-  const txt = normSpace(stripHtml(p.html() || ""));
-  const m = txt.match(/\b(\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3})(?:\s+(\d{4}))?/);
-  if (!m) return "";
-  return `${m[1]}${m[2] ? " " + m[2] : ""}`;
+function extractCdnCardDateText($detail) {
+  const txt = normSpace($detail.find("p").toArray().map((p) => stripHtml(cheerio.load(p).root().html() || "")).join(" · "));
+  if (!txt) return "";
+  const m = txt.match(/\b(\d{1,2}\s*[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}\s*[-–]\s*\d{1,2}\s*[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}(?:\s*\d{4})?)\b/i);
+  if (m) return normSpace(m[1]);
+  const m2 = txt.match(/\b(del\s+\d{1,2}\s+al\s+\d{1,2}\s+de\s+[a-záéíóúñ]+\s+de\s+\d{4})\b/i);
+  if (m2) return normSpace(m2[1]);
+  return "";
 }
 
-function parseCdnAuthorDirectorFromDetail($detail) {
-  const out = { author: "", director: "", credits: "" };
+function parseTeamBlock($) {
+  const out = { author: "", director: "" };
+  const txt = normSpace($("div.equipo.box-line").text());
+  if (!txt) return out;
 
-  const ps = $detail.find("p").toArray().map((el) => {
-    const html = cheerio.load(el).root().html() || "";
-    const text = normSpace(stripHtml(html));
-    return { html, text };
-  });
-
-  const ficha = ps.filter(
-    (p) => p.text && !/\b\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}\s*[-–]\s*\d{1,2}\s+[A-ZÁÉÍÓÚÑ]{3}/.test(p.text)
-  );
-
-  const blob = ficha.map((x) => x.text).join(" · ");
-
-  let m = blob.match(/\bTexto\s+y\s+dirección\s+(.+)$/i);
+  let m = txt.match(/\bTexto\s+y\s+direcci[oó]n\s*:?\s*([^|·\n]+)/i);
   if (m) {
-    const person = normSpace(m[1]);
-    out.author = person;
-    out.director = person;
-    out.credits = truncateForUI(person, 160);
+    out.author = normSpace(m[1]);
+    out.director = normSpace(m[1]);
     return out;
   }
 
-  m = blob.match(/\b(Dramaturgia|Texto|Autor(?:ía)?)\s+(.+?)(?=(Dirección|Dirección asociada|$))/i);
-  if (m) out.author = normSpace(m[2]);
+  m = txt.match(/\b(?:Texto|Dramaturgia|Autor(?:ía)?)\s*:?\s*([^|·\n]+?)(?=\b(?:Direcci[oó]n|Versi[oó]n\s+y\s+direcci[oó]n|$))/i);
+  if (m) out.author = normSpace(m[1]);
 
-  m = blob.match(/\bDirección(?:\s+asociada)?\s+(.+?)(?=($|Dirección asociada|Producción|Compañ[ií]a))/i);
+  m = txt.match(/\b(?:Direcci[oó]n|Versi[oó]n\s+y\s+direcci[oó]n)\s*:?\s*([^|·\n]+?)(?=\b(?:Texto|Dramaturgia|Autor(?:ía)?|$))/i);
   if (m) out.director = normSpace(m[1]);
-
-  const bits = [];
-  if (out.author) bits.push(out.author);
-  if (out.director) bits.push(out.director);
-  out.credits = truncateForUI(bits.join(" · "), 160);
 
   return out;
 }
 
-function extractCdnScheduleFromEventLeftPanel($) {
+function parseCdnDetailDate($) {
   const p = $("div.col-lg-5.col-left .box-title .detail > p").first();
-  if (!p.length) return { scheduleText: "", rangeText: "" };
-
-  const rangeText = normSpace(p.find("strong").first().text() || "");
-  const html = (p.html() || "")
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/p>/gi, "\n");
-
-  const lines = stripHtml(html)
-    .split("\n")
-    .map(normSpace)
-    .filter(Boolean);
-
-  const scheduleLine =
-    lines.find((x) => /a\s+las\s+\d{1,2}:\d{2}/i.test(x) || /martes|miércoles|jueves|viernes|sábado|domingo|lunes/i.test(x)) ||
-    "";
-
-  const scheduleText = scheduleLine ? scheduleLine.split("|")[0].trim() : "";
-  return { scheduleText, rangeText };
+  if (!p.length) return { rangeText: "", scheduleText: "" };
+  const rangeText = normSpace(p.find("strong").first().text());
+  const html = (p.html() || "").replace(/<br\s*\/?>/gi, "\n");
+  const lines = stripHtml(html).split(/\n+/).map(normSpace).filter(Boolean);
+  const scheduleText = lines.find((ln) => ln !== rangeText && /(a\s+las\s+\d{1,2}[:\.]\d{2}|\d{1,2}[:\.]\d{2}\s*h|lunes|martes|mi[eé]rcoles|jueves|viernes|s[áa]bado|domingo)/i.test(ln)) || "";
+  return {
+    rangeText,
+    scheduleText: scheduleText ? normSpace(scheduleText.split("| Duración")[0].split("|")[0]) : ""
+  };
 }
 
-/* =========================================================
-   INAEM (entradasinaem.es) — ENRICH ROBUSTO (sin clases sc-*)
-   ========================================================= */
-
-function findFirstMatch(text, re) {
-  const m = String(text || "").match(re);
-  return m ? m[0] : "";
+function buildCdnDateText(rangeText, scheduleText, fallback = "") {
+  const range = normSpace(rangeText);
+  const sch = normSpace(scheduleText);
+  if (range && sch) return `${range} · ${sch}`;
+  if (range) return `${range} · Consultar taquilla`;
+  return normSpace(fallback);
 }
 
-function parseInaemDateRangeFromText(txt) {
-  const t = normSpace(txt);
-  // Ej: "14 febrero 2026 - 05 abril 2026"
-  const m = t.match(/\b(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})\s+([a-záéíóúñ]+)\s+(\d{4})\b/i);
-  if (!m) return { startIso: "", endIso: "" };
-
-  const d1 = Number(m[1]);
-  const mon1 = MONTHS[normMonthKey(m[2])];
-  const y1 = Number(m[3]);
-
-  const d2 = Number(m[4]);
-  const mon2 = MONTHS[normMonthKey(m[5])];
-  const y2 = Number(m[6]);
-
-  if (!Number.isFinite(mon1) || !Number.isFinite(mon2)) return { startIso: "", endIso: "" };
-
-  const startIso = new Date(y1, mon1, d1, 0, 0, 0).toISOString();
-  const endIso = new Date(y2, mon2, d2, 23, 59, 59).toISOString();
-  return { startIso, endIso };
+function inferCdnSourceFromText(txt, fallback = "") {
+  const t = normSpace(txt).toLowerCase();
+  if (t.includes("maría guerrero") || t.includes("maria guerrero")) return "cdn-maria-guerrero";
+  if (t.includes("valle-inclán") || t.includes("valle inclan") || t.includes("valle-inclan")) return "cdn-valle-inclan";
+  return fallback || "cdn-valle-inclan";
 }
 
-function extractInaemTeamFromText(txt) {
-  const t = String(txt || "");
-  const lines = t.split("\n").map(normSpace).filter(Boolean);
+async function enrichCdnEvent(item, errors) {
+  const tries = [item.link, toJinaUrl(item.link)];
+  let enriched = { ...item };
 
-  const idx = lines.findIndex((l) => /equipo\s+art[ií]stico/i.test(l));
-  if (idx === -1) return { author: "", director: "", cast: [] };
-
-  const slice = lines.slice(idx + 1, idx + 70);
-
-  let outAuthor = "";
-  let outDirector = "";
-  const outCast = [];
-
-  for (let i = 0; i < slice.length; i++) {
-    const l = slice[i];
-
-    if (/^texto\s+y\s+direcci[oó]n$/i.test(l)) {
-      const v = slice[i + 1] || "";
-      if (v) { outAuthor = v; outDirector = v; }
-      i++;
-      continue;
-    }
-    if (/^texto$/i.test(l) || /^dramaturgia$/i.test(l) || /^autor(?:[ií]a)?$/i.test(l)) {
-      const v = slice[i + 1] || "";
-      if (v) outAuthor = v;
-      i++;
-      continue;
-    }
-    if (/^direcci[oó]n$/i.test(l) || /^direcci[oó]n\s+esc[eé]nica$/i.test(l) || /^versi[oó]n\s+y\s+direcci[oó]n$/i.test(l)) {
-      const v = slice[i + 1] || "";
-      if (v) outDirector = v;
-      i++;
-      continue;
-    }
-    if (/^reparto$/i.test(l) || /^int[eé]rpretes$/i.test(l) || /^interpretaci[oó]n$/i.test(l)) {
-      const v = slice[i + 1] || "";
-      if (v) outCast.push(...splitPeopleList(v));
-      i++;
-      continue;
-    }
-  }
-
-  return { author: outAuthor, director: outDirector, cast: [...new Set(outCast)].slice(0, 8) };
-}
-
-async function enrichInaemFromEntradas(item, errors) {
-  // Solo para fichas CDN (de donde sacamos el link a entradas)
-  if (!item?.link || !/dramatico\.inaem\.gob\.es\/evento\//.test(item.link)) return item;
-
-  try {
-    // 1) sacar URL de entradas desde la ficha CDN (usando JINA para evitar WAF)
-    const fichaTxt = await fetchText(
-      toJinaUrl(item.link),
-      { headers: { accept: "text/plain,*/*;q=0.9" } },
-      { tries: 2 }
-    );
-    const $ = cheerio.load(fichaTxt);
-
-    const entradasHref =
-      $("a[href*='entradasinaem.es']").first().attr("href") ||
-      findFirstMatch(fichaTxt, /https?:\/\/entradasinaem\.es\/[^\s"'<>]+/i);
-
-    if (!entradasHref) return item;
-
-    // 2) cargar entradasinaem y parsear por texto (robusto)
-    const eHtml = await fetchText(
-      entradasHref,
-      { headers: { accept: "text/html,*/*;q=0.9" } },
-      { tries: 2 }
-    );
-
-    const $$ = cheerio.load(eHtml);
-    const pageText = $$.text().replace(/\r/g, "");
-
-    const { startIso, endIso } = parseInaemDateRangeFromText(pageText);
-    const team = extractInaemTeamFromText(pageText);
-
-    const enriched = { ...item };
-
-    // Fechas: solo si faltan
-    if (startIso && !enriched.startDate) enriched.startDate = startIso;
-    if (endIso && !enriched.endDate) enriched.endDate = endIso;
-
-    // dateText humano (rango) si falta
-    if (!enriched.dateText) {
-      const rangeHuman = findFirstMatch(
-        pageText,
-        /\b\d{1,2}\s+[a-záéíóúñ]+\s+\d{4}\s*[-–]\s*\d{1,2}\s+[a-záéíóúñ]+\s+\d{4}\b/i
-      );
-      if (rangeHuman) enriched.dateText = normSpace(rangeHuman);
-    }
-
-    // Equipo: solo si falta
-    if (team.author && !enriched.author) enriched.author = team.author;
-    if (team.director && !enriched.director) enriched.director = team.director;
-    if (team.cast?.length && (!enriched.cast || !enriched.cast.length)) enriched.cast = team.cast;
-
-    if (!enriched.endDate && enriched.dateText) {
-      const tryEnd = parseSpanishEndDate(enriched.dateText);
-      if (tryEnd) enriched.endDate = tryEnd;
-    }
-
-    if (!enriched.credits) {
-      const bits = [];
-      if (enriched.author) bits.push(enriched.author);
-      if (enriched.director && enriched.director !== enriched.author) bits.push(enriched.director);
-      enriched.credits = truncateForUI(bits.join(" · "), 160);
-    } else {
-      enriched.credits = truncateForUI(enriched.credits, 160);
-    }
-
-    return enriched;
-  } catch (e) {
-    errors.push({
-      source: "inaem",
-      venue: item.source,
-      message: `INAEM enrich failed for ${item.link}: ${String(e?.message || e)}`
-    });
-    return item;
-  }
-}
-
-async function enrichDramaticoEventPage(item, errors) {
-  if (!item?.link || !/dramatico\.inaem\.gob\.es\/evento\//.test(item.link)) return item;
-
-  const tryUrls = [item.link, toJinaUrl(item.link)];
-
-  for (let attempt = 0; attempt < tryUrls.length; attempt++) {
-    const url = tryUrls[attempt];
+  for (const u of tries) {
     try {
-      const html = await fetchText(url, {
+      const html = await fetchText(u, {
         headers: {
-          accept: "text/html,*/*;q=0.9",
-          referer: "https://dramatico.inaem.gob.es/",
-          origin: "https://dramatico.inaem.gob.es"
+          accept: u.includes("r.jina.ai") ? "text/plain,*/*;q=0.9" : "text/html,*/*;q=0.9"
         }
-      });
-
-      if (attempt === 0 && isWafChallengeHtml(html)) {
-        errors.push({
-          source: "cdn",
-          venue: item.source,
-          message: `WAF/Challenge también en ficha ${item.link} (directo). Intento fallback r.jina.ai…`
-        });
-        continue;
-      }
+      }, { tries: 2 });
 
       const $ = cheerio.load(html);
-      const equipo = parseEquipoBoxFromDramatico($);
-      const jsonLd = extractJsonLdObjects(html);
-      const ev = pickEventFromJsonLd(jsonLd);
+      const title = normSpace($("h1").first().text()) || enriched.title;
+      if (title) enriched.title = title;
 
-      const enriched = { ...item };
+      const { rangeText, scheduleText } = parseCdnDetailDate($);
+      const finalRange = rangeText || extractCdnCardDateText($("body"));
+      if (finalRange) {
+        enriched.dateText = buildCdnDateText(finalRange, scheduleText, enriched.dateText);
+        if (!enriched.startDate) enriched.startDate = parseSpanishStartDate(finalRange);
+        if (!enriched.endDate) enriched.endDate = parseSpanishEndDate(finalRange);
+      }
 
-      if (ev?.startDate && !enriched.startDate) enriched.startDate = String(ev.startDate);
-      if (ev?.endDate && !enriched.endDate) enriched.endDate = String(ev.endDate);
+      const team = parseTeamBlock($);
+      if (team.author && !enriched.author) enriched.author = team.author;
+      if (team.director && !enriched.director) enriched.director = team.director;
+
+      const sourceDetected = inferCdnSourceFromText($.text(), enriched.source);
+      enriched.source = sourceDetected;
 
       if (!enriched.image) {
-        const og = extractOgImage($);
-        if (og) enriched.image = og;
+        enriched.image = $("meta[property='og:image']").attr("content") || "";
       }
 
-      if (equipo.author && !enriched.author) enriched.author = equipo.author;
-      if (equipo.director && !enriched.director) enriched.director = equipo.director;
-      if (equipo.company && !enriched.company) enriched.company = equipo.company;
-      if (equipo.choreographer && !enriched.choreographer) enriched.choreographer = equipo.choreographer;
-      if (Array.isArray(equipo.cast) && equipo.cast.length && (!Array.isArray(enriched.cast) || !enriched.cast.length)) {
-        enriched.cast = equipo.cast;
+      if (u.includes("r.jina.ai")) {
+        errors.push({ source: "cdn", venue: enriched.source, message: `evento:jina:ok ${item.link}` });
       }
 
-      // ✅ HORARIO/DÍAS desde panel izquierdo
-      const { scheduleText, rangeText } = extractCdnScheduleFromEventLeftPanel($);
-      const baseRange = rangeText || enriched.dateText || "";
-      const schedule = normSpace(scheduleText);
-
-      if (baseRange && schedule) enriched.dateText = `${baseRange} · ${schedule}`;
-      else if (schedule && !enriched.dateText) enriched.dateText = schedule;
-
-      if (!enriched.endDate) {
-        const tryEnd = parseSpanishEndDate(enriched.dateText || baseRange);
-        if (tryEnd) enriched.endDate = tryEnd;
-      }
-
-      if (!enriched.credits) {
-        const bits = [];
-        if (enriched.author) bits.push(enriched.author);
-        if (enriched.director) bits.push(enriched.director);
-        enriched.credits = truncateForUI(bits.slice(0, 2).join(" · "), 160);
-      } else {
-        enriched.credits = truncateForUI(enriched.credits, 160);
-      }
-
-      // ✅ BLINDAJE FINAL: si aún faltan datos clave, intenta INAEM Entradas (robusto)
-      const needsInaem =
-        (!enriched.endDate && !enriched.dateText) ||
-        (!enriched.author && !enriched.director);
-
-      if (needsInaem) {
-        const fromInaem = await enrichInaemFromEntradas(enriched, errors);
-        return fromInaem;
-      }
-
-      return enriched;
+      if (enriched.endDate && enriched.dateText) break;
     } catch (e) {
-      if (attempt === tryUrls.length - 1) {
-        errors.push({
-          source: "cdn",
-          venue: item.source,
-          message: `CDN enrich failed for ${item.link}: ${String(e?.message || e)}`
-        });
+      if (u.includes("r.jina.ai")) {
+        errors.push({ source: "cdn", venue: item.source, message: `evento:jina:fail ${item.link}` });
       }
     }
   }
 
-  // Si no pudimos enrich por CDN/JINA, intenta INAEM igualmente (último recurso)
-  return await enrichInaemFromEntradas(item, errors);
-}
-
-async function scrapeCDNProgramacionPage(url, source, errors) {
-  const meta = cdnVenueMeta(source);
-
-  const html = await fetchTextCdnSmart(url, errors, source);
-
-  if (isWafChallengeHtml(html)) {
-    errors.push({
-      source: "cdn",
-      venue: source,
-      message: `WAF/Challenge persistente en ${url} (directo + jina). Activaré fallback AJAX.`
-    });
-    return [];
+  if (!enriched.author || !enriched.director) {
+    const m = String(item.link).match(/\/evento\/([^/?#]+)\/?/i);
+    if (m) {
+      const pressUrl = `https://dramatico.inaem.gob.es/prensa/${m[1]}/`;
+      try {
+        const txt = await fetchText(toJinaUrl(pressUrl), { headers: { accept: "text/plain,*/*;q=0.9" } }, { tries: 2 });
+        const t = normSpace(txt);
+        const ad = { author: "", director: "" };
+        let mm = t.match(/\bTexto\s+y\s+direcci[oó]n\s*:?\s*([^|·\n]+)/i);
+        if (mm) {
+          ad.author = normSpace(mm[1]);
+          ad.director = normSpace(mm[1]);
+        }
+        if (!ad.author) {
+          mm = t.match(/\b(?:Texto|Dramaturgia|Autor(?:ía)?)\s*:?\s*([^|·\n]+)/i);
+          if (mm) ad.author = normSpace(mm[1]);
+        }
+        if (!ad.director) {
+          mm = t.match(/\b(?:Direcci[oó]n|Versi[oó]n\s+y\s+direcci[oó]n)\s*:?\s*([^|·\n]+)/i);
+          if (mm) ad.director = normSpace(mm[1]);
+        }
+        if (ad.author && !enriched.author) enriched.author = ad.author;
+        if (ad.director && !enriched.director) enriched.director = ad.director;
+        errors.push({ source: "cdn", venue: enriched.source, message: `prensa:ok ${pressUrl}` });
+      } catch {
+        errors.push({ source: "cdn", venue: enriched.source, message: `prensa:fail ${pressUrl}` });
+      }
+    }
   }
 
+  if (!enriched.credits) {
+    const bits = [];
+    if (enriched.author) bits.push(enriched.author);
+    if (enriched.director && enriched.director !== enriched.author) bits.push(enriched.director);
+    enriched.credits = truncateForUI(bits.join(" · "), 160);
+  }
+
+  const meta = sourceMeta(enriched.source);
+  enriched.venue = enriched.venue || meta.venue;
+  enriched.address = enriched.address || meta.address;
+  enriched.mapsQuery = enriched.mapsQuery || meta.mapsQuery;
+  enriched.mapsUrl = toMapsUrl(enriched.mapsQuery);
+
+  return enriched;
+}
+
+async function scrapeCdnProgramacionPage(url, source, errors) {
+  const html = await fetchCdnSmart(url, errors, source);
+  if (!html) return [];
   const $ = cheerio.load(html);
   const out = [];
 
-  const cards = $("div.item.item-event-resume.evento-programacion");
-  if (!cards.length) {
-    errors.push({ source: "cdn", venue: source, message: `No encontré cards .item-event-resume en ${url}` });
-    return out;
-  }
-
-  cards.each((_, card) => {
+  $("div.item-event-resume").each((_, card) => {
     const $card = $(card);
     const $detail = $card.find(".wrapper-detail .detail").first();
-
     const $a = $detail.find("h2 a[href*='/evento/']").first();
-
     const title = normSpace($a.text());
     const href = $a.attr("href") || "";
     const link = href ? (href.startsWith("http") ? href : `https://dramatico.inaem.gob.es${href}`) : "";
     if (!title || !link) return;
 
-    const dateTextBasic = extractDateTextFromCDNCard($detail);
-    const endDate = parseSpanishEndDate(dateTextBasic);
-
-    const parsed = parseCdnAuthorDirectorFromDetail($detail);
-
-    const img =
-      $card.find(".carousel-inner img").first().attr("src") ||
-      $card.find("img").first().attr("src") ||
-      "";
-
-    out.push({
+    const meta = sourceMeta(source);
+    const dateText = extractCdnCardDateText($detail);
+    out.push(makeBaseItem({
       source,
       kind: "theatre",
       title,
-
-      credits: parsed.credits || "",
-      deck: "",
-
-      author: parsed.author || "",
-      director: parsed.director || "",
-      company: "Centro Dramático Nacional",
-      choreographer: "",
-      cast: [],
-
-      startDate: "",
-      endDate,
-      dateText: dateTextBasic,
-
+      link,
+      endDate: parseSpanishEndDate(dateText),
+      startDate: parseSpanishStartDate(dateText),
+      dateText,
       venue: meta.venue,
       address: meta.address,
       mapsQuery: meta.mapsQuery,
       mapsUrl: toMapsUrl(meta.mapsQuery),
-      link,
-      image: img
-    });
+      image: $card.find(".carousel-inner img").first().attr("src") || $card.find("img").first().attr("src") || "",
+      company: "Centro Dramático Nacional"
+    }));
   });
 
-  return dedupeBy(out, (x) => x.link);
-}
-
-/* ---------- CDN fallback admin-ajax (best-effort) ---------- */
-
-async function cdnWarmup(errors) {
-  const base = "https://dramatico.inaem.gob.es/";
-  const warmUrls = [base, `${base}programacion/`, `${base}compania/`];
-
-  for (const u of warmUrls) {
-    try {
-      await fetchText(
-        u,
-        {
-          headers: {
-            accept: "text/html,*/*;q=0.9",
-            "cache-control": "no-cache",
-            pragma: "no-cache"
-          },
-          timeoutMs: 25000
-        },
-        { tries: 2, allowStatuses: [403, 503] }
-      );
-      await sleep(220);
-    } catch (e) {
-      errors.push({ source: "cdn", venue: "warmup", message: String(e?.message || e) });
-    }
-  }
-}
-
-async function fetchCDNJson(month, year) {
-  const url = "https://dramatico.inaem.gob.es/wp-admin/admin-ajax.php";
-  const tryActions = ["get-cdn-events", "get_cdn_events"];
-  let lastErr = null;
-
-  for (const action of tryActions) {
-    const body = new URLSearchParams({
-      action,
-      mes: String(month),
-      year: String(year)
-    }).toString();
-
-    try {
-      const res = await requestWithRetry(
-        url,
-        {
-          method: "POST",
-          headers: {
-            accept: "application/json, text/plain, */*",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "x-requested-with": "XMLHttpRequest",
-            origin: "https://dramatico.inaem.gob.es",
-            referer: "https://dramatico.inaem.gob.es/"
-          },
-          body
-        },
-        { tries: 3, allowStatuses: [400, 403, 503] }
-      );
-
-      const txt = res.text();
-
-      if (looksLikeHtml(txt)) {
-        const snip = txt.slice(0, 180).replace(/\s+/g, " ");
-        throw new Error(`Expected JSON but got HTML (WAF?). Snippet: ${snip}`);
-      }
-
-      if (res.ok) return JSON.parse(txt);
-      lastErr = new Error(`HTTP ${res.status} for CDN action=${action}`);
-    } catch (e) {
-      lastErr = e;
-    }
-  }
-
-  throw lastErr || new Error("CDN JSON fetch failed");
-}
-
-function cdnSourceFromText(txt) {
-  const t = normSpace(txt).toLowerCase();
-  if (!t) return "";
-  if (t.includes("maría guerrero") || t.includes("maria guerrero")) return "cdn-maria-guerrero";
-  if (t.includes("valle-inclán") || t.includes("valle inclan") || t.includes("valle-inclan")) return "cdn-valle-inclan";
-  return "";
-}
-
-async function scrapeCDNMonthsFallbackAjax(errors) {
-  await cdnWarmup(errors);
-
-  const now = new Date();
-  const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-
-  const months = [
-    { m: now.getMonth() + 1, y: now.getFullYear() },
-    { m: next.getMonth() + 1, y: next.getFullYear() }
-  ];
-
-  const out = [];
-
-  for (const { m, y } of months) {
-    try {
-      const json = await fetchCDNJson(m, y);
-      const days = Array.isArray(json?.response) ? json.response : [];
-
-      for (const day of days) {
-        const eventos = Array.isArray(day?.eventos) ? day.eventos : [];
-        for (const ev of eventos) {
-          const title = normSpace(ev?.titulo);
-          const link = ev?.url ? String(ev.url) : "";
-          if (!title || !link) continue;
-
-          const locTxt = stripHtml(ev?.localizacion || "");
-          let src = cdnSourceFromText(locTxt);
-          if (!src) continue;
-
-          const meta = cdnVenueMeta(src);
-
-          out.push({
-            source: src,
-            kind: "theatre",
-            title,
-            credits: truncateForUI(stripHtml(ev?.subtitulo || ""), 160),
-            deck: "",
-            author: "",
-            director: "",
-            company: "",
-            choreographer: "",
-            cast: [],
-            startDate: "",
-            endDate: "",
-            dateText: "",
-            venue: meta.venue,
-            address: meta.address,
-            mapsQuery: meta.mapsQuery,
-            mapsUrl: toMapsUrl(meta.mapsQuery),
-            link,
-            image: ""
-          });
-        }
-      }
-    } catch (e) {
-      errors.push({ source: "cdn", venue: `ajax:month:${m}/${y}`, message: String(e?.message || e) });
-    }
-  }
-
-  const base = dedupeBy(out, (x) => x.link);
+  const unique = dedupeBy(out, (x) => x.link);
   const enriched = [];
-  const cache = new Map();
-
-  for (const it of base) {
-    if (cache.has(it.link)) {
-      enriched.push(cache.get(it.link));
-      continue;
-    }
-    const got = await enrichDramaticoEventPage(it, errors);
-    cache.set(it.link, got);
-    enriched.push(got);
-    await sleep(180);
+  for (const it of unique) {
+    enriched.push(await enrichCdnEvent(it, errors));
   }
 
-  return enriched.filter((x) => x.source === "cdn-maria-guerrero" || x.source === "cdn-valle-inclan");
+  const kept = enriched.filter((x) => x.endDate);
+  return kept;
 }
 
-async function scrapeCDNProgramacion(errors) {
+async function scrapeCDN(errors) {
   const mgUrl = "https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/";
   const viUrl = "https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/";
 
-  const mg = await scrapeCDNProgramacionPage(mgUrl, "cdn-maria-guerrero", errors);
-  const vi = await scrapeCDNProgramacionPage(viUrl, "cdn-valle-inclan", errors);
+  const [mg, vi] = await Promise.all([
+    scrapeCdnProgramacionPage(mgUrl, "cdn-maria-guerrero", errors),
+    scrapeCdnProgramacionPage(viUrl, "cdn-valle-inclan", errors)
+  ]);
 
-  const base = [...mg, ...vi];
-  if (!base.length) {
-    return await scrapeCDNMonthsFallbackAjax(errors);
-  }
-
-  const enriched = [];
-  const cache = new Map();
-
-  for (const it of base) {
-    if (cache.has(it.link)) {
-      enriched.push(cache.get(it.link));
-      continue;
-    }
-    const got = await enrichDramaticoEventPage(it, errors);
-    cache.set(it.link, got);
-    enriched.push(got);
-    await sleep(180);
-  }
-
-  return enriched;
+  const all = dedupeBy([...mg, ...vi], (x) => x.link);
+  const now = Date.now();
+  const kept = all.filter((x) => !isExpired(x, now));
+  errors.push({ source: "cdn", venue: "pipeline", message: `cdn: collected ${all.length}, kept ${kept.length}` });
+  return kept;
 }
 
-/* =========================================================
-   CANAL — REST tribe events v1 (estable)
-   ========================================================= */
-
-function ymd(date) {
-  const d = new Date(date);
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+function canalContainsCirco(ev) {
+  const t = normSpace(`${ev?.title || ""} ${ev?.url || ""} ${JSON.stringify(ev?.categories || [])}`).toLowerCase();
+  return /(circo|circus|cirque|pandax)/.test(t);
 }
 
-function safeLower(s) {
-  return normSpace(s).toLowerCase();
+function canalIsDance(ev) {
+  const t = normSpace(JSON.stringify(ev?.categories || [])).toLowerCase();
+  return /danza/.test(t);
 }
 
-function canalCatSignals(ev) {
-  const cats = Array.isArray(ev?.categories) ? ev.categories : [];
-  const slugs = cats.map((c) => safeLower(c?.slug)).filter(Boolean);
-  const names = cats.map((c) => safeLower(c?.name)).filter(Boolean);
-  return { slugs, names };
+function canalIsTheatre(ev) {
+  const t = normSpace(JSON.stringify(ev?.categories || [])).toLowerCase();
+  return /teatro/.test(t);
 }
 
-function isCanalDance(ev) {
-  const { slugs, names } = canalCatSignals(ev);
-  return slugs.some((s) => s.includes("danza")) || names.some((n) => n.includes("danza"));
+function formatCanalDateText(startIso, endIso) {
+  const d1 = new Date(startIso);
+  const d2 = new Date(endIso);
+  const mon = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  const left = `${d1.getDate()} ${mon[d1.getMonth()]}`;
+  const right = `${d2.getDate()} ${mon[d2.getMonth()]}`;
+  const hh = String(d1.getHours()).padStart(2, "0");
+  const mm = String(d1.getMinutes()).padStart(2, "0");
+  const showHour = !(hh === "00" && mm === "00");
+  return `${left} – ${right}${showHour ? ` · ${hh}:${mm}` : ""}`;
 }
 
-function isCanalTheatre(ev) {
-  const { slugs, names } = canalCatSignals(ev);
-
-  const theatreSlug = slugs.some((s) => s.includes("teatro") || s.includes("en-cartel") || s.includes("en-cartelera"));
-  const theatreName = names.some((n) => n.includes("teatro") || n.includes("en cartel"));
-  if (theatreSlug || theatreName) return true;
-
-  const title = safeLower(ev?.title);
-  const bad = ["taller", "curso", "masterclass", "seminario", "visita guiada", "formacion", "formación"];
-  if (bad.some((k) => title.includes(k))) return false;
-
-  return true;
-}
-
-function pickBestImageFromCanal(ev) {
-  const img = ev?.image;
-  if (!img) return "";
-  if (typeof img === "string") return img;
-  if (img?.url) return String(img.url);
-  return "";
-}
-
-function canalDates(ev) {
-  const start = ev?.start_date_utc || ev?.start_date || "";
-  const end = ev?.end_date_utc || ev?.end_date || "";
-  return { startDate: String(start || ""), endDate: String(end || "") };
-}
-
-function weekdayEsShort(d) {
-  const w = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
-  return w[d.getDay()];
-}
-function monthEsShort(d) {
-  const m = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
-  return m[d.getMonth()];
-}
-function pad2(n) { return String(n).padStart(2, "0"); }
-
-function fmtTimeFromIso(iso) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  const hh = pad2(d.getHours());
-  const mm = pad2(d.getMinutes());
-  if (hh === "00" && mm === "00") return "";
-  return `${hh}:${mm}`;
-}
-
-function canalDateText(ev) {
-  const start = ev?.start_date_utc || ev?.start_date || "";
-  const end = ev?.end_date_utc || ev?.end_date || "";
-  if (!start) return "";
-
-  const ds = new Date(start);
-  const de = end ? new Date(end) : null;
-
-  const time = fmtTimeFromIso(start);
-
-  if (!de || ds.toDateString() === de.toDateString()) {
-    const day = `${weekdayEsShort(ds)} ${pad2(ds.getDate())} ${monthEsShort(ds)}`;
-    return time ? `${day} · ${time}` : day;
-  }
-
-  const a = `${pad2(ds.getDate())} ${monthEsShort(ds)}`;
-  const b = `${pad2(de.getDate())} ${monthEsShort(de)}`;
-  const w1 = weekdayEsShort(ds);
-  const w2 = weekdayEsShort(de);
-  const wRange = (w1 && w2) ? `${w1}–${w2}` : "";
-
-  const left = `Del ${a} al ${b}`;
-  const mid = wRange ? ` · ${wRange}` : "";
-  const right = time ? ` · ${time}` : "";
-
-  return `${left}${mid}${right}`;
-}
-
-async function fetchCanalEventsPage({ perPage, page, startDate, endDate }, errors) {
-  const url = new URL("https://www.teatroscanal.com/wp-json/tribe/events/v1/events");
-  url.searchParams.set("per_page", String(perPage));
-  url.searchParams.set("page", String(page));
-  url.searchParams.set("start_date", startDate);
-  url.searchParams.set("end_date", endDate);
-
-  try {
-    const res = await requestWithRetry(url.toString(), {}, { tries: 3, allowStatuses: [404] });
-    if (res.status === 404) return { _end: true, events: [] };
-
-    const txt = res.text();
-    if (looksLikeHtml(txt)) throw new Error("Expected JSON but got HTML");
-    return JSON.parse(txt);
-  } catch (e) {
-    errors.push({ source: "canal", venue: `rest:page:${page}`, message: String(e?.message || e) });
-    return null;
-  }
-}
-
-async function scrapeCanalREST(errors) {
-  const now = new Date();
-  const from = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
-  const to = new Date(now.getTime() + 120 * 24 * 60 * 60 * 1000);
-
-  const startDate = ymd(from);
-  const endDate = ymd(to);
-
-  const perPage = 50;
-  const maxPages = 8;
-
+async function scrapeCanal(errors) {
   const theatre = [];
   const dance = [];
 
-  for (let page = 1; page <= maxPages; page++) {
-    const data = await fetchCanalEventsPage({ perPage, page, startDate, endDate }, errors);
-    if (!data) break;
-    if (data._end) break;
+  let page = 1;
+  let guard = 0;
+  while (guard < 12) {
+    guard += 1;
+    const url = `https://www.teatroscanal.com/wp-json/tribe/events/v1/events?page=${page}&per_page=100`;
+    let json;
+    try {
+      const txt = await fetchText(url, { headers: { accept: "application/json,*/*;q=0.9" } }, { tries: 2, allowStatuses: [400, 404] });
+      json = parseJsonSafe(txt, null);
+    } catch (e) {
+      errors.push({ source: "canal", venue: "canal", message: `page ${page} ${String(e?.message || e)}` });
+      break;
+    }
 
-    const events = Array.isArray(data?.events) ? data.events : [];
+    const events = Array.isArray(json?.events) ? json.events : [];
     if (!events.length) break;
 
     for (const ev of events) {
+      if (canalContainsCirco(ev)) continue;
       const title = normSpace(ev?.title);
-      const link = ev?.url ? String(ev.url) : "";
+      const link = ev?.url || "";
       if (!title || !link) continue;
+      const startRaw = ev?.start_date || ev?.start_date_utc;
+      const endRaw = ev?.end_date || ev?.end_date_utc;
+      if (!startRaw || !endRaw) continue;
 
-      const { startDate: s, endDate: e } = canalDates(ev);
-      const image = pickBestImageFromCanal(ev);
+      const startDate = new Date(startRaw).toISOString();
+      const endDate = new Date(endRaw).toISOString();
 
-      const baseItem = {
+      const base = makeBaseItem({
         source: "canal",
         title,
-        credits: "",
-        deck: "",
-        author: "",
-        director: "",
-        company: "",
-        choreographer: "",
-        cast: [],
-        startDate: s,
-        endDate: e,
-        dateText: canalDateText(ev),
+        link,
+        startDate,
+        endDate,
+        dateText: formatCanalDateText(startDate, endDate),
         venue: "Teatros del Canal",
         address: "C. de Cea Bermúdez, 1, Madrid",
         mapsQuery: "Teatros del Canal, Madrid",
         mapsUrl: toMapsUrl("Teatros del Canal, Madrid"),
-        link,
-        image
-      };
+        image: ev?.image?.url || ev?.image?.sizes?.medium?.url || ""
+      });
 
-      if (isCanalDance(ev)) dance.push({ ...baseItem, kind: "dance" });
-      else if (isCanalTheatre(ev)) theatre.push({ ...baseItem, kind: "theatre" });
+      if (canalIsDance(ev)) {
+        dance.push({ ...base, kind: "dance" });
+      } else if (canalIsTheatre(ev)) {
+        theatre.push({ ...base, kind: "theatre" });
+      }
     }
 
-    if (theatre.length >= 60 && dance.length >= 20) break;
-    await sleep(140);
+    page += 1;
   }
 
   return {
@@ -1363,422 +676,355 @@ async function scrapeCanalREST(errors) {
   };
 }
 
-/* =========================================================
-   Nave 10 (JSON-LD por evento)
-   ========================================================= */
+function extractDrupalLibraries(html) {
+  const m1 = String(html || "").match(/"ajax_page_state"\s*:\s*\{[^}]*"libraries"\s*:\s*"([^"]+)"/i);
+  if (m1) return m1[1];
+  const m2 = String(html || "").match(/name="ajax_page_state\[libraries\]"\s+value="([^"]+)"/i);
+  if (m2) return m2[1];
+  return "";
+}
 
-async function scrapeNave10Theatre(errors) {
-  const listUrl = "https://www.nave10matadero.es/programacion?field_category%5B14%5D=14";
-  const html = await fetchText(listUrl);
-  const $ = cheerio.load(html);
-
-  const links = $("a")
-    .map((_, a) => $(a).attr("href"))
-    .get()
-    .filter(Boolean)
-    .map((href) => (href.startsWith("http") ? href : `https://www.nave10matadero.es${href}`))
-    .filter((href) => /\/actividades\//.test(href));
-
-  const uniqueLinks = [...new Set(links)].slice(0, 18);
-
-  const out = [];
-  for (const url of uniqueLinks) {
-    try {
-      const page = await fetchText(url);
-      const jsonLd = extractJsonLdObjects(page);
-      const ev = pickEventFromJsonLd(jsonLd);
-      if (!ev?.name) continue;
-
-      const desc = stripHtml(ev.description || "");
-      out.push({
-        source: "nave10",
-        kind: "theatre",
-        title: normSpace(ev.name),
-
-        credits: "",
-        deck: pickFirstSentence(desc, 210),
-
-        author: "",
-        director: "",
-        company: "",
-        choreographer: "",
-        cast: [],
-
-        startDate: ev.startDate || "",
-        endDate: ev.endDate || "",
-        dateText: "",
-
-        venue: "Nave 10 Matadero",
-        address: "Plaza de Legazpi, 8, Madrid",
-        mapsQuery: "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
-        mapsUrl: toMapsUrl("Nave 10 Matadero, Plaza de Legazpi 8, Madrid"),
-        link: ev.url || url,
-        image: (typeof ev.image === "string" ? ev.image : ev.image?.url) || ""
-      });
-
-      await sleep(120);
-    } catch (e) {
-      errors.push({ source: "nave10", venue: "activity", message: String(e?.message || e) });
-    }
+function extractDrupalHtmlFromAjaxCommands(payload) {
+  const arr = Array.isArray(payload) ? payload : [];
+  let html = "";
+  for (const cmd of arr) {
+    if (typeof cmd?.data === "string" && cmd.data.includes("views-row")) html += `\n${cmd.data}`;
+    if (typeof cmd?.html === "string" && cmd.html.includes("views-row")) html += `\n${cmd.html}`;
   }
-  return out;
+  return html;
 }
 
-async function scrapeMataderoTheatreDisabled() {
-  return [];
-}
-
-/* =========================================================
-   Teatro Pradillo (Divi)
-   ========================================================= */
-
-async function scrapePradillo(errors) {
-  const url = "https://www.teatropradillo.com/";
-  const html = await fetchText(url);
-  const $ = cheerio.load(html);
-
-  const items = $("article.et_pb_post[id^='post-']")
-    .map((_, el) => {
-      const $a = $(el).find("h2.entry-title a").first();
-      const title = normSpace($a.text());
-      const link = $a.attr("href") ? String($a.attr("href")) : "";
-      if (!title || !link) return null;
-
-      const dateText = normSpace($(el).find(".post-content-inner p").first().text());
-      const endDate = parseSpanishEndDate(dateText);
-
-      const img = $(el).find(".et_pb_image_container img").first().attr("src") || "";
-
-      return {
-        source: "pradillo",
-        kind: "theatre",
-        title,
-
-        credits: "",
-        deck: "",
-
-        author: "",
-        director: "",
-        company: "",
-        choreographer: "",
-        cast: [],
-
-        startDate: "",
-        endDate,
-        dateText,
-
-        venue: "Teatro Pradillo",
-        address: "C. de Pradillo, 12, Madrid",
-        mapsQuery: "Teatro Pradillo, Madrid",
-        mapsUrl: toMapsUrl("Teatro Pradillo, Madrid"),
-        link,
-        image: img
-      };
-    })
-    .get()
-    .filter(Boolean);
-
-  return dedupeBy(items, (x) => x.link);
-}
-
-/* =========================================================
-   Teatro del Barrio (Elementor) — FIX ROBUSTO
-   ========================================================= */
-
-async function scrapeTeatroDelBarrio(errors) {
-  const url = "https://teatrodelbarrio.com/";
-  const html = await fetchText(url);
-  const $ = cheerio.load(html);
-
-  const items = $("div.article[id^='post-']")
-    .map((_, el) => {
-      const $a = $(el).find("h2.title a").first();
-      const title = normSpace($a.text() || $(el).find("h2.title").first().text());
-      const link = $a.attr("href") ? String($a.attr("href")) : "";
-      if (!title || !link) return null;
-
-      const dateText =
-        normSpace($(el).find("div.text-container > div").first().text()) ||
-        normSpace($(el).find(".grid-content div").first().text());
-
-      const endDate = parseSpanishEndDate(dateText);
-
-      const style = $(el).find("div.image-wrap").first().attr("style") || "";
-      const m = style.match(/background-image:\s*url\(["']?([^"')]+)["']?\)/i);
-      const image = m ? m[1] : "";
-
-      return {
-        source: "teatrodelbarrio",
-        kind: "theatre",
-        title,
-
-        credits: "",
-        deck: "",
-
-        author: "",
-        director: "",
-        company: "",
-        choreographer: "",
-        cast: [],
-
-        startDate: "",
-        endDate,
-        dateText,
-
-        venue: "Teatro del Barrio",
-        address: "C. de Zurita, 20, Madrid",
-        mapsQuery: "Teatro del Barrio, Madrid",
-        mapsUrl: toMapsUrl("Teatro del Barrio, Madrid"),
-        link,
-        image
-      };
-    })
-    .get()
-    .filter(Boolean);
-
-  return dedupeBy(items, (x) => x.link);
-}
-
-/* =========================================================
-   Teatro Español — Drupal Views AJAX (blindado)
-   ========================================================= */
-
-function extractDrupalSettingsJson(html) {
-  const $ = cheerio.load(html);
-  const raw = $('script[type="application/json"][data-drupal-selector="drupal-settings-json"]').first().html();
-  if (!raw) return null;
-  try { return JSON.parse(raw); } catch { return null; }
-}
-
-function extractAjaxPageState(html) {
-  const mTheme = html.match(/"theme"\s*:\s*"([^"]+)"/);
-  const mLibs = html.match(/"libraries"\s*:\s*"([^"]+)"/);
-  return { theme: mTheme ? mTheme[1] : "", libraries: mLibs ? mLibs[1] : "" };
-}
-
-async function fetchTeatroEspanolViewsPage(page, errors) {
+async function scrapeTeatroEspanol(errors) {
+  const out = [];
   const base = "https://www.teatroespanol.es";
-  const programUrl = `${base}/programacion`;
-  const html = await fetchText(programUrl, { headers: { accept: "text/html,*/*;q=0.9" } });
-
-  const settings = extractDrupalSettingsJson(html);
-  let theme = "";
   let libraries = "";
 
-  if (settings?.ajaxPageState) {
-    theme = settings.ajaxPageState.theme || "";
-    libraries = settings.ajaxPageState.libraries || "";
-  } else {
-    const ap = extractAjaxPageState(html);
-    theme = ap.theme;
-    libraries = ap.libraries;
-  }
-
-  if (!theme || !libraries) {
-    errors.push({ source: "teatroespanol", venue: "ajax", message: "No pude extraer ajax_page_state (theme/libraries)." });
-    return null;
-  }
-
-  const endpoint = `${base}/views/ajax?_wrapper_format=drupal_ajax`;
-
-  const form = new URLSearchParams();
-  form.set("view_name", "schedule");
-  form.set("view_display_id", "schedule");
-  form.set("view_args", "");
-  form.set("view_path", "/programacion");
-  form.set("view_base_path", "programacion");
-  form.set("pager_element", "0");
-  form.set("page", String(page));
-  form.set("ajax_page_state[theme]", theme);
-  form.set("ajax_page_state[libraries]", libraries);
-
   try {
-    const res = await requestWithRetry(
-      endpoint,
-      {
-        method: "POST",
-        headers: {
-          accept: "application/json, text/plain, */*",
-          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "x-requested-with": "XMLHttpRequest",
-          origin: base,
-          referer: programUrl
-        },
-        body: form.toString()
-      },
-      { tries: 3 }
-    );
-
-    const txt = res.text();
-
-    if (looksLikeHtml(txt)) throw new Error("Expected JSON but got HTML");
-    return JSON.parse(txt);
+    const initial = await fetchText(`${base}/programacion`, { headers: { accept: "text/html,*/*;q=0.9" } }, { tries: 2 });
+    libraries = extractDrupalLibraries(initial);
   } catch (e) {
-    errors.push({ source: "teatroespanol", venue: `ajax:page:${page}`, message: String(e?.message || e) });
-    return null;
+    errors.push({ source: "teatroespanol", venue: "teatroespanol", message: `init fail: ${String(e?.message || e)}` });
   }
-}
 
-function extractInsertedHtmlFromDrupalAjax(payload) {
-  if (!Array.isArray(payload)) return "";
-  for (const cmd of payload) {
-    if (cmd && typeof cmd === "object" && cmd.command === "insert" && typeof cmd.data === "string") {
-      if (cmd.data.includes("views-row")) return cmd.data;
+  for (let page = 0; page < 30; page++) {
+    const params = new URLSearchParams({
+      view_name: "schedule",
+      view_display_id: "schedule",
+      view_path: "/programacion",
+      view_base_path: "programacion",
+      page: String(page),
+      "ajax_page_state[theme]": "teatroespanol_v2",
+      "ajax_page_state[libraries]": libraries || ""
+    });
+
+    let payload;
+    try {
+      const txt = await fetchText(
+        `${base}/views/ajax?_wrapper_format=drupal_ajax`,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json, text/javascript, */*; q=0.01",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "x-requested-with": "XMLHttpRequest",
+            origin: base,
+            referer: `${base}/programacion`
+          },
+          body: params.toString()
+        },
+        { tries: 2 }
+      );
+      payload = parseJsonSafe(txt, []);
+    } catch (e) {
+      errors.push({ source: "teatroespanol", venue: "teatroespanol", message: `ajax page ${page} fail: ${String(e?.message || e)}` });
+      break;
     }
-  }
-  return payload.map((x) => (x && typeof x.data === "string" ? x.data : "")).join("\n");
-}
 
-async function scrapeTeatroEspanolAJAX(errors) {
-  const base = "https://www.teatroespanol.es";
-  const out = [];
-  const maxPages = 4;
-
-  for (let page = 0; page < maxPages; page++) {
-    const payload = await fetchTeatroEspanolViewsPage(page, errors);
-    if (!payload) break;
-
-    const html = extractInsertedHtmlFromDrupalAjax(payload);
+    const html = extractDrupalHtmlFromAjaxCommands(payload);
     if (!html || !html.includes("views-row")) break;
 
     const $ = cheerio.load(html);
     const rows = $("div.views-row");
     if (!rows.length) break;
 
-    rows.each((_, el) => {
-      const $row = $(el);
-
-      const $titleA = $row.find(".show-content .title a, .field--name-node-title a").first();
-      const title = normSpace($titleA.text());
-      const href = $titleA.attr("href") || "";
+    rows.each((_, row) => {
+      const $row = $(row);
+      const $a = $row.find(".field-name-node-title a").first();
+      const title = normSpace($a.text());
+      const href = $a.attr("href") || "";
       const link = href ? (href.startsWith("http") ? href : `${base}${href}`) : "";
       if (!title || !link) return;
 
-      const subtitle =
-        normSpace($row.find(".field--name-field-secondary-subtitle").first().text()) ||
-        normSpace($row.find(".subtitle").first().text());
-
       const dateText = normSpace($row.find(".date-range").first().text());
       const endDate = parseSpanishEndDate(dateText);
+      if (!endDate) return;
 
-      const img = $row.find(".show-image img, picture img").first().attr("src") || "";
-      const image = img ? (img.startsWith("http") ? img : `${base}${img}`) : "";
-
-      const venue = "Teatro Español";
-      const address = "Pl. de Santa Ana, 4, Madrid";
-
-      out.push({
+      out.push(makeBaseItem({
         source: "teatroespanol",
         kind: "theatre",
         title,
-
-        credits: truncateForUI(subtitle || "", 160),
-        deck: "",
-
-        author: "",
-        director: "",
-        company: "",
-        choreographer: "",
-        cast: [],
-
-        startDate: "",
-        endDate,
-        dateText,
-
-        venue,
-        address,
-        mapsQuery: `${venue}, ${address}`,
-        mapsUrl: toMapsUrl(`${venue}, ${address}`),
         link,
-        image
-      });
+        dateText,
+        startDate: parseSpanishStartDate(dateText),
+        endDate,
+        venue: "Teatro Español",
+        address: "Pl. de Santa Ana, 4, Madrid",
+        mapsQuery: "Teatro Español, Pl. de Santa Ana, 4, Madrid",
+        mapsUrl: toMapsUrl("Teatro Español, Pl. de Santa Ana, 4, Madrid")
+      }));
     });
-
-    await sleep(120);
   }
 
   return dedupeBy(out, (x) => x.link);
 }
 
-/* =========================================================
-   MAIN
-   ========================================================= */
+async function scrapeNave10(errors) {
+  const out = [];
+  const tryPaths = [
+    "https://www.nave10matadero.es/actividades/",
+    "https://www.nave10matadero.es/actividades",
+    "https://www.nave10matadero.es/programacion/",
+    "https://www.nave10matadero.es/programacion",
+    "https://www.nave10matadero.es/agenda/",
+    "https://www.nave10matadero.es/agenda"
+  ];
+
+  let listing = "";
+  for (const p of tryPaths) {
+    try {
+      const txt = await fetchText(p, { headers: { accept: "text/html,*/*;q=0.9" } }, { tries: 2 });
+      if (txt && !looksWaf(txt)) {
+        listing = txt;
+        break;
+      }
+    } catch {}
+  }
+
+  if (!listing) {
+    errors.push({ source: "nave10", venue: "nave10", message: "listing unavailable" });
+    return out;
+  }
+
+  const $ = cheerio.load(listing);
+  const links = new Set();
+  $("a[href]").each((_, a) => {
+    const href = $(a).attr("href") || "";
+    if (!href) return;
+    const abs = href.startsWith("http") ? href : `https://www.nave10matadero.es${href}`;
+    if (/nave10matadero\.es\/.+/.test(abs) && !/\.(jpg|jpeg|png|webp|pdf)(\?|$)/i.test(abs)) {
+      if (/\/actividades\//.test(abs) || /\/programacion\//.test(abs) || /\/agenda\//.test(abs)) links.add(abs);
+    }
+  });
+
+  for (const link of [...links]) {
+    try {
+      const html = await fetchText(link, { headers: { accept: "text/html,*/*;q=0.9" } }, { tries: 1 });
+      const $$ = cheerio.load(html);
+      const title = normSpace($$("h1").first().text()) || normSpace($$("meta[property='og:title']").attr("content"));
+      if (!title) continue;
+
+      let startDate = "";
+      let endDate = "";
+      const ldScripts = $$('script[type="application/ld+json"]').toArray();
+      for (const sc of ldScripts) {
+        const obj = parseJsonSafe($$(sc).html() || "", null);
+        const arr = Array.isArray(obj) ? obj : (obj ? [obj] : []);
+        for (const x of arr) {
+          if (x?.startDate && !startDate) startDate = new Date(x.startDate).toISOString();
+          if (x?.endDate && !endDate) endDate = new Date(x.endDate).toISOString();
+          if (Array.isArray(x?.subEvent)) {
+            for (const y of x.subEvent) {
+              if (y?.startDate && !startDate) startDate = new Date(y.startDate).toISOString();
+              if (y?.endDate && !endDate) endDate = new Date(y.endDate).toISOString();
+            }
+          }
+        }
+      }
+      if (!endDate) continue;
+
+      out.push(makeBaseItem({
+        source: "nave10",
+        kind: "theatre",
+        title,
+        link,
+        startDate,
+        endDate,
+        deck: truncateForUI(normSpace($$("meta[name='description']").attr("content") || ""), 200),
+        venue: "Nave 10 Matadero",
+        address: "Plaza de Legazpi, 8, Madrid",
+        mapsQuery: "Nave 10 Matadero, Plaza de Legazpi 8, Madrid",
+        mapsUrl: toMapsUrl("Nave 10 Matadero, Plaza de Legazpi 8, Madrid"),
+        image: $$("meta[property='og:image']").attr("content") || ""
+      }));
+    } catch {}
+  }
+
+  return dedupeBy(out, (x) => x.link);
+}
+
+async function scrapePradillo(errors) {
+  const out = [];
+  try {
+    const html = await fetchText("https://www.teatropradillo.com/", { headers: { accept: "text/html,*/*;q=0.9" } }, { tries: 2 });
+    const $ = cheerio.load(html);
+    $("article.et_pb_post").each((_, card) => {
+      const $c = $(card);
+      const $a = $c.find("h2 a").first();
+      const title = normSpace($a.text());
+      const href = $a.attr("href") || "";
+      const link = href ? (href.startsWith("http") ? href : `https://www.teatropradillo.com${href}`) : "";
+      if (!title || !link) return;
+
+      const dateText = normSpace($c.find(".post-meta").text()) || normSpace($c.text());
+      const endDate = parseSpanishEndDate(dateText);
+      if (!endDate) return;
+
+      out.push(makeBaseItem({
+        source: "pradillo",
+        kind: "theatre",
+        title,
+        link,
+        dateText,
+        startDate: parseSpanishStartDate(dateText),
+        endDate,
+        venue: "Teatro Pradillo",
+        address: "C. de Pradillo, 12, Madrid",
+        mapsQuery: "Teatro Pradillo, Madrid",
+        mapsUrl: toMapsUrl("Teatro Pradillo, Madrid")
+      }));
+    });
+  } catch (e) {
+    errors.push({ source: "pradillo", venue: "pradillo", message: String(e?.message || e) });
+  }
+  return dedupeBy(out, (x) => x.link);
+}
+
+async function scrapeTeatroDelBarrio(errors) {
+  const out = [];
+  try {
+    const html = await fetchText("https://teatrodelbarrio.com/", { headers: { accept: "text/html,*/*;q=0.9" } }, { tries: 2 });
+    const $ = cheerio.load(html);
+    $("div.article[id^='post-']").each((_, card) => {
+      const $c = $(card);
+      const $a = $c.find("h2.title a").first();
+      const title = normSpace($a.text());
+      const href = $a.attr("href") || "";
+      const link = href ? (href.startsWith("http") ? href : `https://teatrodelbarrio.com${href}`) : "";
+      if (!title || !link) return;
+
+      const dateText = normSpace($c.text());
+      const endDate = parseSpanishEndDate(dateText);
+      if (!endDate) return;
+
+      out.push(makeBaseItem({
+        source: "teatrodelbarrio",
+        kind: "theatre",
+        title,
+        link,
+        dateText,
+        startDate: parseSpanishStartDate(dateText),
+        endDate,
+        venue: "Teatro del Barrio",
+        address: "C/ de Zurita, 20, Madrid",
+        mapsQuery: "Teatro del Barrio, Madrid",
+        mapsUrl: toMapsUrl("Teatro del Barrio, Madrid")
+      }));
+    });
+  } catch (e) {
+    errors.push({ source: "teatrodelbarrio", venue: "teatrodelbarrio", message: String(e?.message || e) });
+  }
+  return dedupeBy(out, (x) => x.link);
+}
+
+function filterActive(items) {
+  const nowMs = Date.now();
+  return items.filter((it) => {
+    const end = isoToMs(it.endDate);
+    return end !== Infinity && end >= (nowMs - 24 * 60 * 60 * 1000);
+  });
+}
+
+function countMix(items) {
+  const m = {};
+  for (const it of items) m[it.source] = (m[it.source] || 0) + 1;
+  return m;
+}
 
 async function main() {
   const errors = [];
 
-  const theatre = [];
-  const dance = [];
+  const [cdnTheatre, canal, espanolTheatre, nave10Theatre, pradilloTheatre, barrioTheatre] = await Promise.all([
+    scrapeCDN(errors),
+    scrapeCanal(errors),
+    scrapeTeatroEspanol(errors),
+    scrapeNave10(errors),
+    scrapePradillo(errors),
+    scrapeTeatroDelBarrio(errors)
+  ]);
 
-  // 1) CDN (Valle + María) Programación + enrich; fallback (jina -> ajax) + INAEM (si hace falta)
-  theatre.push(...(await scrapeCDNProgramacion(errors)));
+  const theatreCollected = dedupeBy([
+    ...cdnTheatre,
+    ...espanolTheatre,
+    ...nave10Theatre,
+    ...pradilloTheatre,
+    ...barrioTheatre,
+    ...canal.theatre
+  ], (x) => x.link);
 
-  // 2) CANAL REST (teatro + danza) + dateText editorial
-  const canal = await scrapeCanalREST(errors);
-  theatre.push(...canal.theatre);
-  dance.push(...canal.dance);
+  const danceCollected = dedupeBy(canal.dance, (x) => x.link);
 
-  // 3) Nave10 + Matadero desactivado
-  theatre.push(...(await scrapeNave10Theatre(errors)));
-  theatre.push(...(await scrapeMataderoTheatreDisabled()));
+  const theatreActive = filterActive(theatreCollected);
+  const danceActive = filterActive(danceCollected);
 
-  // 4) Español AJAX, Pradillo, Barrio
-  theatre.push(...(await scrapeTeatroEspanolAJAX(errors)));
-  theatre.push(...(await scrapePradillo(errors)));
-  theatre.push(...(await scrapeTeatroDelBarrio(errors)));
-
-  const theatreUnique = dedupeBy(theatre, (x) => x.link || `${x.source}:${x.title}`);
-  const danceUnique = dedupeBy(dance, (x) => x.link || `${x.source}:${x.title}`);
-
-  const nowMs = Date.now();
-  const theatreActive = theatreUnique.filter((it) => !isExpired(it, nowMs));
-  const danceActive = danceUnique.filter((it) => !isExpired(it, nowMs));
-
-  const theatrePicked = pickWithCaps(theatreActive, LIMITS.theatreMax, CAPS_THEATRE);
-  const dancePicked = pickWithCaps(danceActive, LIMITS.danceMax, CAPS_DANCE);
-
-  const theatreFinal = theatrePicked.map(sanitizeForOutput);
-  const danceFinal = dancePicked.map(sanitizeForOutput);
+  const theatreFinal = pickWithCaps(theatreActive, LIMITS.theatreMax, CAPS_THEATRE).map(sanitizeForOutput);
+  const danceFinal = pickWithCaps(danceActive, LIMITS.danceMax, CAPS_DANCE).map(sanitizeForOutput);
 
   const out = {
     updatedAt: new Date().toISOString(),
     theatre: theatreFinal,
     dance: danceFinal,
     meta: {
-      limits: LIMITS,
-      caps: { theatre: CAPS_THEATRE, dance: CAPS_DANCE },
-      sources: {
-        theatre: [...new Set(theatreFinal.map((x) => x.source))],
-        dance: [...new Set(danceFinal.map((x) => x.source))]
-      },
       counts: {
-        theatreCollected: theatre.length,
-        danceCollected: dance.length,
-        theatreUnique: theatreUnique.length,
-        danceUnique: danceUnique.length,
+        theatreCollected: theatreCollected.length,
+        danceCollected: danceCollected.length,
         theatreActive: theatreActive.length,
         danceActive: danceActive.length,
         theatreFinal: theatreFinal.length,
         danceFinal: danceFinal.length
       },
       mix: {
-        theatre: tallyBySource(theatreFinal),
-        dance: tallyBySource(danceFinal)
+        theatre: countMix(theatreFinal),
+        dance: countMix(danceFinal)
       },
       errors
     }
   };
 
-  fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
-  fs.writeFileSync(OUT_PATH, JSON.stringify(out, null, 2) + "\n", "utf-8");
-
-  console.log(`OK: wrote ${OUT_PATH}`);
-  console.log(`Mix theatre:`, out.meta.mix.theatre);
-  console.log(`Mix dance:`, out.meta.mix.dance);
-  if (errors.length) console.warn(`WARN: ${errors.length} source errors (see meta.errors).`);
+  await fs.mkdir(path.dirname(OUT_PATH), { recursive: true });
+  await fs.writeFile(OUT_PATH, `${JSON.stringify(out, null, 2)}\n`, "utf8");
 }
 
-main().catch((err) => {
-  console.error("FAILED:", err);
-  process.exit(1);
+main().catch(async (err) => {
+  const fallback = {
+    updatedAt: new Date().toISOString(),
+    theatre: [],
+    dance: [],
+    meta: {
+      counts: {
+        theatreCollected: 0,
+        danceCollected: 0,
+        theatreActive: 0,
+        danceActive: 0,
+        theatreFinal: 0,
+        danceFinal: 0
+      },
+      mix: { theatre: {}, dance: {} },
+      errors: [{ source: "main", venue: "main", message: String(err?.stack || err?.message || err) }]
+    }
+  };
+  try {
+    await fs.mkdir(path.dirname(OUT_PATH), { recursive: true });
+    await fs.writeFile(OUT_PATH, `${JSON.stringify(fallback, null, 2)}\n`, "utf8");
+  } catch {}
+  process.exitCode = 1;
 });
