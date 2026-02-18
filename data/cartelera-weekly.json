@@ -1,48 +1,6 @@
 {
-  "updatedAt": "2026-02-17T23:55:58.314Z",
+  "updatedAt": "2026-02-18T09:58:07.406Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Roberto Magro",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-17T00:00:00.000Z",
-      "endDate": "2026-02-17T23:59:59.000Z",
-      "dateText": "17 feb – 17 feb",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/roberto-magro-ponencia/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_MAGRO.jpg"
-    },
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "DelsAltres",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-19T00:00:00.000Z",
-      "endDate": "2026-02-20T23:59:59.000Z",
-      "dateText": "19 feb – 20 feb",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/dels-altres-burstners-club/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_BURSTNER.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -67,27 +25,6 @@
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Cirque La Compagnie",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-21T00:00:00.000Z",
-      "endDate": "2026-02-22T23:59:59.000Z",
-      "dateText": "21 feb – 22 feb",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/cirque-la-compagnie-pandax/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/11/AF_BANNERS_ABONO_CANAL_2025_111125_RIESGO_293x150_PANDAX.jpg"
-    },
-    {
-      "source": "canal",
-      "kind": "theatre",
       "title": "Grand River &#038; Abul Mogard",
       "credits": "",
       "deck": "",
@@ -107,21 +44,66 @@
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MOGARD.jpg"
     }
   ],
-  "dance": [],
+  "dance": [
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Compañía Daniel Abreu",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-02-26T00:00:00.000Z",
+      "endDate": "2026-02-28T23:59:59.000Z",
+      "dateText": "26 feb – 28 feb",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/compania-daniel-abreu-capitulo-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_151225_ABREU.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Compañía Nacional de Danza",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-03-12T00:00:00.000Z",
+      "endDate": "2026-03-15T23:59:59.000Z",
+      "dateText": "12 mar – 15 mar",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/compania-nacional-de-danza-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MURIEL.jpg"
+    }
+  ],
   "meta": {
     "counts": {
-      "theatreCollected": 5,
-      "danceCollected": 0,
-      "theatreActive": 5,
-      "danceActive": 0,
-      "theatreFinal": 5,
-      "danceFinal": 0
+      "theatreCollected": 28,
+      "danceCollected": 9,
+      "theatreActive": 28,
+      "danceActive": 9,
+      "theatreFinal": 2,
+      "danceFinal": 2
     },
     "mix": {
       "theatre": {
-        "canal": 5
+        "canal": 2
       },
-      "dance": {}
+      "dance": {
+        "canal": 2
+      }
     },
     "errors": [
       {
@@ -130,9 +112,39 @@
         "message": "cdn: collected 0, kept 0"
       },
       {
+        "source": "teatroespanol",
+        "venue": "teatroespanol",
+        "message": "libraries empty (fallback POST without libraries will be attempted)"
+      },
+      {
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
+      },
+      {
+        "source": "teatroespanol",
+        "venue": "teatroespanol",
+        "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
+      },
+      {
+        "source": "teatroespanol",
+        "venue": "pipeline",
+        "message": "espanol: collected 0"
+      },
+      {
         "source": "nave10",
         "venue": "nave10",
-        "message": "HTTP 404 for https://www.nave10matadero.es/actividades"
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
+      },
+      {
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
+      },
+      {
+        "source": "nave10",
+        "venue": "pipeline",
+        "message": "nave10: collected 0"
       }
     ]
   }
