@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-02-18T09:58:07.406Z",
+  "updatedAt": "2026-02-23T08:06:30.313Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Romina Paula",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-02-18T00:00:00.000Z",
-      "endDate": "2026-02-22T23:59:59.000Z",
-      "dateText": "18 feb – 22 feb",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/sombras-por-supuesto-romina-paula-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_ROMINA.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -42,6 +21,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/abul-mogard-grand-river-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MOGARD.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Amos Gitai",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-03-05T00:00:00.000Z",
+      "endDate": "2026-03-07T23:59:59.000Z",
+      "dateText": "5 mar – 7 mar",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/golem-amos-gitai-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_GITAI.jpg"
     }
   ],
   "dance": [
@@ -107,19 +107,14 @@
     },
     "errors": [
       {
-        "source": "cdn",
-        "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
-      },
-      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
       },
       {
         "source": "teatroespanol",
@@ -130,6 +125,16 @@
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
+      },
+      {
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
+      },
+      {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
       },
       {
         "source": "nave10",
