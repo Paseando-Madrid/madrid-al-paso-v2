@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-03-02T07:09:36.451Z",
+  "updatedAt": "2026-03-09T07:12:46.598Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Amos Gitai",
+      "title": "Cabosanroque con El Niño de Elche",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-05T00:00:00.000Z",
-      "endDate": "2026-03-07T23:59:59.000Z",
-      "dateText": "5 mar – 7 mar",
+      "startDate": "2026-03-11T00:00:00.000Z",
+      "endDate": "2026-03-11T23:59:59.000Z",
+      "dateText": "11 mar – 11 mar",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/golem-amos-gitai-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_GITAI.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/cabosanroque-con-el-nino-de-elche/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/02/nelchewebTC-543x314-1.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Young Boy Dancing Group",
+      "title": "Martina Cabanas Collell",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,15 +33,15 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-06T00:00:00.000Z",
-      "endDate": "2026-03-07T23:59:59.000Z",
-      "dateText": "6 mar – 7 mar",
+      "startDate": "2026-03-18T00:00:00.000Z",
+      "endDate": "2026-03-21T23:59:59.000Z",
+      "dateText": "18 mar – 21 mar",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/young-boydancing-group-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_YOUNG_BOY.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/la-curva-del-tiempo-martina-cabanas-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_071025_CURVA_TIEMPO.jpg"
     }
   ],
   "dance": [
@@ -90,9 +90,9 @@
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 27,
+      "theatreCollected": 24,
       "danceCollected": 8,
-      "theatreActive": 27,
+      "theatreActive": 24,
       "danceActive": 8,
       "theatreFinal": 2,
       "danceFinal": 2
@@ -107,9 +107,9 @@
     },
     "errors": [
       {
-        "source": "cdn",
+        "source": "teatrodelbarrio",
         "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
+        "message": "barrio: collected 0"
       },
       {
         "source": "teatroespanol",
@@ -117,14 +117,14 @@
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
+      },
+      {
         "source": "pradillo",
         "venue": "pipeline",
         "message": "pradillo: collected 0"
-      },
-      {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
       },
       {
         "source": "teatroespanol",
@@ -140,6 +140,16 @@
         "source": "nave10",
         "venue": "nave10",
         "message": "listing ok https://www.nave10matadero.es/programacion/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
+      },
+      {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
       },
       {
         "source": "nave10",
