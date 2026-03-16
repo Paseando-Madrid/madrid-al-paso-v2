@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-03-09T07:12:46.598Z",
+  "updatedAt": "2026-03-16T07:43:03.834Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Cabosanroque con El Niño de Elche",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-03-11T00:00:00.000Z",
-      "endDate": "2026-03-11T23:59:59.000Z",
-      "dateText": "11 mar – 11 mar",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/cabosanroque-con-el-nino-de-elche/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/02/nelchewebTC-543x314-1.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -42,13 +21,11 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/la-curva-del-tiempo-martina-cabanas-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_071025_CURVA_TIEMPO.jpg"
-    }
-  ],
-  "dance": [
+    },
     {
       "source": "canal",
-      "kind": "dance",
-      "title": "Compañía Nacional de Danza",
+      "kind": "theatre",
+      "title": "El invitado, de Aurora Parrilla",
       "credits": "",
       "deck": "",
       "author": "",
@@ -56,16 +33,18 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-12T00:00:00.000Z",
-      "endDate": "2026-03-15T23:59:59.000Z",
-      "dateText": "12 mar – 15 mar",
+      "startDate": "2026-03-23T00:00:00.000Z",
+      "endDate": "2026-03-23T23:59:59.000Z",
+      "dateText": "23 mar – 23 mar",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/compania-nacional-de-danza-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_020326_CND_293x150.jpg"
-    },
+      "link": "https://www.teatroscanal.com/espectaculo/lectura-dramatizada-dia-internacional-del-teatro-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_120326_INVITADO_293x150.jpg"
+    }
+  ],
+  "dance": [
     {
       "source": "canal",
       "kind": "dance",
@@ -86,14 +65,35 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/bailarinas-incendiadas-luciana-acuna-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_INCENDIADAS.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Les Ballets de Monte-Carlo",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-03-26T00:00:00.000Z",
+      "endDate": "2026-03-28T23:59:59.000Z",
+      "dateText": "26 mar – 28 mar",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/les-ballets-de-monte-carlo-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_CENICIENTA.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 24,
-      "danceCollected": 8,
-      "theatreActive": 24,
-      "danceActive": 8,
+      "theatreCollected": 25,
+      "danceCollected": 7,
+      "theatreActive": 25,
+      "danceActive": 7,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -107,19 +107,14 @@
     },
     "errors": [
       {
-        "source": "teatrodelbarrio",
+        "source": "cdn",
         "venue": "pipeline",
-        "message": "barrio: collected 0"
+        "message": "cdn: collected 0, kept 0"
       },
       {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "libraries empty (fallback POST without libraries will be attempted)"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
       },
       {
         "source": "pradillo",
@@ -137,19 +132,14 @@
         "message": "espanol: collected 0"
       },
       {
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
+      },
+      {
         "source": "nave10",
         "venue": "nave10",
         "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
-      },
-      {
-        "source": "cdn",
-        "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
       },
       {
         "source": "nave10",
