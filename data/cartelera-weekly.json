@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-03-16T07:43:03.834Z",
+  "updatedAt": "2026-03-23T07:24:00.761Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Martina Cabanas Collell",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-03-18T00:00:00.000Z",
-      "endDate": "2026-03-21T23:59:59.000Z",
-      "dateText": "18 mar – 21 mar",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/la-curva-del-tiempo-martina-cabanas-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2025_071025_CURVA_TIEMPO.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -42,13 +21,11 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/lectura-dramatizada-dia-internacional-del-teatro-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_120326_INVITADO_293x150.jpg"
-    }
-  ],
-  "dance": [
+    },
     {
       "source": "canal",
-      "kind": "dance",
-      "title": "Luciana Acuña",
+      "kind": "theatre",
+      "title": "Semana del Teatro",
       "credits": "",
       "deck": "",
       "author": "",
@@ -56,16 +33,18 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-18T00:00:00.000Z",
-      "endDate": "2026-03-21T23:59:59.000Z",
-      "dateText": "18 mar – 21 mar",
+      "startDate": "2026-03-23T00:00:00.000Z",
+      "endDate": "2026-03-27T23:59:59.000Z",
+      "dateText": "23 mar – 27 mar",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/bailarinas-incendiadas-luciana-acuna-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_INCENDIADAS.jpg"
-    },
+      "link": "https://www.teatroscanal.com/espectaculo/semana-del-teatro-marzo-2026/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2022/01/Miguel-Angel-Gomez-11.jpg"
+    }
+  ],
+  "dance": [
     {
       "source": "canal",
       "kind": "dance",
@@ -86,14 +65,35 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/les-ballets-de-monte-carlo-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_CENICIENTA.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Goblin Party",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-04-10T00:00:00.000Z",
+      "endDate": "2026-04-12T23:59:59.000Z",
+      "dateText": "10 abr – 12 abr",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/once-upon-a-time-goblin-party-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_GOBLIN.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 25,
-      "danceCollected": 7,
-      "theatreActive": 25,
-      "danceActive": 7,
+      "theatreCollected": 23,
+      "danceCollected": 6,
+      "theatreActive": 23,
+      "danceActive": 6,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -107,9 +107,14 @@
     },
     "errors": [
       {
-        "source": "cdn",
+        "source": "teatrodelbarrio",
         "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
+        "message": "barrio: collected 0"
+      },
+      {
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
       },
       {
         "source": "teatroespanol",
@@ -117,9 +122,14 @@
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
-        "source": "pradillo",
-        "venue": "pipeline",
-        "message": "pradillo: collected 0"
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
       },
       {
         "source": "teatroespanol",
@@ -132,9 +142,9 @@
         "message": "espanol: collected 0"
       },
       {
-        "source": "teatrodelbarrio",
+        "source": "cdn",
         "venue": "pipeline",
-        "message": "barrio: collected 0"
+        "message": "cdn: collected 0, kept 0"
       },
       {
         "source": "nave10",
