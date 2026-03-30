@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-03-23T07:24:00.761Z",
+  "updatedAt": "2026-03-30T07:55:52.733Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "El invitado, de Aurora Parrilla",
+      "title": "Bromo",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-23T00:00:00.000Z",
-      "endDate": "2026-03-23T23:59:59.000Z",
-      "dateText": "23 mar – 23 mar",
+      "startDate": "2026-03-31T00:00:00.000Z",
+      "endDate": "2026-03-31T23:59:59.000Z",
+      "dateText": "31 mar – 31 mar",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/lectura-dramatizada-dia-internacional-del-teatro-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_120326_INVITADO_293x150.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/bromo-av-live-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_BROMO.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Semana del Teatro",
+      "title": "Conj. instr. de Les Arts Florissants",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,39 +33,18 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-23T00:00:00.000Z",
-      "endDate": "2026-03-27T23:59:59.000Z",
-      "dateText": "23 mar – 27 mar",
+      "startDate": "2026-03-31T00:00:00.000Z",
+      "endDate": "2026-03-31T23:59:59.000Z",
+      "dateText": "31 mar – 31 mar",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/semana-del-teatro-marzo-2026/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2022/01/Miguel-Angel-Gomez-11.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/les-arts-florissants-lecciones-de-tinieblas/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/02/AF_BANNERS_CANAL_FIAS_300126_02.jpg"
     }
   ],
   "dance": [
-    {
-      "source": "canal",
-      "kind": "dance",
-      "title": "Les Ballets de Monte-Carlo",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-03-26T00:00:00.000Z",
-      "endDate": "2026-03-28T23:59:59.000Z",
-      "dateText": "26 mar – 28 mar",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/les-ballets-de-monte-carlo-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_CENICIENTA.jpg"
-    },
     {
       "source": "canal",
       "kind": "dance",
@@ -86,13 +65,34 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/once-upon-a-time-goblin-party-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_GOBLIN.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Mounia Nassangar",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-04-15T00:00:00.000Z",
+      "endDate": "2026-04-18T23:59:59.000Z",
+      "dateText": "15 abr – 18 abr",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/stuck-mounia-nassangar-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_STUCK.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 23,
+      "theatreCollected": 20,
       "danceCollected": 6,
-      "theatreActive": 23,
+      "theatreActive": 20,
       "danceActive": 6,
       "theatreFinal": 2,
       "danceFinal": 2
@@ -106,6 +106,11 @@
       }
     },
     "errors": [
+      {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
+      },
       {
         "source": "teatrodelbarrio",
         "venue": "pipeline",
@@ -122,14 +127,9 @@
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "teatroespanol",
@@ -140,16 +140,6 @@
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
-      },
-      {
-        "source": "cdn",
-        "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
-      },
-      {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "nave10",
