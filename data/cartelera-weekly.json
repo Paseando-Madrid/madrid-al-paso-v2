@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-03-30T07:55:52.733Z",
+  "updatedAt": "2026-04-06T07:57:11.284Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Bromo",
+      "title": "Isabelle Huppert / Romeo Castellucci",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-31T00:00:00.000Z",
-      "endDate": "2026-03-31T23:59:59.000Z",
-      "dateText": "31 mar – 31 mar",
+      "startDate": "2026-04-10T00:00:00.000Z",
+      "endDate": "2026-04-12T23:59:59.000Z",
+      "dateText": "10 abr – 12 abr",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/bromo-av-live-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_BROMO.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/berenice-isabelle-huppert-romeo-castellucci-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_BERENICE.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Conj. instr. de Les Arts Florissants",
+      "title": "Periferia Teatro",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,15 +33,15 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-03-31T00:00:00.000Z",
-      "endDate": "2026-03-31T23:59:59.000Z",
-      "dateText": "31 mar – 31 mar",
+      "startDate": "2026-04-11T00:00:00.000Z",
+      "endDate": "2026-04-12T23:59:59.000Z",
+      "dateText": "11 abr – 12 abr",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/les-arts-florissants-lecciones-de-tinieblas/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/02/AF_BANNERS_CANAL_FIAS_300126_02.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/bobo-periferia-teatro-canal-teatralia-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/bobowebTC-543x314-1.jpg"
     }
   ],
   "dance": [
@@ -90,9 +90,9 @@
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 20,
+      "theatreCollected": 17,
       "danceCollected": 6,
-      "theatreActive": 20,
+      "theatreActive": 17,
       "danceActive": 6,
       "theatreFinal": 2,
       "danceFinal": 2
@@ -112,6 +112,11 @@
         "message": "cdn: collected 0, kept 0"
       },
       {
+        "source": "teatroespanol",
+        "venue": "teatroespanol",
+        "message": "libraries empty (fallback POST without libraries will be attempted)"
+      },
+      {
         "source": "teatrodelbarrio",
         "venue": "pipeline",
         "message": "barrio: collected 0"
@@ -124,22 +129,17 @@
       {
         "source": "teatroespanol",
         "venue": "teatroespanol",
-        "message": "libraries empty (fallback POST without libraries will be attempted)"
-      },
-      {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
-        "source": "teatroespanol",
-        "venue": "teatroespanol",
         "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
       },
       {
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
+      },
+      {
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "nave10",
