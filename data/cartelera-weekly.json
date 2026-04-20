@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-04-13T08:17:24.831Z",
+  "updatedAt": "2026-04-20T08:22:21.314Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Abraham Cupeiro",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-04-19T00:00:00.000Z",
-      "endDate": "2026-04-19T23:59:59.000Z",
-      "dateText": "19 abr – 19 abr",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/loira-abraham-cupeiro-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/cupeirowebTC-543x314-1.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -42,13 +21,34 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/mami-mario-banushi-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MAMI.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "La Juan Gallery",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-04-25T00:00:00.000Z",
+      "endDate": "2026-04-25T23:59:59.000Z",
+      "dateText": "25 abr – 25 abr",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/accion-xm-la-juan-gallery-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/juangallerywebTC-543x314-1.jpg"
     }
   ],
   "dance": [
     {
       "source": "canal",
       "kind": "dance",
-      "title": "Mounia Nassangar",
+      "title": "Taiat Dansa | Dir.: Meritxell Barberá &#038; Inma García",
       "credits": "",
       "deck": "",
       "author": "",
@@ -56,20 +56,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-04-15T00:00:00.000Z",
-      "endDate": "2026-04-18T23:59:59.000Z",
-      "dateText": "15 abr – 18 abr",
+      "startDate": "2026-04-29T00:00:00.000Z",
+      "endDate": "2026-04-30T23:59:59.000Z",
+      "dateText": "29 abr – 30 abr",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/stuck-mounia-nassangar-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_STUCK.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/las-hijas-de-bernarda-taiat-dansa-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_180326_TAIAT_293x150.jpg"
     },
     {
       "source": "canal",
       "kind": "dance",
-      "title": "Compagnie Accrorap",
+      "title": "SOL PICÓ CIA DE DANZA",
       "credits": "",
       "deck": "",
       "author": "",
@@ -77,23 +77,23 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-04-17T00:00:00.000Z",
-      "endDate": "2026-04-18T23:59:59.000Z",
-      "dateText": "17 abr – 18 abr",
+      "startDate": "2026-05-20T00:00:00.000Z",
+      "endDate": "2026-05-23T23:59:59.000Z",
+      "dateText": "20 may – 23 may",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/compagnie-accrorap-le-murmure-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_ACCRORAP.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/sol-pico-cia-de-danza/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/03/AF_BANNERS_ABONO_CANAL_2026_150426_CORDERO_293x150.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 15,
-      "danceCollected": 5,
-      "theatreActive": 15,
-      "danceActive": 5,
+      "theatreCollected": 14,
+      "danceCollected": 3,
+      "theatreActive": 14,
+      "danceActive": 3,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -112,19 +112,14 @@
         "message": "cdn: collected 0, kept 0"
       },
       {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
-      },
-      {
-        "source": "pradillo",
-        "venue": "pipeline",
-        "message": "pradillo: collected 0"
-      },
-      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "libraries empty (fallback POST without libraries will be attempted)"
+      },
+      {
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
       },
       {
         "source": "teatroespanol",
@@ -135,6 +130,11 @@
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
+      },
+      {
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
       },
       {
         "source": "nave10",
