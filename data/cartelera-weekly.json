@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-20T08:22:21.314Z",
+  "updatedAt": "2026-04-27T08:38:15.914Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Mario Banushi",
+      "title": "Aline Kuppenheim / De Teatro y Su Doble",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-04-24T00:00:00.000Z",
-      "endDate": "2026-04-25T23:59:59.000Z",
-      "dateText": "24 abr – 25 abr",
+      "startDate": "2026-04-29T00:00:00.000Z",
+      "endDate": "2026-05-02T23:59:59.000Z",
+      "dateText": "29 abr – 2 may",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/mami-mario-banushi-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MAMI.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/feos-guillermo-calderon-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_FEOS.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "La Juan Gallery",
+      "title": "Eurípides | Dir.: Declan Donnellan",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,18 +33,39 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-04-25T00:00:00.000Z",
-      "endDate": "2026-04-25T23:59:59.000Z",
-      "dateText": "25 abr – 25 abr",
+      "startDate": "2026-04-30T00:00:00.000Z",
+      "endDate": "2026-05-03T23:59:59.000Z",
+      "dateText": "30 abr – 3 may",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/accion-xm-la-juan-gallery-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/juangallerywebTC-543x314-1.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/medea-declan-donnellan-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_MEDEA.jpg"
     }
   ],
   "dance": [
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "DÍA INTERNACIONAL DE LA DANZA 2026",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-04-29T00:00:00.000Z",
+      "endDate": "2026-04-29T23:59:59.000Z",
+      "dateText": "29 abr – 29 abr",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/dia-internacional-de-la-danza-2026/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/04/20250917_lucia_campillo_pablolorente_0204-scaled.jpg"
+    },
     {
       "source": "canal",
       "kind": "dance",
@@ -65,35 +86,14 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/las-hijas-de-bernarda-taiat-dansa-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_180326_TAIAT_293x150.jpg"
-    },
-    {
-      "source": "canal",
-      "kind": "dance",
-      "title": "SOL PICÓ CIA DE DANZA",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-05-20T00:00:00.000Z",
-      "endDate": "2026-05-23T23:59:59.000Z",
-      "dateText": "20 may – 23 may",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/sol-pico-cia-de-danza/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/03/AF_BANNERS_ABONO_CANAL_2026_150426_CORDERO_293x150.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 14,
-      "danceCollected": 3,
-      "theatreActive": 14,
-      "danceActive": 3,
+      "theatreCollected": 12,
+      "danceCollected": 4,
+      "theatreActive": 12,
+      "danceActive": 4,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -122,16 +122,6 @@
         "message": "barrio: collected 0"
       },
       {
-        "source": "teatroespanol",
-        "venue": "teatroespanol",
-        "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
-      },
-      {
-        "source": "teatroespanol",
-        "venue": "pipeline",
-        "message": "espanol: collected 0"
-      },
-      {
         "source": "pradillo",
         "venue": "pipeline",
         "message": "pradillo: collected 0"
@@ -140,6 +130,16 @@
         "source": "nave10",
         "venue": "nave10",
         "message": "listing ok https://www.nave10matadero.es/programacion/"
+      },
+      {
+        "source": "teatroespanol",
+        "venue": "teatroespanol",
+        "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
+      },
+      {
+        "source": "teatroespanol",
+        "venue": "pipeline",
+        "message": "espanol: collected 0"
       },
       {
         "source": "nave10",
