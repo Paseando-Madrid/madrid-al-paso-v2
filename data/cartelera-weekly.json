@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-05-04T08:39:57.387Z",
+  "updatedAt": "2026-05-11T09:56:23.844Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Joven Camerata de la Orcam",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-05-10T00:00:00.000Z",
-      "endDate": "2026-05-10T23:59:59.000Z",
-      "dateText": "10 may – 10 may",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/joven-camerata-de-la-orcam-2/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/03/jovencamerwebTC-543x314-1.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -42,6 +21,27 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/palabreria-pesada-amaia-bono-damian-montesdeoca-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/amaiawebTC-543x314-1.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Farrés Brothers i Cia",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-05-30T00:00:00.000Z",
+      "endDate": "2026-05-31T23:59:59.000Z",
+      "dateText": "30 may – 31 may",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/la-madriguera-farres-brothers-canal-teatralia-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/farreswebTC-543x314-1.jpg"
     }
   ],
   "dance": [
@@ -90,9 +90,9 @@
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 10,
+      "theatreCollected": 9,
       "danceCollected": 2,
-      "theatreActive": 10,
+      "theatreActive": 9,
       "danceActive": 2,
       "theatreFinal": 2,
       "danceFinal": 2
@@ -127,11 +127,6 @@
         "message": "pradillo: collected 0"
       },
       {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
@@ -140,6 +135,11 @@
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
+      },
+      {
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "nave10",
