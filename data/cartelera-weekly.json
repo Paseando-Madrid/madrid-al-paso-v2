@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-05-18T10:20:53.639Z",
+  "updatedAt": "2026-05-25T10:25:00.826Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Amaia Bono y Damián Montesdeoca",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-05-23T00:00:00.000Z",
-      "endDate": "2026-05-23T23:59:59.000Z",
-      "dateText": "23 may – 23 may",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/palabreria-pesada-amaia-bono-damian-montesdeoca-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/amaiawebTC-543x314-1.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -42,13 +21,11 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/la-madriguera-farres-brothers-canal-teatralia-tc2526/",
       "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/farreswebTC-543x314-1.jpg"
-    }
-  ],
-  "dance": [
+    },
     {
       "source": "canal",
-      "kind": "dance",
-      "title": "SOL PICÓ CIA DE DANZA",
+      "kind": "theatre",
+      "title": "Lope de Vega | Dir.: Josep Maria Mestres",
       "credits": "",
       "deck": "",
       "author": "",
@@ -56,16 +33,18 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-05-20T00:00:00.000Z",
-      "endDate": "2026-05-23T23:59:59.000Z",
-      "dateText": "20 may – 23 may",
+      "startDate": "2026-05-28T00:00:00.000Z",
+      "endDate": "2026-06-14T23:59:59.000Z",
+      "dateText": "28 may – 14 jun",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/sol-pico-cia-de-danza/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/03/AF_BANNERS_ABONO_CANAL_2026_150426_CORDERO_293x150.jpg"
-    },
+      "link": "https://www.teatroscanal.com/espectaculo/la-dama-boba-josep-maria-mestres-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_240326_DAMA_BOBA_293x150.jpg"
+    }
+  ],
+  "dance": [
     {
       "source": "canal",
       "kind": "dance",
@@ -90,27 +69,22 @@
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 9,
-      "danceCollected": 2,
-      "theatreActive": 9,
-      "danceActive": 2,
+      "theatreCollected": 8,
+      "danceCollected": 1,
+      "theatreActive": 8,
+      "danceActive": 1,
       "theatreFinal": 2,
-      "danceFinal": 2
+      "danceFinal": 1
     },
     "mix": {
       "theatre": {
         "canal": 2
       },
       "dance": {
-        "canal": 2
+        "canal": 1
       }
     },
     "errors": [
-      {
-        "source": "cdn",
-        "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
-      },
       {
         "source": "teatrodelbarrio",
         "venue": "pipeline",
@@ -122,9 +96,19 @@
         "message": "pradillo: collected 0"
       },
       {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
+      },
+      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "libraries empty (fallback POST without libraries will be attempted)"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
       },
       {
         "source": "teatroespanol",
@@ -145,6 +129,11 @@
         "source": "nave10",
         "venue": "pipeline",
         "message": "nave10: collected 0"
+      },
+      {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
       }
     ]
   }
