@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-05-25T10:25:00.826Z",
+  "updatedAt": "2026-06-01T11:51:26.539Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Farrés Brothers i Cia",
+      "title": "EVENTO ESPECIAL POR LA VISITA DE SU SANTIDAD “NO LA DEBEMOS DORMIR”",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-05-30T00:00:00.000Z",
-      "endDate": "2026-05-31T23:59:59.000Z",
-      "dateText": "30 may – 31 may",
+      "startDate": "2026-06-06T00:00:00.000Z",
+      "endDate": "2026-06-07T23:59:59.000Z",
+      "dateText": "6 jun – 7 jun",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/la-madriguera-farres-brothers-canal-teatralia-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/05/farreswebTC-543x314-1.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/no-la-debemos-dormir/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/05/Diseno-sin-titulo-13.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Lope de Vega | Dir.: Josep Maria Mestres",
+      "title": "Nao Albet y Marcel Borràs / Fernando Velázquez",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,58 +33,39 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-05-28T00:00:00.000Z",
+      "startDate": "2026-06-02T00:00:00.000Z",
       "endDate": "2026-06-14T23:59:59.000Z",
-      "dateText": "28 may – 14 jun",
+      "dateText": "2 jun – 14 jun",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/la-dama-boba-josep-maria-mestres-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_240326_DAMA_BOBA_293x150.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/los-estunmen-nao-albet-marcel-borras-fernando-velazquez-tc2526/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNER_ABONO_CANAL_2026_120326_BORRAS_293x150.jpg"
     }
   ],
-  "dance": [
-    {
-      "source": "canal",
-      "kind": "dance",
-      "title": "Alberto Velasco",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-05-28T00:00:00.000Z",
-      "endDate": "2026-06-07T23:59:59.000Z",
-      "dateText": "28 may – 7 jun",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/alberto-velasco-sacresize-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_VELASCO.jpg"
-    }
-  ],
+  "dance": [],
   "meta": {
     "counts": {
-      "theatreCollected": 8,
-      "danceCollected": 1,
-      "theatreActive": 8,
-      "danceActive": 1,
+      "theatreCollected": 7,
+      "danceCollected": 0,
+      "theatreActive": 7,
+      "danceActive": 0,
       "theatreFinal": 2,
-      "danceFinal": 1
+      "danceFinal": 0
     },
     "mix": {
       "theatre": {
         "canal": 2
       },
-      "dance": {
-        "canal": 1
-      }
+      "dance": {}
     },
     "errors": [
+      {
+        "source": "teatroespanol",
+        "venue": "teatroespanol",
+        "message": "libraries empty (fallback POST without libraries will be attempted)"
+      },
       {
         "source": "teatrodelbarrio",
         "venue": "pipeline",
@@ -103,16 +84,6 @@
       {
         "source": "teatroespanol",
         "venue": "teatroespanol",
-        "message": "libraries empty (fallback POST without libraries will be attempted)"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
-      },
-      {
-        "source": "teatroespanol",
-        "venue": "teatroespanol",
         "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
       },
       {
@@ -124,6 +95,11 @@
         "source": "nave10",
         "venue": "nave10",
         "message": "listing ok https://www.nave10matadero.es/programacion/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
       },
       {
         "source": "nave10",
