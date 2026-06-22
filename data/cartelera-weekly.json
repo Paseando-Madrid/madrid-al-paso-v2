@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-06-15T12:35:11.923Z",
+  "updatedAt": "2026-06-22T12:20:25.358Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "La Juan Gallery",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-06-20T00:00:00.000Z",
-      "endDate": "2026-06-20T23:59:59.000Z",
-      "dateText": "20 jun – 20 jun",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/la-juan-gallery-2/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/04/La-Sobreactuacion-e1776936004168.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -47,16 +26,16 @@
   "dance": [],
   "meta": {
     "counts": {
-      "theatreCollected": 4,
+      "theatreCollected": 1,
       "danceCollected": 0,
-      "theatreActive": 4,
+      "theatreActive": 1,
       "danceActive": 0,
-      "theatreFinal": 2,
+      "theatreFinal": 1,
       "danceFinal": 0
     },
     "mix": {
       "theatre": {
-        "canal": 2
+        "canal": 1
       },
       "dance": {}
     },
@@ -65,6 +44,16 @@
         "source": "cdn",
         "venue": "pipeline",
         "message": "cdn: collected 0, kept 0"
+      },
+      {
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
+      },
+      {
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
       },
       {
         "source": "teatroespanol",
@@ -80,16 +69,6 @@
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
-      },
-      {
-        "source": "pradillo",
-        "venue": "pipeline",
-        "message": "pradillo: collected 0"
-      },
-      {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
       },
       {
         "source": "nave10",
