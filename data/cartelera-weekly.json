@@ -1,42 +1,18 @@
 {
-  "updatedAt": "2026-06-22T12:20:25.358Z",
-  "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Ricardo Llorca",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-06-23T00:00:00.000Z",
-      "endDate": "2026-06-25T23:59:59.000Z",
-      "dateText": "23 jun – 25 jun",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/diarios-de-manhattan-ricardo-llorca-tc2526/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2025/06/AF_BANNERS_ABONO_293x150_CANAL_2025_270625_293x150_LLORCA.jpg"
-    }
-  ],
+  "updatedAt": "2026-06-29T11:17:53.770Z",
+  "theatre": [],
   "dance": [],
   "meta": {
     "counts": {
-      "theatreCollected": 1,
+      "theatreCollected": 0,
       "danceCollected": 0,
-      "theatreActive": 1,
+      "theatreActive": 0,
       "danceActive": 0,
-      "theatreFinal": 1,
+      "theatreFinal": 0,
       "danceFinal": 0
     },
     "mix": {
-      "theatre": {
-        "canal": 1
-      },
+      "theatre": {},
       "dance": {}
     },
     "errors": [
@@ -44,6 +20,11 @@
         "source": "cdn",
         "venue": "pipeline",
         "message": "cdn: collected 0, kept 0"
+      },
+      {
+        "source": "teatroespanol",
+        "venue": "teatroespanol",
+        "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
         "source": "teatrodelbarrio",
@@ -54,11 +35,6 @@
         "source": "pradillo",
         "venue": "pipeline",
         "message": "pradillo: collected 0"
-      },
-      {
-        "source": "teatroespanol",
-        "venue": "teatroespanol",
-        "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
         "source": "teatroespanol",
