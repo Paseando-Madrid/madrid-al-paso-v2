@@ -1,19 +1,109 @@
 {
-  "updatedAt": "2026-06-29T11:17:53.770Z",
-  "theatre": [],
-  "dance": [],
+  "updatedAt": "2026-07-06T10:53:53.068Z",
+  "theatre": [
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Manuel Canseco",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-09-05T00:00:00.000Z",
+      "endDate": "2026-09-18T23:59:59.000Z",
+      "dateText": "5 sep – 18 sep",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/manuel-cansenco/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_17.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "Lope de Vega | Dir.: Pepa Pedroche",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-09-01T00:00:00.000Z",
+      "endDate": "2026-09-20T23:59:59.000Z",
+      "dateText": "1 sep – 20 sep",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/lope-de-vega-los-locos-de-valencia/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726.jpg"
+    }
+  ],
+  "dance": [
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Compañía Gabriel Matías",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-09-03T00:00:00.000Z",
+      "endDate": "2026-09-04T23:59:59.000Z",
+      "dateText": "3 sep – 4 sep",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/compania-gabriel-matias/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_11.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "Paloma Díaz / La Permanente",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-09-08T00:00:00.000Z",
+      "endDate": "2026-09-09T23:59:59.000Z",
+      "dateText": "8 sep – 9 sep",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/paloma-diaz-la-permanente/",
+      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_19.jpg"
+    }
+  ],
   "meta": {
     "counts": {
-      "theatreCollected": 0,
-      "danceCollected": 0,
-      "theatreActive": 0,
-      "danceActive": 0,
-      "theatreFinal": 0,
-      "danceFinal": 0
+      "theatreCollected": 44,
+      "danceCollected": 36,
+      "theatreActive": 44,
+      "danceActive": 36,
+      "theatreFinal": 2,
+      "danceFinal": 2
     },
     "mix": {
-      "theatre": {},
-      "dance": {}
+      "theatre": {
+        "canal": 2
+      },
+      "dance": {
+        "canal": 2
+      }
     },
     "errors": [
       {
@@ -27,14 +117,14 @@
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
-      },
-      {
         "source": "pradillo",
         "venue": "pipeline",
         "message": "pradillo: collected 0"
+      },
+      {
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "teatroespanol",
@@ -47,9 +137,9 @@
         "message": "espanol: collected 0"
       },
       {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
       },
       {
         "source": "nave10",
