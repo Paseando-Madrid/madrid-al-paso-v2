@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-06T10:53:53.068Z",
+  "updatedAt": "2026-07-13T09:41:29.072Z",
   "theatre": [
     {
       "source": "canal",
@@ -91,9 +91,9 @@
   "meta": {
     "counts": {
       "theatreCollected": 44,
-      "danceCollected": 36,
+      "danceCollected": 37,
       "theatreActive": 44,
-      "danceActive": 36,
+      "danceActive": 37,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -122,11 +122,6 @@
         "message": "pradillo: collected 0"
       },
       {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
@@ -135,6 +130,11 @@
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
+      },
+      {
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "teatrodelbarrio",
