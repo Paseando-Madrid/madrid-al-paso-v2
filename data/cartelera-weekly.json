@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-20T09:29:30.030Z",
+  "updatedAt": "2026-07-27T10:04:30.341Z",
   "theatre": [
     {
       "source": "canal",
@@ -20,7 +20,7 @@
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/electra-jonda-juan-guerrero-zamora-manuel-cansenco/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_17.jpg"
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_17.jpg"
     },
     {
       "source": "canal",
@@ -41,7 +41,7 @@
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/lope-de-vega-los-locos-de-valencia/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726.jpg"
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726.jpg"
     }
   ],
   "dance": [
@@ -64,7 +64,7 @@
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/compania-gabriel-matias/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_11.jpg"
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_11.jpg"
     },
     {
       "source": "canal",
@@ -85,7 +85,7 @@
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/paloma-diaz-la-permanente/",
-      "image": "https://cdn.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_19.jpg"
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_19.jpg"
     }
   ],
   "meta": {
@@ -107,19 +107,14 @@
     },
     "errors": [
       {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
+      },
+      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "libraries empty (fallback POST without libraries will be attempted)"
-      },
-      {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
       },
       {
         "source": "teatroespanol",
@@ -137,19 +132,14 @@
         "message": "pradillo: collected 0"
       },
       {
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
+      },
+      {
         "source": "nave10",
         "venue": "nave10",
         "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
-      },
-      {
-        "source": "cdn",
-        "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
       },
       {
         "source": "nave10",
