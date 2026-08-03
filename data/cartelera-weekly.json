@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-27T10:04:30.341Z",
+  "updatedAt": "2026-08-03T10:00:20.673Z",
   "theatre": [
     {
       "source": "canal",
@@ -117,6 +117,11 @@
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
+      },
+      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
@@ -127,19 +132,14 @@
         "message": "espanol: collected 0"
       },
       {
-        "source": "pradillo",
-        "venue": "pipeline",
-        "message": "pradillo: collected 0"
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "teatrodelbarrio",
         "venue": "pipeline",
         "message": "barrio: collected 0"
-      },
-      {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "nave10",
