@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T07:09:11.152Z",
+  "updatedAt": "2026-08-24T07:12:55.176Z",
   "theatre": [
     {
       "source": "canal",
@@ -107,14 +107,19 @@
     },
     "errors": [
       {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
+      },
+      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
-        "source": "pradillo",
+        "source": "teatrodelbarrio",
         "venue": "pipeline",
-        "message": "pradillo: collected 0"
+        "message": "barrio: collected 0"
       },
       {
         "source": "teatroespanol",
@@ -127,39 +132,24 @@
         "message": "espanol: collected 0"
       },
       {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "nave10",
-        "venue": "nave10",
-        "message": "listing unavailable (all tried paths failed)"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
-      },
-      {
-        "source": "cdn",
         "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
+        "message": "nave10: collected 0"
+      },
+      {
+        "source": "pradillo",
+        "venue": "pradillo",
+        "message": "timeout https://www.teatropradillo.com/"
+      },
+      {
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
       }
     ]
   }
