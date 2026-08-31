@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-24T07:12:55.176Z",
+  "updatedAt": "2026-08-31T13:27:28.801Z",
   "theatre": [
     {
       "source": "canal",
@@ -122,6 +122,11 @@
         "message": "barrio: collected 0"
       },
       {
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
+      },
+      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
@@ -140,16 +145,6 @@
         "source": "nave10",
         "venue": "pipeline",
         "message": "nave10: collected 0"
-      },
-      {
-        "source": "pradillo",
-        "venue": "pradillo",
-        "message": "timeout https://www.teatropradillo.com/"
-      },
-      {
-        "source": "pradillo",
-        "venue": "pipeline",
-        "message": "pradillo: collected 0"
       }
     ]
   }
