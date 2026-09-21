@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-09-14T12:31:10.828Z",
+  "updatedAt": "2026-09-21T12:37:04.503Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Mauricio Kartun",
+      "title": "Atlántida Chamber Orchestra",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-10-02T00:00:00.000Z",
-      "endDate": "2026-10-11T23:59:59.000Z",
-      "dateText": "2 oct – 11 oct",
+      "startDate": "2026-09-22T00:00:00.000Z",
+      "endDate": "2026-09-22T23:59:59.000Z",
+      "dateText": "22 sep – 22 sep",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/baco-polaco-mauricio-kartun/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_300626_30.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/atlantida-chamber-orchestra-coma/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/ATLANTIDA-PRESS-KIT-MOZARTEUM-HORIZONTAL-scaled-e1788461108737.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "CAMILA CAÑEQUE",
+      "title": "Coro de la Comunidad de Madrid",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,39 +33,18 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-10-17T00:00:00.000Z",
-      "endDate": "2026-10-17T23:59:59.000Z",
-      "dateText": "17 oct – 17 oct",
+      "startDate": "2026-09-26T00:00:00.000Z",
+      "endDate": "2026-09-26T23:59:59.000Z",
+      "dateText": "26 sep – 26 sep",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/emily-etc-camila-caneque/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/camilacaneque_EMILY_1_ETC__-1-scaled-e1783502336822.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/coro-de-la-comunidad-de-madrid-coma/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Coro-ORCAM-scaled-e1788462549732.jpg"
     }
   ],
   "dance": [
-    {
-      "source": "canal",
-      "kind": "dance",
-      "title": "Yibu",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-09-17T00:00:00.000Z",
-      "endDate": "2026-09-18T23:59:59.000Z",
-      "dateText": "17 sep – 18 sep",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/yibu/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_23.jpg"
-    },
     {
       "source": "canal",
       "kind": "dance",
@@ -86,14 +65,35 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/javier-martin-artes-del-movimiento/",
       "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_13.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "dance",
+      "title": "SUMA FLAMENCA JOVEN 2026",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-09-24T00:00:00.000Z",
+      "endDate": "2026-09-27T23:59:59.000Z",
+      "dateText": "24 sep – 27 sep",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/suma-flamenca-joven-2026/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_060726_SUMA_JOVEN_01.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 54,
-      "danceCollected": 40,
-      "theatreActive": 54,
-      "danceActive": 40,
+      "theatreCollected": 58,
+      "danceCollected": 39,
+      "theatreActive": 58,
+      "danceActive": 39,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -117,6 +117,21 @@
         "message": "pradillo: collected 0"
       },
       {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
+      },
+      {
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
+      },
+      {
         "source": "teatroespanol",
         "venue": "teatroespanol",
         "message": "ajax page 0 fail: HTTP 500 for https://www.teatroespanol.es/views/ajax?_wrapper_format=drupal_ajax"
@@ -125,31 +140,6 @@
         "source": "teatroespanol",
         "venue": "pipeline",
         "message": "espanol: collected 0"
-      },
-      {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
-        "source": "nave10",
-        "venue": "pipeline",
-        "message": "nave10: collected 0"
-      },
-      {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
       },
       {
         "source": "cdn",
@@ -165,6 +155,16 @@
         "source": "cdn",
         "venue": "pipeline",
         "message": "cdn: collected 0, kept 0"
+      },
+      {
+        "source": "teatrodelbarrio",
+        "venue": "pipeline",
+        "message": "barrio: collected 0"
+      },
+      {
+        "source": "nave10",
+        "venue": "pipeline",
+        "message": "nave10: collected 0"
       }
     ]
   }
