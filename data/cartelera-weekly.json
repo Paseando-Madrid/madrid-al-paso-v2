@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-09-21T12:37:04.503Z",
+  "updatedAt": "2026-09-28T13:38:37.961Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Atlántida Chamber Orchestra",
+      "title": "Spanish Brass",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-09-22T00:00:00.000Z",
-      "endDate": "2026-09-22T23:59:59.000Z",
-      "dateText": "22 sep – 22 sep",
+      "startDate": "2026-09-30T00:00:00.000Z",
+      "endDate": "2026-09-30T23:59:59.000Z",
+      "dateText": "30 sep – 30 sep",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/atlantida-chamber-orchestra-coma/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/ATLANTIDA-PRESS-KIT-MOZARTEUM-HORIZONTAL-scaled-e1788461108737.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/spanish-brass-coma/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Spanish-brass-2026-scaled-e1788533549134.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Coro de la Comunidad de Madrid",
+      "title": "Joan Castelló y Geni Uñón",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,22 +33,22 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-09-26T00:00:00.000Z",
-      "endDate": "2026-09-26T23:59:59.000Z",
-      "dateText": "26 sep – 26 sep",
+      "startDate": "2026-10-06T00:00:00.000Z",
+      "endDate": "2026-10-06T23:59:59.000Z",
+      "dateText": "6 oct – 6 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/coro-de-la-comunidad-de-madrid-coma/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Coro-ORCAM-scaled-e1788462549732.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/joan-castello-y-geni-unon-coma/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Joan-Castello-y-Eugenio-Unon-e1788534144513.jpg"
     }
   ],
   "dance": [
     {
       "source": "canal",
       "kind": "dance",
-      "title": "Javier Martín | Artes del movimiento",
+      "title": "BALLET ESPAÑOL DE LA COMUNIDAD DE MADRID",
       "credits": "",
       "deck": "",
       "author": "",
@@ -56,20 +56,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-09-22T00:00:00.000Z",
-      "endDate": "2026-09-23T23:59:59.000Z",
-      "dateText": "22 sep – 23 sep",
+      "startDate": "2026-09-29T18:00:00.000Z",
+      "endDate": "2026-09-29T19:00:00.000Z",
+      "dateText": "29 sep – 29 sep · 18:00",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/javier-martin-artes-del-movimiento/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_13.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/ballet-espanol-de-la-comunidad-de-madrid-gala-creacion-elenco/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/20250429_dia_de_la_danza_pablolorente_0260-scaled-e1788372515131.jpg"
     },
     {
       "source": "canal",
       "kind": "dance",
-      "title": "SUMA FLAMENCA JOVEN 2026",
+      "title": "Cía. Elías Aguirre",
       "credits": "",
       "deck": "",
       "author": "",
@@ -77,23 +77,23 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-09-24T00:00:00.000Z",
-      "endDate": "2026-09-27T23:59:59.000Z",
-      "dateText": "24 sep – 27 sep",
+      "startDate": "2026-10-03T00:00:00.000Z",
+      "endDate": "2026-10-04T23:59:59.000Z",
+      "dateText": "3 oct – 4 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/suma-flamenca-joven-2026/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_060726_SUMA_JOVEN_01.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/elias-aguirre/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_09.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 58,
-      "danceCollected": 39,
-      "theatreActive": 58,
-      "danceActive": 39,
+      "theatreCollected": 56,
+      "danceCollected": 35,
+      "theatreActive": 56,
+      "danceActive": 35,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -112,9 +112,14 @@
         "message": "libraries empty (fallback POST without libraries will be attempted)"
       },
       {
-        "source": "pradillo",
+        "source": "teatrodelbarrio",
         "venue": "pipeline",
-        "message": "pradillo: collected 0"
+        "message": "barrio: collected 0"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
       },
       {
         "source": "cdn",
@@ -122,14 +127,9 @@
         "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
       },
       {
-        "source": "nave10",
-        "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
+        "source": "pradillo",
+        "venue": "pipeline",
+        "message": "pradillo: collected 0"
       },
       {
         "source": "teatroespanol",
@@ -157,9 +157,9 @@
         "message": "cdn: collected 0, kept 0"
       },
       {
-        "source": "teatrodelbarrio",
-        "venue": "pipeline",
-        "message": "barrio: collected 0"
+        "source": "nave10",
+        "venue": "nave10",
+        "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
         "source": "nave10",
