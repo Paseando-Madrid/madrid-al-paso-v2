@@ -1,27 +1,6 @@
 {
-  "updatedAt": "2026-09-28T13:38:37.961Z",
+  "updatedAt": "2026-10-05T14:22:20.835Z",
   "theatre": [
-    {
-      "source": "canal",
-      "kind": "theatre",
-      "title": "Spanish Brass",
-      "credits": "",
-      "deck": "",
-      "author": "",
-      "director": "",
-      "company": "",
-      "choreographer": "",
-      "cast": [],
-      "startDate": "2026-09-30T00:00:00.000Z",
-      "endDate": "2026-09-30T23:59:59.000Z",
-      "dateText": "30 sep – 30 sep",
-      "venue": "Teatros del Canal",
-      "address": "C. de Cea Bermúdez, 1, Madrid",
-      "mapsQuery": "Teatros del Canal, Madrid",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/spanish-brass-coma/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Spanish-brass-2026-scaled-e1788533549134.jpg"
-    },
     {
       "source": "canal",
       "kind": "theatre",
@@ -42,13 +21,34 @@
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
       "link": "https://www.teatroscanal.com/espectaculo/joan-castello-y-geni-unon-coma/",
       "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Joan-Castello-y-Eugenio-Unon-e1788534144513.jpg"
+    },
+    {
+      "source": "canal",
+      "kind": "theatre",
+      "title": "PluralEnsemble",
+      "credits": "",
+      "deck": "",
+      "author": "",
+      "director": "",
+      "company": "",
+      "choreographer": "",
+      "cast": [],
+      "startDate": "2026-10-07T00:00:00.000Z",
+      "endDate": "2026-10-07T23:59:59.000Z",
+      "dateText": "7 oct – 7 oct",
+      "venue": "Teatros del Canal",
+      "address": "C. de Cea Bermúdez, 1, Madrid",
+      "mapsQuery": "Teatros del Canal, Madrid",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
+      "link": "https://www.teatroscanal.com/espectaculo/pluralensemble-festival-ensemble/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Captura-de-pantalla-2026-09-22-a-las-13.26.16-e1790076673294.png"
     }
   ],
   "dance": [
     {
       "source": "canal",
       "kind": "dance",
-      "title": "BALLET ESPAÑOL DE LA COMUNIDAD DE MADRID",
+      "title": "Ferial de Calaveras",
       "credits": "",
       "deck": "",
       "author": "",
@@ -56,20 +56,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-09-29T18:00:00.000Z",
-      "endDate": "2026-09-29T19:00:00.000Z",
-      "dateText": "29 sep – 29 sep · 18:00",
+      "startDate": "2026-10-09T00:00:00.000Z",
+      "endDate": "2026-10-11T23:59:59.000Z",
+      "dateText": "9 oct – 11 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/ballet-espanol-de-la-comunidad-de-madrid-gala-creacion-elenco/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/20250429_dia_de_la_danza_pablolorente_0260-scaled-e1788372515131.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/ferial-calaveras/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_10.jpg"
     },
     {
       "source": "canal",
       "kind": "dance",
-      "title": "Cía. Elías Aguirre",
+      "title": "Cuatro x Cuatro / Shantí Vera",
       "credits": "",
       "deck": "",
       "author": "",
@@ -77,23 +77,23 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-10-03T00:00:00.000Z",
-      "endDate": "2026-10-04T23:59:59.000Z",
-      "dateText": "3 oct – 4 oct",
+      "startDate": "2026-10-10T00:00:00.000Z",
+      "endDate": "2026-10-11T23:59:59.000Z",
+      "dateText": "10 oct – 11 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/elias-aguirre/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_09.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/cuatro-x-cuatro-shanti-vera/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_08.jpg"
     }
   ],
   "meta": {
     "counts": {
       "theatreCollected": 56,
-      "danceCollected": 35,
+      "danceCollected": 33,
       "theatreActive": 56,
-      "danceActive": 35,
+      "danceActive": 33,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -117,16 +117,6 @@
         "message": "barrio: collected 0"
       },
       {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
-      },
-      {
         "source": "pradillo",
         "venue": "pipeline",
         "message": "pradillo: collected 0"
@@ -142,21 +132,6 @@
         "message": "espanol: collected 0"
       },
       {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
-      },
-      {
-        "source": "cdn",
-        "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
-      },
-      {
         "source": "nave10",
         "venue": "nave10",
         "message": "listing ok https://www.nave10matadero.es/programacion/"
@@ -165,6 +140,31 @@
         "source": "nave10",
         "venue": "pipeline",
         "message": "nave10: collected 0"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-maria-guerrero",
+        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
+      },
+      {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
+      },
+      {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
       }
     ]
   }
