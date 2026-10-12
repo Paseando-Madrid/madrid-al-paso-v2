@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-10-05T14:22:20.835Z",
+  "updatedAt": "2026-10-12T15:09:12.681Z",
   "theatre": [
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "Joan Castelló y Geni Uñón",
+      "title": "Sonor Ensemble y Anna Cabrera",
       "credits": "",
       "deck": "",
       "author": "",
@@ -12,20 +12,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-10-06T00:00:00.000Z",
-      "endDate": "2026-10-06T23:59:59.000Z",
-      "dateText": "6 oct – 6 oct",
+      "startDate": "2026-10-13T00:00:00.000Z",
+      "endDate": "2026-10-13T23:59:59.000Z",
+      "dateText": "13 oct – 13 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/joan-castello-y-geni-unon-coma/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Joan-Castello-y-Eugenio-Unon-e1788534144513.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/sonor-ensemble-y-anna-cabrera-coma/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Sonor-04-e1788534710364.jpg"
     },
     {
       "source": "canal",
       "kind": "theatre",
-      "title": "PluralEnsemble",
+      "title": "CAMILA CAÑEQUE",
       "credits": "",
       "deck": "",
       "author": "",
@@ -33,22 +33,22 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-10-07T00:00:00.000Z",
-      "endDate": "2026-10-07T23:59:59.000Z",
-      "dateText": "7 oct – 7 oct",
+      "startDate": "2026-10-17T00:00:00.000Z",
+      "endDate": "2026-10-17T23:59:59.000Z",
+      "dateText": "17 oct – 17 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/pluralensemble-festival-ensemble/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/09/Captura-de-pantalla-2026-09-22-a-las-13.26.16-e1790076673294.png"
+      "link": "https://www.teatroscanal.com/espectaculo/emily-etc-camila-caneque/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/camilacaneque_EMILY_1_ETC__-1-scaled-e1783502336822.jpg"
     }
   ],
   "dance": [
     {
       "source": "canal",
       "kind": "dance",
-      "title": "Ferial de Calaveras",
+      "title": "Batsheva Dance Company | Ohad Naharin",
       "credits": "",
       "deck": "",
       "author": "",
@@ -56,20 +56,20 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-10-09T00:00:00.000Z",
-      "endDate": "2026-10-11T23:59:59.000Z",
-      "dateText": "9 oct – 11 oct",
+      "startDate": "2026-10-15T00:00:00.000Z",
+      "endDate": "2026-10-17T23:59:59.000Z",
+      "dateText": "15 oct – 17 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/ferial-calaveras/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_10.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/sadeh21-batsheva-dance-company/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/06/AF_BANNER_ABONO_CANAL_2026_300626_04.jpg"
     },
     {
       "source": "canal",
       "kind": "dance",
-      "title": "Cuatro x Cuatro / Shantí Vera",
+      "title": "COMPAÑÍA MANUEL LIÑÁN",
       "credits": "",
       "deck": "",
       "author": "",
@@ -77,23 +77,23 @@
       "company": "",
       "choreographer": "",
       "cast": [],
-      "startDate": "2026-10-10T00:00:00.000Z",
-      "endDate": "2026-10-11T23:59:59.000Z",
-      "dateText": "10 oct – 11 oct",
+      "startDate": "2026-10-21T00:00:00.000Z",
+      "endDate": "2026-10-24T23:59:59.000Z",
+      "dateText": "21 oct – 24 oct",
       "venue": "Teatros del Canal",
       "address": "C. de Cea Bermúdez, 1, Madrid",
       "mapsQuery": "Teatros del Canal, Madrid",
       "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatros%20del%20Canal%2C%20Madrid",
-      "link": "https://www.teatroscanal.com/espectaculo/cuatro-x-cuatro-shanti-vera/",
-      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_08.jpg"
+      "link": "https://www.teatroscanal.com/espectaculo/manuel-linan-llamame-lorca/",
+      "image": "https://www.teatroscanal.com/wp-content/uploads/2026/07/AF_BANNER_ABONO_CANAL_2026_030726_35.jpg"
     }
   ],
   "meta": {
     "counts": {
-      "theatreCollected": 56,
-      "danceCollected": 33,
-      "theatreActive": 56,
-      "danceActive": 33,
+      "theatreCollected": 54,
+      "danceCollected": 31,
+      "theatreActive": 54,
+      "danceActive": 31,
       "theatreFinal": 2,
       "danceFinal": 2
     },
@@ -132,39 +132,29 @@
         "message": "espanol: collected 0"
       },
       {
+        "source": "cdn",
+        "venue": "cdn-valle-inclan",
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
+      },
+      {
         "source": "nave10",
         "venue": "nave10",
         "message": "listing ok https://www.nave10matadero.es/programacion/"
       },
       {
-        "source": "nave10",
-        "venue": "pipeline",
-        "message": "nave10: collected 0"
-      },
-      {
         "source": "cdn",
         "venue": "cdn-maria-guerrero",
-        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "direct fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 503 for https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "jina fail https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/: HTTP 403 for https://r.jina.ai/https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/"
+        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
       },
       {
         "source": "cdn",
         "venue": "pipeline",
         "message": "cdn: collected 0, kept 0"
+      },
+      {
+        "source": "nave10",
+        "venue": "pipeline",
+        "message": "nave10: collected 0"
       }
     ]
   }
