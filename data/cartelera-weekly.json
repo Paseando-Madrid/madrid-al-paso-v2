@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-09T15:56:55.973Z",
+  "updatedAt": "2026-11-16T15:31:15.048Z",
   "theatre": [],
   "dance": [],
   "meta": {
@@ -16,6 +16,11 @@
       "dance": {}
     },
     "errors": [
+      {
+        "source": "cdn",
+        "venue": "pipeline",
+        "message": "cdn: collected 0, kept 0"
+      },
       {
         "source": "teatroespanol",
         "venue": "teatroespanol",
@@ -42,29 +47,9 @@
         "message": "espanol: collected 0"
       },
       {
-        "source": "cdn",
-        "venue": "cdn-maria-guerrero",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-maria-guerrero/ -> trying jina"
-      },
-      {
-        "source": "cdn",
-        "venue": "cdn-valle-inclan",
-        "message": "waf on https://dramatico.inaem.gob.es/programacion/teatro-valle-inclan/ -> trying jina"
-      },
-      {
         "source": "nave10",
         "venue": "nave10",
-        "message": "listing ok https://www.nave10matadero.es/programacion/"
-      },
-      {
-        "source": "cdn",
-        "venue": "pipeline",
-        "message": "cdn: collected 0, kept 0"
-      },
-      {
-        "source": "nave10",
-        "venue": "pipeline",
-        "message": "nave10: collected 0"
+        "message": "listing unavailable (all tried paths failed)"
       }
     ]
   }
